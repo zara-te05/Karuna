@@ -1,0 +1,2 @@
+Hasta ahora solo va de instalar con pip
+*   Django
