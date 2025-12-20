@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from KarunaApp.views import hello
 from KarunaApp.views import login_api
 from KarunaApp.views import login_view
+from KarunaApp.views import register_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", login_view),           # ← login por defecto
     path("api/login/", login_api), 
+    path("api/register/", register_api)
 ]

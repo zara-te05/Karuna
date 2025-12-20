@@ -8,19 +8,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --black: #000000;
-            --white: #FFFFFF;
-            --gray-10: #0A0A0A;
-            --gray-20: #1A1A1A;
-            --gray-30: #2A2A2A;
-            --gray-40: #3A3A3A;
-            --gray-50: #4A4A4A;
-            --gray-60: #5A5A5A;
-            --gray-70: #6A6A6A;
-            --gray-80: #7A7A7A;
-            --gray-90: #8A8A8A;
-            --glass-light: rgba(255, 255, 255, 0.08);
-            --glass-dark: rgba(0, 0, 0, 0.7);
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #8b5cf6;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-surface: #334155;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-surface: #f1f5f9;
+            --text-dark: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --error: #ef4444;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary), #22d3ee);
+            --gradient-accent: linear-gradient(135deg, var(--accent), #fbbf24);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -30,208 +41,289 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--gray-10) 0%, var(--gray-30) 100%);
+            background: linear-gradient(135deg, 
+                var(--dark-bg) 0%, 
+                #1e1b4b 50%, 
+                var(--dark-bg) 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            color: var(--white);
+            color: var(--text-light);
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Fondo educativo sutil */
-        .background {
+        /* Fondo animado con partículas */
+        .particles-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background-image: 
-                radial-gradient(circle at 10% 20%, var(--gray-20) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, var(--gray-20) 0%, transparent 20%);
+            opacity: 0.3;
         }
 
-        /* Elementos educativos abstractos */
-        .education-elements .element {
+        .particle {
             position: absolute;
-            background: var(--glass-light);
-            border: 1px solid var(--gray-40);
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            animation: float 15s infinite linear;
+        }
+
+        /* Elementos educativos abstractos modernos */
+        .modern-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .element {
+            position: absolute;
+            opacity: 0.15;
+            filter: blur(40px);
+            border-radius: 50%;
         }
 
         .element-1 {
-            width: 100px;
-            height: 100px;
-            top: 10%;
-            right: 8%;
-            border-radius: 50%;
-            background: conic-gradient(var(--gray-30), var(--gray-60), var(--gray-30));
+            width: 400px;
+            height: 400px;
+            background: var(--gradient-primary);
+            top: -200px;
+            right: -100px;
+            animation: pulse 8s ease-in-out infinite;
         }
 
         .element-2 {
-            width: 80px;
-            height: 80px;
-            bottom: 15%;
-            left: 8%;
-            transform: rotate(45deg);
-            background: repeating-linear-gradient(
-                45deg,
-                var(--gray-30),
-                var(--gray-30) 2px,
-                var(--gray-50) 2px,
-                var(--gray-50) 4px
-            );
+            width: 300px;
+            height: 300px;
+            background: var(--gradient-secondary);
+            bottom: -150px;
+            left: -100px;
+            animation: pulse 10s ease-in-out infinite reverse;
         }
 
         .element-3 {
-            width: 120px;
-            height: 120px;
-            top: 35%;
-            left: 12%;
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            background: linear-gradient(45deg, var(--gray-20), var(--gray-40));
+            width: 250px;
+            height: 250px;
+            background: var(--gradient-accent);
+            top: 40%;
+            left: 10%;
+            animation: pulse 12s ease-in-out infinite;
         }
 
         /* Contenedor principal */
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1300px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Header educativo */
+        /* Header moderno */
         .header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
             width: 100%;
+            animation: slideDown 0.8s ease-out;
         }
 
         .logo {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
-            gap: 15px;
+            margin-bottom: 20px;
+            gap: 20px;
         }
 
-        .logo-icon {
-            font-size: 3rem;
-            color: var(--white);
+        .logo-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(45deg);
+            animation: logoFloat 6s ease-in-out infinite;
+        }
+
+        .logo-icon-wrapper i {
+            transform: rotate(-45deg);
+            font-size: 2.5rem;
+            color: white;
         }
 
         .logo-text {
-            font-size: 3.2rem;
-            font-weight: 300;
-            color: var(--white);
-            letter-spacing: 3px;
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--text-light), #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
         }
 
         .tagline {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 300;
-            color: var(--gray-70);
-            max-width: 700px;
+            color: var(--text-light);
+            max-width: 800px;
             margin: 0 auto;
             line-height: 1.6;
+            opacity: 0.9;
+            position: relative;
+            padding: 0 20px;
         }
 
-        /* Sistema de tarjetas educativo - TARJETAS MÁS GRANDES */
+        .tagline::before,
+        .tagline::after {
+            content: "✦";
+            position: absolute;
+            color: var(--primary-light);
+            font-size: 1.5rem;
+            opacity: 0.6;
+        }
+
+        .tagline::before {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .tagline::after {
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Sistema de tarjetas moderno */
         .cards {
             display: flex;
             width: 100%;
-            gap: 40px;
+            gap: 50px;
             justify-content: center;
             align-items: stretch;
+            animation: slideUp 0.8s ease-out 0.2s both;
         }
 
         .card {
             flex: 1;
-            min-width: 380px;
-            max-width: 520px;
-            min-height: 650px; /* Aumentado significativamente */
-            background: var(--glass-dark);
-            backdrop-filter: blur(15px);
-            border-radius: 6px;
-            border: 1px solid var(--gray-40);
-            padding: 50px 45px;
+            min-width: 400px;
+            max-width: 550px;
+            min-height: 700px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            padding: 60px 50px;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: var(--shadow-lg);
         }
 
-        /* Efecto borde superior para indicar tipo */
+        /* Efecto de borde animado */
         .card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gray-70);
-            opacity: 0.5;
+            inset: 0;
+            border-radius: 24px;
+            padding: 2px;
+            background: linear-gradient(135deg, 
+                transparent, 
+                var(--primary-light),
+                var(--secondary),
+                transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, 
+                         linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, 
+                  linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .card:hover::before {
-            opacity: 0.8;
-        }
-
-        /* Decoración de tarjeta */
-        .card-decoration {
-            position: absolute;
-            bottom: 25px;
-            right: 25px;
-            font-size: 0.9rem;
-            color: var(--gray-60);
-            font-style: italic;
+            opacity: 1;
         }
 
         /* Contenido de tarjeta */
         .card-header {
-            margin-bottom: 45px;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .card-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transform: rotate(0deg);
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover .card-icon-wrapper {
+            transform: rotate(10deg);
+        }
+
+        .card-icon-wrapper i {
+            font-size: 1.8rem;
+            color: white;
         }
 
         .card-title {
-            font-size: 1.8rem;
-            font-weight: 400;
-            margin-bottom: 12px;
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .card-icon {
-            font-size: 1.4rem;
-            color: var(--gray-70);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-light);
+            line-height: 1.2;
+            background: linear-gradient(45deg, var(--text-light), #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .card-subtitle {
-            font-size: 1rem;
-            color: var(--gray-70);
-            font-weight: 300;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 400;
             line-height: 1.6;
+            opacity: 0.9;
         }
 
-        /* Formularios con más espacio */
+        /* Formularios modernos */
         .form-group {
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            position: relative;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            color: var(--gray-70);
-            font-weight: 400;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 600;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            opacity: 0.9;
         }
 
         .input-container {
@@ -240,242 +332,419 @@
 
         .form-input {
             width: 100%;
-            padding: 16px 16px 16px 50px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--gray-40);
-            border-radius: 3px;
-            color: var(--white);
-            font-size: 1rem;
-            transition: all 0.2s ease;
+            padding: 20px 20px 20px 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--gray-70);
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.2);
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            transform: translateY(-2px);
         }
 
         .input-icon {
             position: absolute;
-            left: 16px;
+            left: 22px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray-70);
-            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
         }
 
-        /* Opciones del formulario con más espacio */
+        .form-input:focus + .input-icon {
+            color: var(--primary);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Select personalizado */
+        .form-input[type="select"] {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 20px;
+        }
+
+        /* Opciones del formulario */
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 35px;
-            font-size: 0.9rem;
+            margin-bottom: 40px;
         }
 
         .remember {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .checkbox-container {
+            position: relative;
+            width: 44px;
+            height: 24px;
         }
 
         .checkbox {
-            width: 18px;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkbox-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 34px;
+            transition: .4s;
+        }
+
+        .checkbox-slider:before {
+            position: absolute;
+            content: "";
             height: 18px;
-            accent-color: var(--gray-70);
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        .checkbox:checked + .checkbox-slider {
+            background: var(--gradient-primary);
+        }
+
+        .checkbox:checked + .checkbox-slider:before {
+            transform: translateX(20px);
         }
 
         .forgot-link {
-            color: var(--gray-70);
+            color: var(--primary);
             text-decoration: none;
-            transition: all 0.2s ease;
-            padding: 5px 10px;
-            border-radius: 2px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: rgba(99, 102, 241, 0.1);
         }
 
         .forgot-link:hover {
-            color: var(--white);
-            background: rgba(255, 255, 255, 0.05);
-            text-decoration: none;
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
-        /* Botones educativos más grandes */
+        /* Botones modernos */
         .btn {
-            padding: 18px 30px;
-            border: 1px solid var(--gray-40);
-            border-radius: 3px;
-            font-size: 1rem;
-            font-weight: 500;
+            padding: 22px 40px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--white);
+            gap: 15px;
+            margin-top: 25px;
+            color: white;
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--gray-60);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn:active {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .btn-icon {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
 
         /* Toggle entre formularios */
         .toggle {
             text-align: center;
-            margin-top: 35px;
-            padding-top: 25px;
-            border-top: 1px solid var(--gray-40);
-            font-size: 0.95rem;
+            margin-top: 45px;
+            padding-top: 35px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1rem;
         }
 
         .toggle-link {
-            color: var(--gray-70);
+            color: var(--text-light);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            padding: 5px 15px;
-            border-radius: 3px;
+            transition: all 0.3s ease;
+            padding: 12px 24px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
             display: inline-block;
-            margin-top: 5px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .toggle-link:hover {
-            color: var(--white);
-            background: rgba(255, 255, 255, 0.05);
-            text-decoration: none;
-            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
         }
 
         /* Indicador de tarjeta activa */
         .card.active {
-            border-color: var(--gray-70);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            transform: translateY(-10px) scale(1.02);
         }
 
         .card.active::before {
-            background: var(--white);
-            opacity: 0.9;
-            height: 5px;
+            opacity: 1;
         }
 
-        /* Mensaje educativo adicional */
+        /* Botón de cambio de tema */
+        .theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            animation: slideInRight 0.8s ease-out 0.4s both;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(45deg) scale(1.1);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+        }
+
+        .theme-icon {
+            font-size: 1.5rem;
+            color: white;
+            transition: transform 0.4s ease;
+        }
+
+        /* Mensaje educativo */
         .educational-note {
-            margin-top: 50px;
+            margin-top: 60px;
             text-align: center;
-            color: var(--gray-70);
-            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
             max-width: 800px;
             line-height: 1.6;
-            padding: 20px;
-            border-top: 1px solid var(--gray-40);
+            padding: 25px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             width: 100%;
+            animation: fadeIn 1s ease-out 0.6s both;
         }
 
-        /* Animación sutil para elementos */
+        /* Animaciones */
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
         }
 
-        .floating {
-            animation: float 8s ease-in-out infinite;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.1); opacity: 0.2; }
         }
 
-        /* Efecto de brillo en hover */
-        .card:hover .card-icon {
-            color: var(--white);
-            transition: color 0.3s ease;
+        @keyframes logoFloat {
+            0%, 100% { transform: rotate(45deg) translateY(0); }
+            50% { transform: rotate(45deg) translateY(-15px); }
         }
 
-        /* Responsive - manteniendo el tamaño en móviles */
-        @media (max-width: 1000px) {
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Efectos de partículas */
+        .particles-container {
+            pointer-events: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
             .cards {
                 flex-direction: column;
                 align-items: center;
-                gap: 35px;
+                gap: 45px;
             }
             
             .card {
                 width: 100%;
-                max-width: 600px;
-                min-height: 620px;
-                padding: 45px 35px;
+                max-width: 650px;
+                min-height: 680px;
+                padding: 50px 40px;
             }
             
             .logo-text {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
             
-            .logo-icon {
-                font-size: 2.5rem;
+            .logo-icon-wrapper {
+                width: 70px;
+                height: 70px;
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .card {
-                padding: 40px 30px;
-                min-height: 600px;
+                padding: 45px 35px;
+                min-height: 650px;
                 min-width: 100%;
             }
             
             .logo {
                 flex-direction: column;
-                gap: 10px;
+                gap: 15px;
+            }
+            
+            .logo-text {
+                font-size: 2.5rem;
+            }
+            
+            .logo-icon-wrapper {
+                width: 65px;
+                height: 65px;
+            }
+            
+            .btn {
+                padding: 20px 30px;
+            }
+            
+            .form-input {
+                padding: 18px 18px 18px 55px;
+            }
+            
+            .card-title {
+                font-size: 1.9rem;
+            }
+            
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 40px 25px;
             }
             
             .logo-text {
                 font-size: 2.2rem;
             }
             
-            .logo-icon {
-                font-size: 2.2rem;
-            }
-            
             .btn {
-                padding: 16px 25px;
+                padding: 18px 25px;
             }
             
             .form-input {
-                padding: 14px 14px 14px 45px;
+                padding: 16px 16px 16px 50px;
             }
             
             .card-title {
-                font-size: 1.6rem;
+                font-size: 1.7rem;
+            }
+            
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                border-radius: 14px;
+            }
+            
+            .theme-icon {
+                font-size: 1.3rem;
             }
         }
 
         /* Mejoras de accesibilidad */
         .form-input::placeholder {
-            color: var(--gray-60);
+            color: var(--text-muted);
             opacity: 0.7;
         }
 
         .form-input:-webkit-autofill,
         .form-input:-webkit-autofill:hover,
         .form-input:-webkit-autofill:focus {
-            -webkit-text-fill-color: var(--white);
-            -webkit-box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.3) inset;
+            -webkit-text-fill-color: var(--text-light);
+            -webkit-box-shadow: 0 0 0px 1000px rgba(30, 41, 59, 0.8) inset;
             transition: background-color 5000s ease-in-out 0s;
-        }
-
-        /* Efecto de enfoque mejorado */
-        .form-input:focus + .input-icon {
-            color: var(--white);
-            transform: translateY(-50%) scale(1.1);
         }
 
         /* Espaciado adicional para contenido */
@@ -485,44 +754,74 @@
             flex-direction: column;
             justify-content: space-between;
         }
+
+        /* Efecto de brillo en elementos */
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: var(--gradient-primary);
+            filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 0.4;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Fondo educativo -->
-    <div class="background"></div>
+    <!-- Botón de cambio de tema -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-palette theme-icon"></i>
+    </button>
     
-    <!-- Elementos educativos abstractos -->
-    <div class="education-elements">
-        <div class="element element-1 floating"></div>
-        <div class="element element-2 floating" style="animation-delay: 2s;"></div>
-        <div class="element element-3 floating" style="animation-delay: 4s;"></div>
+    <!-- Fondo con partículas -->
+    <div class="particles-container" id="particles"></div>
+    
+    <!-- Elementos educativos modernos -->
+    <div class="modern-elements">
+        <div class="element element-1"></div>
+        <div class="element element-2"></div>
+        <div class="element element-3"></div>
     </div>
 
     <div class="container">
-        <!-- Header educativo -->
+        <!-- Header educativo moderno -->
         <div class="header">
             <div class="logo">
-                <i class="fas fa-graduation-cap logo-icon"></i>
+                <div class="logo-icon-wrapper">
+                    <i class="fas fa-graduation-cap logo-icon"></i>
+                </div>
                 <h1 class="logo-text">Karuna</h1>
             </div>
             <p class="tagline">Accede a recursos educativos premium, cursos interactivos y una comunidad de aprendizaje colaborativo. Plataforma certificada para instituciones educativas.</p>
         </div>
 
-        <!-- Sistema de tarjetas MÁS GRANDES -->
+        <!-- Sistema de tarjetas MÁS GRANDES y modernas -->
         <div class="cards">
             <!-- Tarjeta de Login -->
             <div class="card active" id="loginCard">
                 <div class="card-header">
-                    <h2 class="card-title">
+                    <div class="card-icon-wrapper">
                         <i class="fas fa-sign-in-alt card-icon"></i>
+                    </div>
+                    <h2 class="card-title">
                         Acceso a la Plataforma
                     </h2>
                     <p class="card-subtitle">Ingresa con tus credenciales institucionales para acceder a todos los recursos educativos, cursos en línea, materiales de estudio y sistema de evaluaciones.</p>
                 </div>
                 
                 <div class="form-content">
-                    <form id="loginForm">
+                    <form id="loginForm" method="post">
                         {% csrf_token %}
                         <div class="form-group">
                             <label class="form-label">Correo Institucional</label>
@@ -542,13 +841,16 @@
                         
                         <div class="form-options">
                             <div class="remember">
-                                <input type="checkbox" id="remember" class="checkbox">
-                                <label for="remember">Mantener sesión activa</label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="remember" class="checkbox">
+                                    <span class="checkbox-slider"></span>
+                                </label>
+                                <span>Mantener sesión activa</span>
                             </div>
                             <a href="#" class="forgot-link">¿Problemas de acceso?</a>
                         </div>
                         
-                        <button type="submit" class="btn">
+                        <button type="submit" class="btn glow-effect">
                             <i class="fas fa-sign-in-alt btn-icon"></i>
                             Iniciar Sesión Educativa
                         </button>
@@ -559,26 +861,28 @@
                         <span class="toggle-link" id="showSignup">Crear nueva cuenta de estudiante</span>
                     </div>
                 </div>
-                <div class="card-decoration">Acceso seguro - Certificado ISO 27001</div>
             </div>
             
             <!-- Tarjeta de Registro -->
             <div class="card" id="signupCard">
                 <div class="card-header">
-                    <h2 class="card-title">
+                    <div class="card-icon-wrapper">
                         <i class="fas fa-user-plus card-icon"></i>
+                    </div>
+                    <h2 class="card-title">
                         Registro de Estudiante
                     </h2>
                     <p class="card-subtitle">Crea tu cuenta para acceder a la plataforma educativa completa. Recibirás acceso inmediato a cursos, biblioteca digital y herramientas de aprendizaje colaborativo.</p>
                 </div>
                 
                 <div class="form-content">
+                    {% csrf_token %}
                     <form id="signupForm">
                         <div class="form-group">
                             <label class="form-label">Nombre Completo</label>
                             <div class="input-container">
                                 <i class="fas fa-user input-icon"></i>
-                                <input type="text" class="form-input" placeholder="Nombre y Apellido" required>
+                                <input type="text" class="form-input" name="registro-nombre" placeholder="Nombre y Apellido" required>
                             </div>
                         </div>
                         
@@ -586,7 +890,7 @@
                             <label class="form-label">Correo Electrónico</label>
                             <div class="input-container">
                                 <i class="fas fa-envelope input-icon"></i>
-                                <input type="email" class="form-input" placeholder="correo@ejemplo.com" required>
+                                <input type="email" class="form-input" name="registro-correo" placeholder="correo@ejemplo.com" required>
                             </div>
                         </div>
                         
@@ -594,7 +898,7 @@
                             <label class="form-label">Institución Educativa</label>
                             <div class="input-container">
                                 <i class="fas fa-school input-icon"></i>
-                                <input type="text" class="form-input" placeholder="Nombre de tu institución o universidad" required>
+                                <input type="text" class="form-input" name="registro-institucion" placeholder="Nombre de tu institución o universidad" required>
                             </div>
                         </div>
                         
@@ -602,7 +906,7 @@
                             <label class="form-label">Nivel Educativo</label>
                             <div class="input-container">
                                 <i class="fas fa-graduation-cap input-icon"></i>
-                                <select class="form-input" required>
+                                <select class="form-input" name="registro-nivel-educativo" required style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 20px center; background-size: 20px;">
                                     <option value="">Selecciona tu nivel</option>
                                     <option value="secundaria">Educación Secundaria</option>
                                     <option value="pregrado">Pregrado / Universidad</option>
@@ -617,7 +921,7 @@
                             <label class="form-label">Contraseña</label>
                             <div class="input-container">
                                 <i class="fas fa-lock input-icon"></i>
-                                <input type="password" class="form-input" placeholder="Mínimo 8 caracteres, mayúsculas y números" required>
+                                <input type="password" class="form-input" name="registro-contrasena" placeholder="Mínimo 8 caracteres, mayúsculas y números" required>
                             </div>
                         </div>
                         
@@ -625,18 +929,21 @@
                             <label class="form-label">Confirmar Contraseña</label>
                             <div class="input-container">
                                 <i class="fas fa-lock input-icon"></i>
-                                <input type="password" class="form-input" placeholder="Repite tu contraseña para verificación" required>
+                                <input type="password" class="form-input" name="registro-confirmacion-contrasena" placeholder="Repite tu contraseña para verificación" required>
                             </div>
                         </div>
                         
                         <div class="form-options">
                             <div class="remember">
-                                <input type="checkbox" id="terms" class="checkbox" required>
-                                <label for="terms">Acepto los términos y condiciones educativos</label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="terms" class="checkbox" required>
+                                    <span class="checkbox-slider"></span>
+                                </label>
+                                <span>Acepto los términos y condiciones educativos</span>
                             </div>
                         </div>
                         
-                        <button type="submit" class="btn">
+                        <button type="submit" class="btn glow-effect">
                             <i class="fas fa-user-plus btn-icon"></i>
                             Completar Registro Educativo
                         </button>
@@ -647,7 +954,6 @@
                         <span class="toggle-link" id="showLogin">Acceder con credenciales existentes</span>
                     </div>
                 </div>
-                <div class="card-decoration">Educación de calidad - Aprendizaje continuo</div>
             </div>
         </div>
         
@@ -655,11 +961,48 @@
             <p><i class="fas fa-shield-alt"></i> Plataforma segura con encriptación de datos. Cumple con estándares internacionales de protección de información educativa.</p>
         </div>
     </div>
-
-    <script src="{% static 'js/login.js' %}" defer></script>
-    <!-- JavaScript para efectos visuales -->
+   <script src="{% static 'js/login.js' %}"></script>
+    <script src="{% static 'js/register.js' %}"></script>
     <script>
-        // 1. Alternar entre tarjetas de login y registro
+        // Solo efectos visuales, sin funcionalidad de login/registro
+        
+        // 1. Crear partículas animadas
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 6 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posición aleatoria
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Color aleatorio
+                const colors = [
+                    'rgba(99, 102, 241, 0.8)',
+                    'rgba(6, 182, 212, 0.8)',
+                    'rgba(245, 158, 11, 0.8)'
+                ];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = color;
+                
+                // Animación personalizada
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                particle.style.animation = `float ${duration}s infinite linear ${delay}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // 2. Alternar entre tarjetas de login y registro
         const loginCard = document.getElementById('loginCard');
         const signupCard = document.getElementById('signupCard');
         const showSignupBtn = document.getElementById('showSignup');
@@ -674,11 +1017,16 @@
             activeCard.classList.add('active');
             
             // Efecto visual de transición
-            activeCard.style.transform = 'translateY(-5px) scale(1.02)';
+            activeCard.style.transform = 'translateY(-10px) scale(1.02)';
+            activeCard.style.zIndex = '2';
             inactiveCard.style.transform = 'translateY(0) scale(1)';
+            inactiveCard.style.zIndex = '1';
+            
+            // Efecto de brillo
+            activeCard.style.boxShadow = '0 40px 80px rgba(0, 0, 0, 0.6)';
             
             setTimeout(() => {
-                activeCard.style.transform = 'translateY(-5px)';
+                activeCard.style.transform = 'translateY(-10px) scale(1.02)';
             }, 300);
         }
         
@@ -692,20 +1040,20 @@
             activateCard(loginCard, signupCard);
         });
         
-        // 2. Efectos en formularios
+        // 3. Efectos en formularios
         const inputs = document.querySelectorAll('.form-input');
         
         inputs.forEach(input => {
             // Efecto al enfocar
             input.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'translateY(-3px)';
-                this.parentElement.style.transition = 'transform 0.2s ease';
+                this.parentElement.style.transform = 'translateY(-5px)';
+                this.parentElement.style.transition = 'transform 0.3s ease';
                 
                 // Resaltar el icono
                 const icon = this.previousElementSibling;
                 if (icon && icon.classList.contains('input-icon')) {
-                    icon.style.color = 'var(--white)';
-                    icon.style.transform = 'translateY(-50%) scale(1.1)';
+                    icon.style.color = 'var(--primary)';
+                    icon.style.transform = 'translateY(-50%) scale(1.2)';
                 }
             });
             
@@ -717,143 +1065,172 @@
                 const icon = this.previousElementSibling;
                 if (icon && icon.classList.contains('input-icon')) {
                     if (!this.value) {
-                        icon.style.color = 'var(--gray-70)';
+                        icon.style.color = 'var(--text-muted)';
                         icon.style.transform = 'translateY(-50%) scale(1)';
+                    }
+                }
+            });
+            
+            // Efecto al escribir
+            input.addEventListener('input', function() {
+                if (this.value) {
+                    const icon = this.previousElementSibling;
+                    if (icon && icon.classList.contains('input-icon')) {
+                        icon.style.color = 'var(--primary)';
                     }
                 }
             });
         });
         
-        // 3. Efectos de hover en tarjetas más pronunciados
+        // 4. Efectos de hover en tarjetas más pronunciados
         const cards = document.querySelectorAll('.card');
         
         cards.forEach(card => {
             card.addEventListener('mouseenter', function() {
                 if (!this.classList.contains('active')) {
-                    this.style.transform = 'translateY(-5px)';
-                    this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.25)';
+                    this.style.transform = 'translateY(-8px) scale(1.01)';
+                    this.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.4)';
                 } else {
-                    this.style.transform = 'translateY(-7px)';
-                    this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.35)';
+                    this.style.transform = 'translateY(-12px) scale(1.03)';
+                    this.style.boxShadow = '0 35px 70px rgba(0, 0, 0, 0.5)';
                 }
             });
             
             card.addEventListener('mouseleave', function() {
                 if (!this.classList.contains('active')) {
-                    this.style.transform = 'translateY(0)';
-                    this.style.boxShadow = 'none';
+                    this.style.transform = 'translateY(0) scale(1)';
+                    this.style.boxShadow = 'var(--shadow-lg)';
                 } else {
-                    this.style.transform = 'translateY(-5px)';
-                    this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.3)';
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                    this.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.5)';
                 }
             });
         });
         
-        // 4. Efecto de validación de formularios
-        const forms = document.querySelectorAll('form');
-        
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const submitBtn = this.querySelector('.btn');
-                const originalText = submitBtn.innerHTML;
-                
-                // Efecto de carga
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin btn-icon"></i> Procesando solicitud...';
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.7';
-                
-                // Simular validación
-                setTimeout(() => {
-                    // Restaurar botón
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                    submitBtn.style.opacity = '1';
-                    
-                    // Efecto de éxito
-                    submitBtn.style.borderColor = 'var(--gray-70)';
-                    submitBtn.style.background = 'linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))';
-                    
-                    // Restaurar después de 2 segundos
-                    setTimeout(() => {
-                        submitBtn.style.borderColor = '';
-                        submitBtn.style.background = '';
-                    }, 2000);
-                }, 2000);
-            });
-        });
-        
-        // 5. Animación de elementos flotantes
+        // 5. Animación de elementos de fondo
         function animateElements() {
             const elements = document.querySelectorAll('.element');
             
             elements.forEach((element, index) => {
-                // Movimiento más pronunciado
-                const randomX = Math.random() * 20 - 10;
-                const randomY = Math.random() * 20 - 10;
-                const randomRotate = Math.random() * 10 - 5;
+                // Movimiento suave
+                const randomX = Math.random() * 30 - 15;
+                const randomY = Math.random() * 30 - 15;
                 
-                element.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg)`;
+                element.style.transform = `translate(${randomX}px, ${randomY}px) scale(${1 + Math.random() * 0.1})`;
                 
                 // Cambio de opacidad
-                const newOpacity = 0.5 + Math.random() * 0.3;
+                const newOpacity = 0.1 + Math.random() * 0.1;
                 element.style.opacity = newOpacity;
             });
             
-            setTimeout(animateElements, 3500);
+            setTimeout(animateElements, 5000);
         }
-        
-        setTimeout(animateElements, 2000);
         
         // 6. Efecto de aparición de elementos
         document.addEventListener('DOMContentLoaded', function() {
+            // Crear partículas
+            createParticles();
+            
             const cards = document.querySelectorAll('.card');
             const header = document.querySelector('.header');
+            const themeToggle = document.getElementById('themeToggle');
             
             // Inicialmente ocultos
             header.style.opacity = '0';
-            header.style.transform = 'translateY(-30px)';
+            header.style.transform = 'translateY(-40px)';
             cards.forEach(card => {
                 card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
+                card.style.transform = 'translateY(40px) scale(0.95)';
             });
+            themeToggle.style.opacity = '0';
+            themeToggle.style.transform = 'translateX(50px) rotate(-90deg)';
             
             // Animación de entrada
             setTimeout(() => {
-                header.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                header.style.transition = 'opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1)';
                 header.style.opacity = '1';
                 header.style.transform = 'translateY(0)';
             }, 300);
             
+            setTimeout(() => {
+                themeToggle.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                themeToggle.style.opacity = '1';
+                themeToggle.style.transform = 'translateX(0) rotate(0deg)';
+            }, 800);
+            
             cards.forEach((card, index) => {
                 setTimeout(() => {
-                    card.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                    card.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
                     card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 500 + (index * 300));
+                    card.style.transform = 'translateY(0) scale(1)';
+                }, 500 + (index * 400));
             });
+            
+            // Iniciar animación de elementos
+            setTimeout(animateElements, 2000);
         });
         
-        // 7. Efecto de foco en campos importantes
-        const importantFields = document.querySelectorAll('input[required], select[required]');
+        // 7. Efecto visual del botón de tema (solo visual)
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.theme-icon');
         
-        importantFields.forEach(field => {
-            field.addEventListener('focus', function() {
-                const label = this.closest('.form-group').querySelector('.form-label');
-                if (label) {
-                    label.style.color = 'var(--white)';
-                    label.style.fontWeight = '500';
+        themeToggle.addEventListener('click', function() {
+            // Solo efecto visual de clic
+            themeIcon.style.transform = 'rotate(180deg) scale(1.2)';
+            
+            // Efecto de rebote
+            this.style.transform = 'rotate(90deg) scale(0.9)';
+            
+            setTimeout(() => {
+                themeIcon.style.transform = 'rotate(0deg) scale(1)';
+                this.style.transform = 'rotate(45deg) scale(1.1)';
+            }, 300);
+            
+            setTimeout(() => {
+                this.style.transform = 'rotate(0deg) scale(1)';
+            }, 600);
+        });
+        
+        themeToggle.addEventListener('mouseenter', function() {
+            themeIcon.style.transform = 'rotate(45deg) scale(1.1)';
+            this.style.boxShadow = '0 15px 40px rgba(99, 102, 241, 0.5)';
+        });
+        
+        themeToggle.addEventListener('mouseleave', function() {
+            themeIcon.style.transform = 'rotate(0deg) scale(1)';
+            this.style.boxShadow = '0 10px 30px rgba(99, 102, 241, 0.3)';
+        });
+        
+        // 8. Efecto de brillo en botones al pasar el mouse
+        const buttons = document.querySelectorAll('.btn');
+        
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                const after = this.querySelector('.btn-icon');
+                if (after) {
+                    after.style.transform = 'translateX(5px)';
                 }
             });
             
-            field.addEventListener('blur', function() {
-                if (!this.value) {
-                    const label = this.closest('.form-group').querySelector('.form-label');
-                    if (label) {
-                        label.style.color = 'var(--gray-70)';
-                        label.style.fontWeight = '400';
-                    }
+            button.addEventListener('mouseleave', function() {
+                const after = this.querySelector('.btn-icon');
+                if (after) {
+                    after.style.transform = 'translateX(0)';
+                }
+            });
+        });
+        
+        // 9. Efecto de checkbox personalizado
+        const checkboxes = document.querySelectorAll('.checkbox');
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const slider = this.nextElementSibling;
+                if (this.checked) {
+                    slider.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        slider.style.transform = 'scale(1)';
+                    }, 200);
                 }
             });
         });

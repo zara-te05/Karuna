@@ -1,0 +1,37 @@
+1. Modelos descriptivos (NO ML, pero fundamentales) 
+    1.1 - Promedio de calificaciones
+    1.2 - Mediana
+    1.3 - Moda
+    1.4 - Porcentaje de inasistencias
+    1.5 - Tendencia simple (↑ ↓)
+
+
+2. Agrupamiento (clustering) [Para responder: “¿Qué tipos de alumnos tengo en este grupo?”]
+    Modelos ideales en sklearn:
+        2.1 - KMeans
+        2.2 - DBSCAN
+        2.3 - AgglomerativeClustering
+    
+    Variables típicas:
+        * Inasistencias
+        * Promedio
+        * Número de materias
+        * Edad
+
+    Útil para:
+        * Detectar perfiles
+        * Identificar alumnos atípicos
+        * Comparar grupos
+
+
+3. Predicción de riesgo (SUPERVISADO) Pregunta: “¿Este alumno tiene alto riesgo de reprobar / abandonar?”
+    Modelos ideales:
+        3.1 - LogisticRegression 
+        3.2 DecisionTreeClassifier
+        3.3 RandomForestClassifier 
+        3.4 GradientBoosting 
+
+4. Modelos temporales / de supervivencia 
+    Modelos ideales:
+        Kaplan–Meier
+        Cox Proportional Hazards

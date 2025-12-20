@@ -23,3 +23,22 @@ def login_api(request):
             return JsonResponse({"success": False})
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
+
+def register_api(request):  
+    if request.method == "POST":
+        data = json.loads(request.body)
+        
+        nombre = data.get('nombre')
+        email = data.get('email')
+        password = data.get('password')
+        password_confirmacion = data.get('password_confirmacion')
+        institucion = data.get('institucion')
+        nivel_educativo = data.get('nivel_educativo')
+    
+    if not all([nombre, email, password, password_confirmacion, institucion, nivel_educativo]):
+        return JsonResponse({'error': 'Datos incompletos'}, status = 400)
+    
+    if password != password_confirmacion:
+        return JsonResponse({'error' : 'Las claves no coinciden'}, status=400)
+    
+    return JsonResponse({'succes':True})

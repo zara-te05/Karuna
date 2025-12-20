@@ -23,7 +23,9 @@ function ValidacionesLogin(e){
     email = email.trim();
     password = password.trim();
 
+    console.log(email, password)
     enviarLogin(email, password);
+    
 }
 
 function enviarLogin(email, password) {
@@ -36,6 +38,7 @@ function enviarLogin(email, password) {
         body: JSON.stringify({ email, password })
     })
     .then(response => {
+       
         if (!response.ok) {
             throw new Error('Error HTTP: ' + response.status);
         }
@@ -54,7 +57,6 @@ function enviarLogin(email, password) {
         console.error('Error:', error);
     });
 }
-
 
 function getCSRFToken() {
     return document.querySelector('[name=csrfmiddlewaretoken]').value;
