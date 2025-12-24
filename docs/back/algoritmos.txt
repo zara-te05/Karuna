@@ -1,9 +1,29 @@
-1. Modelos descriptivos (NO ML, pero fundamentales) 
+1. Modelos Descriptivos (NO ML, pero fundamentales) 
     1.1 - Promedio de calificaciones
-    1.2 - Mediana
-    1.3 - Moda
+
+        1.1.1 Promedio Individual por Parcial
+            1.1.1.1 -> Promedio Individual Final
+
+        1.1.2 Promedio Grupal por Parcial
+            1.1.1.2  -> Promedio Grupal Final
+
+    1.2 - Diferencia contra el promedio grupal
+        Nota -> Consiste en medir el promedio de un solo alumno contra la sumatoria del promedio del resto
+
+    1.3 - Índice de reprobacion 
+        1.3.1 Por alumno
+        1.3.2 Por grupo
+
     1.4 - Porcentaje de inasistencias
-    1.5 - Tendencia simple (↑ ↓)
+        1.4.1 Por alumno
+        1.4.2 Por grupo
+
+    1.5 - Consistencia (variabilidad simple)
+            * Nota -> max(calificaciones) - min(calificaciones)
+
+    1.6 - Progreso entre periodos (Δ real)
+            1.6.1 - Progreso Individual
+            1.6.2 - Progreso por grupo
 
 
 2. Agrupamiento (clustering) [Para responder: “¿Qué tipos de alumnos tengo en este grupo?”]
@@ -23,7 +43,6 @@
         * Identificar alumnos atípicos
         * Comparar grupos
 
-
 3. Predicción de riesgo (SUPERVISADO) Pregunta: “¿Este alumno tiene alto riesgo de reprobar / abandonar?”
     Modelos ideales:
         3.1 - LogisticRegression 
@@ -35,3 +54,189 @@
     Modelos ideales:
         Kaplan–Meier
         Cox Proportional Hazards
+
+
+
+
+Planteamiento de Modelos Descriptivos(1):
+   
+    Promedio por alumno de un solo parcial -> Se compone por( 
+                               
+                               [Valor de examen,                     Calificacion del examen]
+                               [Valor de asistencia,                 Calificacion de la asistencia]
+                               [Valor de participaciones       ->>   Calificaciones de las participaciones]              
+                               [Valor de conducta                    Calificacion conducta]
+                               [Valor Tareas                         Calificacion Tareas]
+
+                               Sea:
+                                    E = Calificacion de examen
+                                    A = Calificacion de asistencia
+                                    P = promedio de participaciones
+                                    C = calificacion de conducta
+                                    T = promedio de Tareas
+                              
+                               Y:
+                                    wE, wA, wP, wC, wT = pesos definidos por el docente
+
+                               Vease pues:
+                                    (E * wE) + (A * wA) + (P * wP) + (C * wC) + (T * wT)
+                                    ---------------------------------------------------------    ===  Calificacion del parcial N
+                                                        wE + wA + wP + wC + wt
+
+                        );
+    
+    Promedio por alumno final (de todos los parciales) -> Se compone por(
+
+                                [Promedio del parcial N]
+                                [Cantidad de parciales]
+
+                                Sea:
+                                    Ei = calificacion del parcial I
+                                    P = numero de parciales N
+
+                                Vease pues:
+                                    E1 + E2 + ... Ei 
+                                  --------------------
+                                            n
+                        );
+    
+   Promedio Grupal por Parcial -> Se compone por(
+
+                                [Promedio N de cada alumno]
+                                [Cantidad de alumnos por grupo]
+                        
+                                Sea:
+                                    Pi = promedio de cada alumno
+                                    C = cantidad de alumnos
+                                
+                                Vease pues:
+                                    P1 + P2 ... + Pi
+                                  -------------------- === PGP (Promedio Grupal por Parcial)
+                                          c
+                        );
+
+   Diferencia contra el promedio grupal por parcial -> Se compone por(
+
+                                    [Promedio del alumno]
+                                    [Promedio Grupal]
+                                    [Nota minima esperada (minimo de calificacion aprobatoria designada por el docente)]
+
+                                    Sea:
+                                        Pa = Promedio del alumno seleccionado
+                                        Pg = Promedio del general del grupo por parcial o final 
+                                        M = Nota minima 
+                                    
+                                    Vease pues:
+                                        Pa - Pg = DA (Diferencia del Alumno)
+                                            * Si DA >= 0 -> Alumno por encima del grupo
+                                            * Si DA < 0 -> Alumno en riesgo
+
+                                        Pa - M = DAM (Diferencia del Alumno con respecto a la nota minima)
+                                            * Si DAM >= 0 -> Alumno aprobado
+                                            * Si DAM < 0 -> Alumno en riesgo
+
+                                        Pg - M = DGM  (Diferencia del colectivo con respecto a la nota minima)
+                                            * Si DGM >= 0 -> Grupo aprobado en promedio
+                                            * Si DGM < 0 -> Grupo en riesgo
+                                    
+                            );
+
+   Aprobacion de Alumnos -> Se compone por(
+
+                                    [Promedio del alumno por parcial]
+                                    [Promedio del alumno final]
+
+                                    [Nota minima de aprobacion]
+
+                                    Sea:
+                                        PA = promedio del alumno por parcial
+                                        PF = promedio final
+                                        N = nota minima 
+
+                                    Vease pues: 
+                                        DP (Desglose por parcial) == PA - N 
+                                            * Si DP >= 0 -> Estado parcial satisfactorio
+                                            * Si DP < 0 -> Alumno en riesgo parcial
+                                        
+                                        DF (Desglose final) == PF - N
+                                            * Si DF >= 0 -> Alumno aprobado
+                                            * Si DF < 0 -> Alumno en riesgo
+
+                            );
+
+   Aprobacion de Grupos -> Se compone por(
+
+                                [Lista de promedios por parcial]
+                                [Lista de promedios finales]
+                                [Nota minima]
+
+                                Sea:
+                                    PGP = promedio grupal por parcial
+                                    PGF = promedio grupal final
+                                    N = nota mínima aprobatoria
+                                
+                                Vease pues: 
+                                    DPG (Desglose por parcial grupal) == PGP - N
+                                        * Si DPG >= 0 -> Estado parcial satisfactorio
+                                        * Si DPG < 0 -> Alumno en riesgo parcial
+
+                                    DFG (Desglose final grupal) == PGF - N
+                                        * Si DFG >= 0 -> Alumnos aprobados
+                                        * Si DFG < 0 -> Alumnos en riesgo
+
+                        );
+
+   Porcentaje de Inasistencias Individual -> Se compone por(
+
+                                [Total de asistencias por parcial]
+                                [Total de asistencias por periodo completo]
+                                [Total de asistencias del alumno]
+                                [Limite de faltas tolerado]
+                                [Asistencias esperadas por parcial]
+                                [Sumatoria total de falta de todos los alumnos]
+                                [Peso asignado por el docente a la asistencia]
+
+                                Sea:
+                                    AE = Asistencias esperadas
+                                    AR = Asistencias reales del alumno
+                                    F = Faltas del alumno
+                                    L = Limite de faltas tolerado
+                                    PA = Porcentaje de asistencia
+                                    WA = Peso asignado por el docente a la asistencia
+                                    
+                                Vease pues:
+
+                                    F (Faltas del alumno) == AE - AR
+                                        * Si F < 0 -> Error de datos
+                                        * Si F = 0 -> Asistencia perfecta
+
+                                    Regla de asistencia:
+                                        * Si TFA >= LTT -> Alumno no aprobado por faltas 
+                                        * Si TFA < LTT -> Alumno con asistencias acreditadas
+                                    
+                                                                         AR
+                                    PA   (Porcentaje de asistencia) ==  ---- * 100
+                                                                         AR
+
+                                                                         PA
+                                    PJ   (Puntaje por asistencia) ==    ---- * WA
+                                                                         100
+                                                                       
+
+                        );
+
+   Porcentaje de Inasistencias Grupal -> Se compone por(
+
+                                    [Numero de alumnos]
+                                    [Porcentaje de asistencia de cada alumno]
+
+                                    Sea:
+                                        n = Numero de alumnos
+                                        Ai = Porcentaje de asistencias del alumno i 
+                                    
+                                    Vease entonces:
+                                        AG = A1 + A2 + ... + An
+                                      ---------------------------
+                                                    n
+
+                        );

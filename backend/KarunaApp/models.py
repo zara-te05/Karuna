@@ -1,43 +1,50 @@
 from django.db import models
 
-# Create your models here.
 
 class Docente(models.Model):
-    id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     rol = models.CharField(max_length=50)
 
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
+
 
 class Grupo(models.Model):
-    id = models.IntegerField(primary_key=True)
-    descripcion = models.CharField(max_length=500)
     nombre = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=500)
     foto = models.CharField(max_length=1000)
+
     docente = models.ForeignKey(
-        "KarunaApp.Docente",
-        on_delete=models.CASCADE
+        Docente,
+        on_delete=models.CASCADE,
+        related_name="grupos"
     )
+
+    def __str__(self):
+        return self.nombre
 
 
 class Periodo(models.Model):
-    id = models.IntegerField(primary_key=True)
-    cantidad_evaluaciones = models.IntegerField()
+    cantidad_evaluaciones = models.PositiveIntegerField()
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField()
 
+    def __str__(self):
+        return f"{self.fecha_inicio.date()} - {self.fecha_fin.date()}"
+
 
 class GrupoPeriodo(models.Model):
-    id = models.IntegerField(primary_key=True)
-
     grupo = models.ForeignKey(
-        "KarunaApp.Grupo",
-        on_delete=models.CASCADE
+        Grupo,
+        on_delete=models.CASCADE,
+        related_name="periodos"
     )
 
     periodo = models.ForeignKey(
-        "KarunaApp.Periodo",
-        on_delete=models.CASCADE
+        Periodo,
+        on_delete=models.CASCADE,
+        related_name="grupos"
     )
 
     valor_asistencia = models.FloatField()
@@ -45,28 +52,65 @@ class GrupoPeriodo(models.Model):
     valor_participacion = models.FloatField()
     valor_examen = models.FloatField()
 
+    def __str__(self):
+        return f"{self.grupo} / {self.periodo}"
+
 
 class Alumno(models.Model):
-    id = models.IntegerField(primary_key=True)  # antes Identificador
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
-    notas = models.CharField(max_length=1000)
+    notas = models.TextField()
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
 
 
 class GrupoPeriodoAlumno(models.Model):
-    id = models.IntegerField(primary_key=True)
-
     grupo_periodo = models.ForeignKey(
-        "KarunaApp.GrupoPeriodo",
-        on_delete=models.CASCADE
+        GrupoPeriodo,
+        on_delete=models.CASCADE,
+        related_name="alumnos"
     )
 
     alumno = models.ForeignKey(
-        "KarunaApp.Alumno",
-        on_delete=models.CASCADE
+        Alumno,
+        on_delete=models.CASCADE,
+        related_name="grupos"
     )
 
-    asistencias = models.IntegerField()
-    tareas = models.IntegerField()
-    participaciones = models.IntegerField()
+    asistencias = models.PositiveIntegerField(default=0)
+    tareas = models.PositiveIntegerField(default=0)
+    participaciones = models.PositiveIntegerField(default=0)
     examen = models.FloatField()
+
+    class Meta:
+        unique_together = ("grupo_periodo", "alumno")
+
+
+
+class PromedioAlumno(models.Model):
+    alumno = models.ForeignKey(
+        Alumno,
+        on_delete=models.CASCADE,
+        related_name="promedios"
+    )
+
+    grupo_periodo = models.ForeignKey(
+        GrupoPeriodo,
+        on_delete=models.CASCADE,
+        related_name="promedios"
+    )
+
+    numero_parcial = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    # null => promedio final del periodo
+
+    promedio = models.FloatField()
+    fecha_cierre = models.DateTimeField(auto_now_add=True)
+
+    motivo = models.CharField(
+        max_length=100,
+        default="Cierre de parcial"
+    )

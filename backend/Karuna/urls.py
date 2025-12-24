@@ -19,10 +19,12 @@ from django.urls import path
 from KarunaApp.views import login_api
 from KarunaApp.views import login_view
 from KarunaApp.views import register_api
+from KarunaApp.views import prueba_promedios
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", login_view),           # ← login por defecto
     path("api/login/", login_api), 
-    path("api/register/", register_api)
+    path("api/register/", register_api),
+    path("api/promediosIndividuales", prueba_promedios)
 ]
