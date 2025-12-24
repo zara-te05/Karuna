@@ -54,7 +54,7 @@ def prueba_promedios(request, alumno_id, grupo_periodo_id):
         grupo_periodo_id = grupo_periodo_id
     )
     
-    from analytics.descriptivos import Descriptivos
+    from KarunaApp.analytics.descriptivos import Descriptivos
     promedio = Descriptivos.calcular_promedio_individual(gpa)
     
     # Guardar (solo si no existe aún)

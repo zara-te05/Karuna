@@ -26,5 +26,8 @@ urlpatterns = [
     path("", login_view),           # ← login por defecto
     path("api/login/", login_api), 
     path("api/register/", register_api),
-    path("api/promediosIndividuales", prueba_promedios)
+    path(
+        "api/prueba-periodo/<int:alumno_id>/<int:grupo_periodo_id>/",
+         prueba_promedios,
+         name="prubea_promedios")
 ]

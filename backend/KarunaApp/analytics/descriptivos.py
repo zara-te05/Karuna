@@ -14,18 +14,19 @@ class Descriptivos:
             gpa.examen * gp.valor_examen +
             gpa.tareas * gp.valor_tarea +
             gpa.asistencias * gp.valor_asistencia +
-            gpa.participaciones * gp.valor_participacione
+            gpa.participaciones * gp.valor_participacion
         )
             
         suma_pesos = (
             gp.valor_examen +
             gp.valor_tarea +
             gp.valor_asistencia +
-            gp.valor_participacione
+            gp.valor_participacion
         )
             
         return suma/suma_pesos
             
+
 
 
 def promedio_final_alumno(lista_parciales):
