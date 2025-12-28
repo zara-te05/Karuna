@@ -1,0 +1,228 @@
+TABLA DOCENTE
+    Propósito:
+        Almacenar la información básica de los docentes responsables de impartir grupos académicos.
+
+    Campos:
+
+        id: Identificador único del docente. Clave primaria.
+
+        nombre: Nombre del docente.
+
+        apellido: Apellido del docente.
+
+        rol: Rol institucional del docente dentro de la organización académica.
+
+    Relaciones:
+        Un docente puede estar asociado a múltiples grupos.
+
+    Lógica:
+        Esta tabla representa una entidad base e independiente. 
+        No contiene dependencias externas y actúa como punto de referencia para la asignación de grupos.
+
+TABLA GRUPO
+    Propósito:
+     Representar una materia o grupo académico impartido por un docente.
+
+    Campos:
+
+        id: Identificador único del grupo. Clave primaria.
+
+        nombre: Nombre del grupo o materia.
+
+        descripcion: Descripción del contenido académico del grupo.
+
+        foto: Recurso visual asociado al grupo.
+
+        docente_id: Identificador del docente responsable del grupo.
+
+    Relaciones:
+
+        Cada grupo pertenece a un único docente.
+
+        Un docente puede impartir varios grupos.
+
+    Lógica:
+        La tabla grupo encapsula la información académica de la materia y establece la relación directa 
+        entre el contenido impartido y el docente responsable.
+
+TABLA PERIODO
+    Propósito:
+        Definir intervalos de tiempo académicos en los que se imparten los grupos.
+
+    Campos:
+
+        id: Identificador único del periodo. Clave primaria.
+
+        nombre: Identificador lógico del periodo (ej. 2025-1).
+
+        fecha_inicio: Fecha de inicio del periodo académico.
+
+        fecha_fin: Fecha de término del periodo académico.
+
+    Relaciones:
+
+        Un periodo puede contener múltiples grupos.
+
+    Lógica:
+     La tabla periodo define exclusivamente la dimensión temporal del sistema académico. 
+     No incluye criterios de evaluación ni reglas pedagógicas.
+
+
+TABLA GRUPO_PERIODO
+    Propósito:
+     Definir la configuración académica y criterios de evaluación de un grupo en un periodo específico.
+
+    Campos:
+
+        id: Identificador único. Clave primaria.
+
+        grupo_id: Referencia al grupo académico.
+
+        periodo_id: Referencia al periodo académico.
+
+        cantidad_parciales: Número de parciales definidos para el grupo en el periodo.
+
+        peso_asistencia: Peso asignado a la asistencia.
+
+        peso_tarea: Peso asignado a las tareas.
+
+        peso_participacion: Peso asignado a la participación.
+
+        peso_examen: Peso asignado a los exámenes.
+
+    Relaciones:
+
+        Un grupo puede existir en varios periodos.
+
+        Un periodo puede contener múltiples grupos.
+
+        La combinación grupo_id y periodo_id es única.
+
+    Lógica:
+     Esta tabla centraliza la configuración evaluativa definida por el docente para un grupo en un periodo. 
+     Permite flexibilidad académica y evita duplicación de configuraciones.
+
+TABLA ALUMNO
+    Propósito:
+        Almacenar la información básica de los alumnos.
+
+    Campos:
+
+        id: Identificador único del alumno. Clave primaria.
+
+        nombre: Nombre del alumno.
+
+        apellido: Apellido del alumno.
+
+    Relaciones:
+
+      Un alumno puede inscribirse en múltiples grupos y periodos.
+
+    Lógica:
+     Representa una entidad independiente del sistema académico, 
+     utilizada como referencia en inscripciones, evaluaciones y promedios.
+
+TABLA OBSERVACION_ALUMNO
+    Propósito:
+        Registrar observaciones académicas o administrativas asociadas a un alumno.
+
+    Campos:
+
+        id: Identificador único. Clave primaria.
+
+        alumno_id: Referencia al alumno.
+
+        texto: Contenido de la observación.
+
+        fecha: Fecha y hora de registro de la observación.
+
+    Relaciones:
+
+     Un alumno puede tener múltiples observaciones.
+
+    Lógica:
+     Permite el almacenamiento de información cualitativa sin afectar la estructura de las tablas académicas críticas.
+
+TABLA INSCRIPCION
+    Propósito:
+        Representar la pertenencia de un alumno a un grupo en un periodo determinado.
+
+    Campos:
+
+        id: Identificador único. Clave primaria.
+
+        alumno_id: Referencia al alumno.
+
+        grupo_periodo_id: Referencia a la configuración del grupo en un periodo.
+
+        asistencias: Conteo de asistencias del alumno.
+
+        tareas: Conteo de tareas realizadas.
+
+        participaciones: Conteo de participaciones registradas.
+
+    Relaciones:
+
+        Un alumno puede tener múltiples inscripciones.
+
+        Una inscripción corresponde a un único grupo-periodo.
+
+        La combinación alumno_id y grupo_periodo_id es única.
+
+    Lógica:
+     Define la relación académica activa del alumno. No almacena calificaciones, únicamente métricas de seguimiento.
+
+TABLA EVALUACION
+    Propósito:
+        Registrar las calificaciones obtenidas por el alumno en cada parcial.
+
+    Campos:
+
+        id: Identificador único. Clave primaria.
+
+        inscripcion_id: Referencia a la inscripción del alumno.
+
+        numero_parcial: Número secuencial del parcial.
+
+        calificacion: Calificación obtenida en el parcial.
+
+    Relaciones:
+
+        Una inscripción puede tener múltiples evaluaciones.
+
+        Cada parcial es único por inscripción.
+
+    Lógica:
+     Normaliza las evaluaciones parciales, permitiendo un número variable de parciales y eliminando ambigüedades 
+     asociadas a evaluaciones únicas o finales.
+
+TABLA PROMEDIO
+    Propósito:
+        Almacenar los promedios parciales y finales cerrados del alumno.
+
+    Campos:
+
+        id: Identificador único. Clave primaria.
+
+        alumno_id: Referencia al alumno.
+
+        grupo_periodo_id: Referencia al grupo en un periodo.
+
+        numero_parcial: Parcial al que corresponde el promedio. Valor NULL indica promedio final.
+
+        promedio: Valor del promedio calculado.
+
+        fecha_cierre: Fecha y hora del cierre del promedio.
+
+        motivo: Motivo del cierre del promedio.
+
+    Relaciones:
+
+        Un alumno puede tener múltiples promedios.
+
+        Un promedio pertenece a un grupo-periodo específico.
+
+    Lógica:
+        Esta tabla registra resultados consolidados y auditables.
+        No realiza cálculos, únicamente almacena cierres definidos por la lógica de negocio.
+

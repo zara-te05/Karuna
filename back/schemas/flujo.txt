@@ -1,0 +1,11 @@
+HTTP GET
+   ↓
+API (recibe ids)
+   ↓
+Repository (SQL)
+   ↓
+Domain objects (PromedioAlumno)
+   ↓
+Service (calcula promedio)
+   ↓
+API (respuesta)
