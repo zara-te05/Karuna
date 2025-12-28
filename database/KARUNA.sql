@@ -43,3 +43,16 @@ INSERT INTO "KarunaApp_grupoperiodoalumno"
 (alumno_id, grupo_periodo_id, asistencias, tareas, participaciones, examen)
 VALUES
 (1, 1, 10, 8, 9, 8.5);
+
+UPDATE "KarunaApp_grupoperiodoalumno"
+SET examen = 10
+WHERE examen = 8.5 
+
+INSERT INTO "KarunaApp_promedioalumno"
+(alumno_id, grupo_periodo_id, numero_parcial, promedio, fecha_cierre, motivo)
+VALUES
+(1, 1, 1, 8.5, '2025-08-01 08:00:00', 'Parcial 1'),
+(1, 1, 2, 9.0, '2025-09-01 08:00:00', 'Parcial 2'),
+(1, 1, 3, 8.0, '2025-10-01 08:00:00', 'Parcial 3'),
+(1, 1, 4, 9.5, '2025-11-01 08:00:00', 'Parcial 4');
+
