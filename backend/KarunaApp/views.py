@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.http import JsonResponse
-from .models import GrupoPeriodoAlumno
+from .models import GrupoPeriodoAlumno, PromedioAlumno
 import json
 
 # Create your views here.
@@ -48,6 +48,7 @@ def register_api(request):
 
 
 def prueba_promedios(request, alumno_id, grupo_periodo_id):
+    
     gpa = get_object_or_404(
         GrupoPeriodoAlumno,
         alumno_id = alumno_id,
@@ -71,4 +72,25 @@ def prueba_promedios(request, alumno_id, grupo_periodo_id):
         "alumno": f"{gpa.alumno.nombre} {gpa.alumno.apellido}",
         "grupo": gpa.grupo_periodo.grupo.nombre,
         "promedio": promedio
+    })
+    
+def promedio_final_alumno(request, alumno_id, grupo_periodo_id):
+    
+    parciales = PromedioAlumno.objects.filter(
+        alumno_id=alumno_id,
+        grupo_periodo_id=grupo_periodo_id,
+        numero_parcial__isnull=False
+    )
+
+    from KarunaApp.analytics.descriptivos import Descriptivos
+
+    try:
+        promedio = Descriptivos.promedio_final_alumno(parciales)
+    except ValueError as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({
+        "alumno_id": alumno_id,
+        "grupo_periodo_id": grupo_periodo_id,
+        "promedio_final": promedio
     })

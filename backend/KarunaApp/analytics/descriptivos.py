@@ -1,5 +1,6 @@
 from statistics import mean
 
+
 class Descriptivos:
     
     @staticmethod
@@ -25,13 +26,22 @@ class Descriptivos:
         )
             
         return suma/suma_pesos
+    
+    @staticmethod
+    def promedio_final_alumno(parciales):
+
+        if not parciales.exists():
+            raise ValueError("No hay parciales")
+
+        grupo_periodo = parciales.first().grupo_periodo
+        N = grupo_periodo.periodo.cantidad_evaluaciones
+
+        if parciales.count() != N:
+            raise ValueError("Faltan parciales")
+
+        return mean([p.promedio for p in parciales])
             
 
-
-
-def promedio_final_alumno(lista_parciales):
-    
-    return mean(lista_parciales)
 
     
 def promedio_parcial_grupo(parcial_n):

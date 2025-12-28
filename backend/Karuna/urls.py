@@ -19,7 +19,7 @@ from django.urls import path
 from KarunaApp.views import login_api
 from KarunaApp.views import login_view
 from KarunaApp.views import register_api
-from KarunaApp.views import prueba_promedios
+from KarunaApp.views import prueba_promedios, promedio_final_alumno
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +29,10 @@ urlpatterns = [
     path(
         "api/prueba-periodo/<int:alumno_id>/<int:grupo_periodo_id>/",
          prueba_promedios,
-         name="prubea_promedios")
+         name="prueba_promedios"),
+    
+   path("api/prueba-promedio-final/<int:alumno_id>/<int:grupo_periodo_id>/",
+            promedio_final_alumno,
+            name="prueba_promedios_final"
+    )
 ]
