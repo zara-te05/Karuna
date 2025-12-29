@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers.promedios import router as promedios_router
+from routers.descriptivo_routes import router as promedios_router
 
 app = FastAPI()
 

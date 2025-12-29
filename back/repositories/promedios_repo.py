@@ -44,6 +44,38 @@ def obtener_valores_calculo_parcial(numero_control: str, evaluacion_id: int) -> 
         peso_examen=row[8],
     )
 
+def obtener_promedio_final_alumno(alumno_id: int, grupo_periodo_id: int) -> list[PromedioAlumnoDTO]:
+
+    conn = obtener_conexion()
+    cur = conn.cursor()
+
+    sql = """
+        SELECT alumno_id, numero_parcial, promedio
+        FROM promedio
+        WHERE alumno_id = %s
+          AND grupo_periodo_id = %s
+          AND numero_parcial IS NOT NULL
+        ORDER BY numero_parcial
+    """
+
+    cur.execute(sql, (alumno_id, grupo_periodo_id))  # ✅ AQUÍ
+    rows = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    if not rows:
+        return []
+
+    return [
+        PromedioAlumnoDTO(
+            alumno_id=r[0],
+            numero_parcial=r[1],
+            promedio=r[2]
+        )
+        for r in rows
+    ]
+
 
 
 def obtener_promedios_finales(grupo_periodo_id: int) -> list[float]:
@@ -66,3 +98,22 @@ def obtener_promedios_finales(grupo_periodo_id: int) -> list[float]:
 def obtener_promedios_parcial(grupo_periodo_id: int, parcial: int) -> list[PromedioAlumnoDTO]:
     pass
 
+
+def obtener_cantidad_parciales(grupo_periodo_id: int) -> int:
+    conn = obtener_conexion()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT cantidad_parciales FROM grupo_periodo WHERE id = %s",
+        (grupo_periodo_id,)
+    )
+
+    row = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if not row:
+        raise Exception("Grupo periodo no encontrado")
+
+    return row[0]

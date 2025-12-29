@@ -26,18 +26,17 @@ class Descriptivos:
         return suma/suma_pesos
         
     @staticmethod
-    def promedio_final_alumno(parciales):
+    def promedio_final_alumno(parciales : list[PromedioAlumnoDTO], cantidad_parciales_definidos : int) -> float:
 
-        if not parciales.exists():
-            raise ValueError("No hay parciales")
-
-        grupo_periodo = parciales.first().grupo_periodo
-        N = grupo_periodo.periodo.cantidad_evaluaciones
-
-        if parciales.count() != N:
-            raise ValueError("Faltan parciales")
-
-        return mean([p.promedio for p in parciales])
+       numero_parciales = len(parciales)
+       
+       if not parciales:
+           raise Exception('No se encontraron parciales a evaluar')
+       
+       if numero_parciales != cantidad_parciales_definidos:
+           raise Exception('No coinciden el numero de parciales recibidos con los asignados')
+       
+       return mean(p.promedio for p in parciales)
     
     @staticmethod
     def promedio_parcial_grupo(promedios: list[PromedioAlumnoDTO]) -> float:
