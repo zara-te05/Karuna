@@ -74,3 +74,24 @@ INSERT INTO promedio (
 (2, 1, 2, 6.8, 'Parcial 2'),
 (2, 1, 3, 7.5, 'Parcial 3'),
 (2, 1, NULL, 7.10, 'Final');
+
+
+INSERT INTO alumno (nombre, apellido, numero_control) VALUES
+('Luis', 'Ramírez', '2025003');
+INSERT INTO inscripcion (
+    alumno_id, grupo_periodo_id, asistencias, tareas, participaciones
+) VALUES
+(3, 1, 27, 8, 9);
+INSERT INTO evaluacion (
+    inscripcion_id, numero_parcial,
+    valor_asistencia, valor_tarea, valor_participacion, valor_examen
+) VALUES
+(3, 1, 9, 8, 9, 8),
+(3, 2, 8, 8, 9, 9),
+(3, 3, 9, 9, 8, 9);
+INSERT INTO promedio (
+    alumno_id, grupo_periodo_id, numero_parcial, promedio, motivo
+) VALUES
+(3, 1, 1, 8.5, 'Parcial 1'),
+(3, 1, 2, 8.8, 'Parcial 2'),
+(3, 1, 3, 8.9, 'Parcial 3');

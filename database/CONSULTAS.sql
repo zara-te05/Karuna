@@ -21,3 +21,4 @@ INNER JOIN evaluacion e
     ON i.id = e.inscripcion_id
 INNER JOIN grupo_periodo gp
     ON i.grupo_periodo_id = gp.id
+
