@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2d5a27",
+            "on-primary": "#f5f2e8",
+            "background-light": "#f5f2e8",
+            "background-dark": "#1a2e18",
+            "forest-green": "#1b3a1e",
+            "parchment": "#fdfbf3",
+            "scholar-gray": "#3d443d",
+            "earth-gold": "#c5a059"
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"],
+            "serif-accent": ["Playfair Display", "serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          transitionProperty: {
+            'height': 'height',
+            'spacing': 'margin, padding',
+            'opacity': 'opacity',
+            'transform': 'transform',
+          },
+          transitionDuration: {
+            '400': '400ms',
+            '500': '500ms',
+            '600': '600ms',
+          },
+          transitionTimingFunction: {
+            'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+            'bounce-soft': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .mandala-bg {
+      background: linear-gradient(135deg, #1b3a1e 0%, #0d1f10 100%);
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuASQYkwX6GjIFSlDAnMgSLLUh-rTo6yU9ZmbG8b2Nk7P8QzTY2RGn1g5AWH4gd_LnLFuzcTxMfrATPKe5Ba1SFTfU1TiW55bMxTkm_vjNH7IWx0Q8tB5IoJvMfNXOC-q2nNhBAwpDuQhc_evPG9aVjED6KxZzcRWIGGYGtdvyM1lTsu3q37xVGAyX6HyMHlPU-nm4Vzc8mQ9j19OVjjW3DJumB2UAP9W1p6h29skoV8m9lkUYw7XdYUmMs6DpYNhTr2nyQMntS1Ulg);
+      position: relative;
+      overflow: hidden
+    }
+    .mandala-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150%;
+      height: 150%;
+      opacity: 0.08;
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCi_boXp5k8tBF97KZUQQhSR5hCM6oLug9WBG7NRapbQ4xm4m_MrJ1VMm4E5-5xspf1ZOoSXuQuCAD_DaQCKAJVagpVhb0ZxsEYeW_L2B2D_TtiH5ssbO1QJEI6oPJWBpTFsNTOC0V9OHqzaOIlheuFkzn5aZH_peqrpIP5VXD9tcdeUTvZy65sHmPGViG4D3YmJzx5Ay1Uw_2HmUtTAT8v60-4bRqgD5Xp2PibVx7Y5LhDRsDS1zKnFu0erq6A-02TXbRzpwuAZPw);
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none
+    }
+    .paper-texture {
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBWZpgiOm9N4m-GUdJGSj0lNCUfJhMcVFS0M6ma-78vccXBDO4oSfhhZoTD-tgtRUri0pPXkousRru4qnm4tB2hQKN80LjBNU-HoQ81-E7poAbSlvqZMfnLIjxAsF_fqR1YGguJ2x9mR1XPc8xj7Yd8Q_t3UHIhtF3YbhV4kcbairjYw-hHkhJmO79TfkTgDoo5usnUfpbdprzSXNSyRY74cBMiyVqeCtuGYp8HODkxUG7BkcMMDMISuxgCgFotoOhDS4BVfKbNTRc)
+    }
+    .tab-active {
+      border-bottom: 2px solid #1b3a1e;
+      color: #1b3a1e;
+      font-weight: 700;
+    }
+    .tab-inactive {
+      border-bottom: 2px solid transparent;
+      color: #8a8060;
+      font-weight: 500;
+    }
+    
+    /* Contenedor con altura animada */
+    .form-container {
+      transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+    
+    /* Animaciones de los formularios */
+    .form-wrapper {
+      transition: opacity 0.4s ease-in-out, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .form-enter {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    .form-exit {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.98);
+      pointer-events: none;
+    }
+    
+    /* Animación para los elementos internos */
+    .form-field {
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .form-field:hover {
+      transform: translateX(5px);
+    }
+    
+    /* Checkbox personalizado */
+    .custom-checkbox {
+      transition: all 0.2s ease-in-out;
+    }
+    
+    .custom-checkbox:checked {
+      transform: scale(1.1);
+    }
+  </style>
+  <title>Karuna - Inicio de Sesión y Registro</title>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-scholar-gray min-h-screen flex items-center justify-center p-4 md:p-8 paper-texture">
+  <div class="max-w-6xl w-full bg-parchment dark:bg-[#1a2e18] shadow-2xl rounded-xl overflow-hidden flex flex-col md:flex-row min-h-[700px] transition-all duration-500 ease-smooth hover:shadow-3xl">
+    <!-- Lado Izquierdo: Sección Artística -->
+    <div class="md:w-5/12 mandala-bg text-white p-12 flex flex-col justify-between relative order-2 md:order-1 transition-all duration-500">
+      <div class="mandala-overlay" data-alt="Sutil patrón de mandala geométrico en terracota"></div>
+      <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-8 transform transition-transform duration-500 hover:scale-105">
+          <span class="material-symbols-outlined text-4xl text-earth-gold animate-pulse">filter_vintage</span>
+          <h1 class="text-4xl font-serif-accent tracking-wide text-earth-gold">Karuna</h1>
+        </div>
+        <h2 class="text-3xl font-bold leading-tight mb-4">Analiza y comprende informacion grupal de manera intuitiva</h2>
+        <p class="text-white/80 text-lg font-light leading-relaxed">
+          Únete a una comunidad de datos dedicada a la utilizacion de datos para mejorar la educacion.
+        </p>
+      </div>
+      <div class="relative z-10">
+        <div class="space-y-6">
+          <div class="flex items-start gap-4 transform transition-all duration-300 hover:translate-x-2">
+            <div class="bg-earth-gold/20 p-2 rounded-lg transition-all duration-300 hover:bg-earth-gold/30"><span class="material-symbols-outlined text-earth-gold">auto_stories</span></div>
+            <div>
+              <p class="font-bold">Formas faciles de analizar y presentar datos</p>
+              <p class="text-sm text-white/70">Accede a herramientas de trabajo y visualizacion.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 transform transition-all duration-300 hover:translate-x-2">
+            <div class="bg-earth-gold/20 p-2 rounded-lg transition-all duration-300 hover:bg-earth-gold/30"><span class="material-symbols-outlined text-earth-gold">school</span></div>
+            <div>
+              <p class="font-bold">Guía de Expertos</p>
+              <p class="text-sm text-white/70">Mejora el rendimiento estudiantil entendiendolas.</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-white/10 transition-all duration-500">
+          <p class="text-sm italic text-white/60">"La compasión es la raíz de todo el conocimiento."</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lado Derecho: Formularios de Autenticación -->
+    <div class="md:w-7/12 p-8 md:p-16 flex flex-col justify-center bg-parchment dark:bg-[#1a2e18] order-1 md:order-2">
+      <!-- Cabecera con Pestañas -->
+      <div class="flex border-b border-[#e6e3db] mb-10">
+        <button id="pestanaInicio" class="flex-1 py-4 text-center tab-active transition-all duration-300 ease-smooth hover:scale-105">
+          Iniciar Sesión
+        </button>
+        <button id="pestanaRegistro" class="flex-1 py-4 text-center tab-inactive hover:text-[#1b3a1e] transition-all duration-300 ease-smooth hover:scale-105">
+          Registrarse
+        </button>
+      </div>
+      
+      <!-- Contenedor con altura animada -->
+      <div id="formContainer" class="form-container relative">
+        <!-- Formulario de Inicio de Sesión -->
+        <div id="formularioInicio" class="form-wrapper form-enter">
+          <div class="space-y-6">
+            <div class="mb-8">
+              <h3 class="text-2xl font-serif-accent mb-2 text-forest-green">Bienvenido de Vuelta</h3>
+              <p class="text-[#8a8060] text-sm">Ingresa tus datos para continuar tu viaje.</p>
+            </div>
+            <form class="space-y-5">
+              <div class="space-y-2 form-field">
+                <label class="text-sm font-semibold block text-forest-green" for="correo">Correo Electrónico</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8060] text-xl transition-all duration-300 group-hover:text-forest-green">mail</span>
+                  <input class="w-full pl-12 pr-4 py-4 bg-background-light dark:bg-[#3a3526] border border-[#e6e3db] dark:border-[#4a4636] rounded-lg focus:ring-2 focus:ring-[#c5a059] focus:border-[#c5a059] outline-none transition-all duration-300 placeholder:text-[#8a8060]/50 hover:border-forest-green hover:shadow-md" id="correo" placeholder="nombre@institucion.edu" type="email"/>
+                </div>
+              </div>
+              <div class="space-y-2 form-field">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-semibold block text-forest-green" for="contrasena">Contraseña</label>
+                  <a class="text-xs font-medium text-[#8a8060] hover:text-forest-green transition-all duration-300 hover:underline" href="#">¿Olvidaste tu contraseña?</a>
+                </div>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8060] text-xl">lock</span>
+                  <input class="w-full pl-12 pr-4 py-4 bg-background-light dark:bg-[#3a3526] border border-[#e6e3db] dark:border-[#4a4636] rounded-lg focus:ring-2 focus:ring-[#c5a059] focus:border-[#c5a059] outline-none transition-all duration-300 placeholder:text-[#8a8060]/50 hover:border-forest-green hover:shadow-md" id="contrasena" placeholder="••••••••" type="password"/>
+                </div>
+              </div>
+              
+              <!-- Opciones de Sesión Mejoradas -->
+              <div class="space-y-3 py-2">
+                <div class="flex items-center gap-3">
+                  <input class="w-4 h-4 rounded border-[#d6d2c4] text-forest-green focus:ring-forest-green transition-all duration-300 custom-checkbox" id="recordar" type="checkbox"/>
+                  <label class="text-sm text-[#8a8060] flex items-center gap-2" for="recordar">
+                    <span>Mantener mi sesión iniciada</span>
+                    <span class="text-xs bg-forest-green/10 text-forest-green px-2 py-1 rounded-full">30 días</span>
+                  </label>
+                </div>
+                
+                <!-- Nueva opción: Dispositivo confiable -->
+                <div class="flex items-center gap-3">
+                  <input class="w-4 h-4 rounded border-[#d6d2c4] text-forest-green focus:ring-forest-green transition-all duration-300 custom-checkbox" id="dispositivoConfiable" type="checkbox"/>
+                  <label class="text-sm text-[#8a8060]" for="dispositivoConfiable">
+                    Marcar este dispositivo como confiable
+                  </label>
+                </div>
+                
+                <!-- Selector de duración de sesión -->
+                <div class="mt-4 p-4 bg-background-light dark:bg-[#3a3526]/30 rounded-lg border border-[#e6e3db] dark:border-[#4a4636] transition-all duration-300 hover:shadow-md">
+                  <label class="text-sm font-semibold block text-forest-green mb-3">Duración de la sesión</label>
+                  <div class="flex gap-3">
+                    <label class="flex-1 flex items-center gap-2 p-2 rounded-lg border border-[#e6e3db] dark:border-[#4a4636] transition-all duration-300 hover:border-forest-green hover:bg-forest-green/5">
+                      <input type="radio" name="duracionSesion" class="w-4 h-4 text-forest-green focus:ring-forest-green" checked/>
+                      <span class="text-sm">1 día</span>
+                    </label>
+                    <label class="flex-1 flex items-center gap-2 p-2 rounded-lg border border-[#e6e3db] dark:border-[#4a4636] transition-all duration-300 hover:border-forest-green hover:bg-forest-green/5">
+                      <input type="radio" name="duracionSesion" class="w-4 h-4 text-forest-green focus:ring-forest-green"/>
+                      <span class="text-sm">7 días</span>
+                    </label>
+                    <label class="flex-1 flex items-center gap-2 p-2 rounded-lg border border-[#e6e3db] dark:border-[#4a4636] transition-all duration-300 hover:border-forest-green hover:bg-forest-green/5">
+                      <input type="radio" name="duracionSesion" class="w-4 h-4 text-forest-green focus:ring-forest-green"/>
+                      <span class="text-sm">30 días</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <button class="w-full bg-forest-green text-on-primary font-bold py-4 rounded-lg shadow-lg shadow-forest-green/20 transition-all duration-300 ease-smooth flex items-center justify-center gap-2 mt-4 hover:bg-[#132a15] hover:shadow-xl hover:scale-[1.02] active:scale-95" type="submit">
+                <span>Entrar a tu Espacio</span>
+                <span class="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span>
+              </button>
+            </form>
+            
+            <!-- Alternativas de Inicio de Sesión Social -->
+            <div class="relative my-8">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-[#e6e3db]"></div>
+              </div>
+              <div class="relative flex justify-center text-xs uppercase">
+                <span class="bg-parchment dark:bg-[#1a2e18] px-4 text-[#8a8060]">O accede con</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <button class="flex items-center justify-center gap-2 py-3 px-4 border border-[#e6e3db] dark:border-[#4a4636] rounded-lg hover:bg-background-light dark:hover:bg-[#3a3526] transition-all duration-300 hover:scale-105 hover:shadow-md active:scale-95">
+                <div class="w-5 h-5 flex items-center justify-center bg-white rounded-full">
+                  <svg class="w-4 h-4" viewbox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+                  </svg>
+                </div>
+                <span class="text-sm font-semibold">Google</span>
+              </button>
+              <button class="flex items-center justify-center gap-2 py-3 px-4 border border-[#e6e3db] dark:border-[#4a4636] rounded-lg hover:bg-background-light dark:hover:bg-[#3a3526] transition-all duration-300 hover:scale-105 hover:shadow-md active:scale-95">
+                <span class="material-symbols-outlined text-xl">account_balance</span>
+                <span class="text-sm font-semibold">Institución</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Formulario de Registro (oculto por defecto) -->
+        <div id="formularioRegistro" class="form-wrapper hidden">
+          <div class="space-y-6">
+            <div class="mb-8">
+              <h3 class="text-2xl font-serif-accent mb-2 text-forest-green">Comienza tu Viaje</h3>
+              <p class="text-[#8a8060] text-sm">Crea una cuenta para acceder a nuestros textos sagrados y comunidad.</p>
+            </div>
+            <form class="space-y-5">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2 form-field">
+                  <label class="text-sm font-semibold block text-forest-green" for="nombre">Nombre</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8060] text-xl">person</span>
+                    <input class="w-full pl-12 pr-4 py-4 bg-background-light dark:bg-[#3a3526] border border-[#e6e3db] dark:border-[#4a4636] rounded-lg focus:ring-2 focus:ring-[#c5a059] focus:border-[#c5a059] outline-none transition-all duration-300 placeholder:text-[#8a8060]/50 hover:border-forest-green hover:shadow-md" id="nombre" placeholder="Juan" type="text"/>
+                  </div>
+                </div>
+                <div class="space-y-2 form-field">
+                  <label class="text-sm font-semibold block text-forest-green" for="apellido">Apellido</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8060] text-xl">person</span>
+                    <input class="w-full pl-12 pr-4 py-4 bg-background-light dark:bg-[#3a3526] border border-[#e6e3db] dark:border-[#4a4636] rounded-lg focus:ring-2 focus:ring-[#c5a059] focus:border-[#c5a059] outline-none transition-all duration-300 placeholder:text-[#8a8060]/50 hover:border-forest-green hover:shadow-md" id="apellido" placeholder="Pérez" type="text"/>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-2 form-field">
+                <label class="text-sm font-semibold block text-forest-green" for="correoRegistro">Correo Electrónico</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8060] text-xl">mail</span>
+                  <input class="w-full pl-12 pr-4 py-4 bg-background-light dark:bg-[#3a3526] border border-[#e6e3db] dark:border-[#4a4636] rounded-lg focus:ring-2 focus:ring-[#c5a059] focus:border-[#c5a059] outline-none transition-all duration-300 placeholder:text-[#8a8060]/50 hover:border-forest-green hover:shadow-md" id="correoRegistro" placeholder="nombre@institucion.edu" type="email"/>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2 form-field">
+                  <label class="text-sm font-semibold block text-forest-green" for="contrasenaRegistro">Contraseña</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8060] text-xl">lock</span>
+                    <input class="w-full pl-12 pr-4 py-4 bg-background-light dark:bg-[#3a3526] border border-[#e6e3db] dark:border-[#4a4636] rounded-lg focus:ring-2 focus:ring-[#c5a059] focus:border-[#c5a059] outline-none transition-all duration-300 placeholder:text-[#8a8060]/50 hover:border-forest-green hover:shadow-md" id="contrasenaRegistro" placeholder="••••••••" type="password"/>
+                  </div>
+                </div>
+                <div class="space-y-2 form-field">
+                  <label class="text-sm font-semibold block text-forest-green" for="confirmarContrasena">Confirmar Contraseña</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8060] text-xl">lock</span>
+                    <input class="w-full pl-12 pr-4 py-4 bg-background-light dark:bg-[#3a3526] border border-[#e6e3db] dark:border-[#4a4636] rounded-lg focus:ring-2 focus:ring-[#c5a059] focus:border-[#c5a059] outline-none transition-all duration-300 placeholder:text-[#8a8060]/50 hover:border-forest-green hover:shadow-md" id="confirmarContrasena" placeholder="••••••••" type="password"/>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-2 form-field">
+                <label class="text-sm font-semibold block text-forest-green" for="institucion">Institución/Afiliación (Opcional)</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8060] text-xl">account_balance</span>
+                  <input class="w-full pl-12 pr-4 py-4 bg-background-light dark:bg-[#3a3526] border border-[#e6e3db] dark:border-[#4a4636] rounded-lg focus:ring-2 focus:ring-[#c5a059] focus:border-[#c5a059] outline-none transition-all duration-300 placeholder:text-[#8a8060]/50 hover:border-forest-green hover:shadow-md" id="institucion" placeholder="Universidad o Centro de Estudios" type="text"/>
+                </div>
+              </div>
+              
+              <!-- Opciones de Sesión para Registro -->
+              <div class="space-y-3 py-2">
+                <div class="flex items-center gap-3">
+                  <input class="w-4 h-4 rounded border-[#d6d2c4] text-forest-green focus:ring-forest-green transition-all duration-300 custom-checkbox" id="recordarRegistro" type="checkbox"/>
+                  <label class="text-sm text-[#8a8060] flex items-center gap-2" for="recordarRegistro">
+                    <span>Mantener mi sesión iniciada al registrarme</span>
+                    <span class="text-xs bg-forest-green/10 text-forest-green px-2 py-1 rounded-full">recomendado</span>
+                  </label>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <input class="w-4 h-4 rounded border-[#d6d2c4] text-forest-green focus:ring-forest-green transition-all duration-300 custom-checkbox" id="terminos" type="checkbox"/>
+                  <label class="text-sm text-[#8a8060]" for="terminos">Acepto los <a href="#" class="text-forest-green font-medium hover:underline transition-all duration-300">Términos de Servicio</a> y la <a href="#" class="text-forest-green font-medium hover:underline transition-all duration-300">Política de Privacidad</a></label>
+                </div>
+                <div class="flex items-center gap-3">
+                  <input class="w-4 h-4 rounded border-[#d6d2c4] text-forest-green focus:ring-forest-green transition-all duration-300 custom-checkbox" id="boletin" type="checkbox"/>
+                  <label class="text-sm text-[#8a8060]" for="boletin">Suscribirme al boletín de Karuna para recibir actualizaciones y enseñanzas</label>
+                </div>
+              </div>
+              
+              <button class="w-full bg-forest-green text-on-primary font-bold py-4 rounded-lg shadow-lg shadow-forest-green/20 transition-all duration-300 ease-smooth flex items-center justify-center gap-2 mt-4 hover:bg-[#132a15] hover:shadow-xl hover:scale-[1.02] active:scale-95" type="submit">
+                <span>Crear Cuenta</span>
+                <span class="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1">person_add</span>
+              </button>
+            </form>
+            
+            <!-- Alternativas de Registro Social -->
+            <div class="relative my-8">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-[#e6e3db]"></div>
+              </div>
+              <div class="relative flex justify-center text-xs uppercase">
+                <span class="bg-parchment dark:bg-[#1a2e18] px-4 text-[#8a8060]">O regístrate con</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <button class="flex items-center justify-center gap-2 py-3 px-4 border border-[#e6e3db] dark:border-[#4a4636] rounded-lg hover:bg-background-light dark:hover:bg-[#3a3526] transition-all duration-300 hover:scale-105 hover:shadow-md active:scale-95">
+                <div class="w-5 h-5 flex items-center justify-center bg-white rounded-full">
+                  <svg class="w-4 h-4" viewbox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+                  </svg>
+                </div>
+                <span class="text-sm font-semibold">Google</span>
+              </button>
+              <button class="flex items-center justify-center gap-2 py-3 px-4 border border-[#e6e3db] dark:border-[#4a4636] rounded-lg hover:bg-background-light dark:hover:bg-[#3a3526] transition-all duration-300 hover:scale-105 hover:shadow-md active:scale-95">
+                <span class="material-symbols-outlined text-xl">account_balance</span>
+                <span class="text-sm font-semibold">Institución</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pie de página / Nota -->
+      <div class="mt-12 text-center">
+        <p class="text-xs text-[#8a8060] font-medium uppercase tracking-widest">
+          Un proyecto de la Fundación para el Aprendizaje Karuna
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Elemento Decorativo de Fondo (Esquina Inferior Derecha) -->
+  <div class="fixed bottom-0 right-0 w-64 h-64 -mb-20 -mr-20 opacity-10 pointer-events-none rotate-12 transition-all duration-500 hover:rotate-45 hover:opacity-20">
+    <span class="material-symbols-outlined text-[300px] text-scholar-gray">filter_vintage</span>
+  </div>
+  
+  <!-- JavaScript mejorado para transiciones suaves de altura -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const pestanaInicio = document.getElementById('pestanaInicio');
+      const pestanaRegistro = document.getElementById('pestanaRegistro');
+      const formularioInicio = document.getElementById('formularioInicio');
+      const formularioRegistro = document.getElementById('formularioRegistro');
+      const formContainer = document.getElementById('formContainer');
+      
+      // Función para actualizar la altura del contenedor
+      function actualizarAltura( elementoMostrar ) {
+        // Mostrar temporalmente el elemento para medir su altura
+        elementoMostrar.style.position = 'absolute';
+        elementoMostrar.style.opacity = '0';
+        elementoMostrar.classList.remove('hidden');
+        
+        // Obtener la altura real
+        const altura = elementoMostrar.offsetHeight;
+        
+        // Restaurar el elemento
+        elementoMostrar.style.position = '';
+        elementoMostrar.style.opacity = '';
+        elementoMostrar.classList.add('hidden');
+        
+        // Animar la altura
+        formContainer.style.height = altura + 'px';
+      }
+      
+      function establecerPestanaActiva(activa, inactiva) {
+        activa.classList.remove('tab-inactive');
+        activa.classList.add('tab-active');
+        inactiva.classList.remove('tab-active');
+        inactiva.classList.add('tab-inactive');
+      }
+      
+      function cambiarFormulario(formMostrar, formOcultar) {
+        // Medir la altura del formulario a mostrar
+        formMostrar.style.position = 'absolute';
+        formMostrar.style.opacity = '0';
+        formMostrar.classList.remove('hidden');
+        const nuevaAltura = formMostrar.offsetHeight;
+        formMostrar.style.position = '';
+        formMostrar.style.opacity = '';
+        formMostrar.classList.add('hidden');
+        
+        // Animar el contenedor a la nueva altura
+        formContainer.style.height = formOcultar.offsetHeight + 'px';
+        
+        // Forzar un reflow
+        formContainer.offsetHeight;
+        
+        // Animar a la nueva altura
+        formContainer.style.height = nuevaAltura + 'px';
+        
+        // Aplicar animación de salida al formulario actual
+        formOcultar.classList.add('form-exit');
+        
+        setTimeout(() => {
+          formOcultar.classList.add('hidden');
+          formOcultar.classList.remove('form-enter', 'form-exit');
+          
+          // Mostrar nuevo formulario con animación de entrada
+          formMostrar.classList.remove('hidden');
+          formMostrar.classList.add('form-enter');
+          
+          // Ajustar altura final después de la animación
+          setTimeout(() => {
+            formContainer.style.height = 'auto';
+          }, 500);
+        }, 250);
+      }
+      
+      // Establecer altura inicial
+      setTimeout(() => {
+        formContainer.style.height = formularioInicio.offsetHeight + 'px';
+      }, 100);
+      
+      pestanaInicio.addEventListener('click', function() {
+        if (!formularioRegistro.classList.contains('hidden')) {
+          establecerPestanaActiva(pestanaInicio, pestanaRegistro);
+          cambiarFormulario(formularioInicio, formularioRegistro);
+        }
+      });
+      
+      pestanaRegistro.addEventListener('click', function() {
+        if (!formularioInicio.classList.contains('hidden')) {
+          establecerPestanaActiva(pestanaRegistro, pestanaInicio);
+          cambiarFormulario(formularioRegistro, formularioInicio);
+        }
+      });
+      
+      // Efecto hover para los botones sociales
+      const socialButtons = document.querySelectorAll('.grid-cols-2 button');
+      socialButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+          this.style.transform = 'scale(1.05)';
+        });
+        button.addEventListener('mouseleave', function() {
+          this.style.transform = 'scale(1)';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
