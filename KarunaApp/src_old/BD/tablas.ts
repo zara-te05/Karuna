@@ -1,77 +1,93 @@
 import Database from '@tauri-apps/plugin-sql';
+import { invoke } from '@tauri-apps/api/core';
 
 let db: Database | null = null;
 
 export async function initDatabase() {
-    
     if (db) return db;
-
-    // Crea o abre la base de datos
-    db = await Database.load('sqlite:karuna.db');
-
-    //Crear tablas
-
-    await db.execute(`
-        
-            CREATE TABLE IF NOT EXISTS DOCENTE(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT NOT NULL UNIQUE,
-                password TEXT NOT NULL,
-                nombre TEXT,
-                apellido TEXT,
-                institucion TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        
-        `);
     
-   console.log('Base de datos inicializada');
-   return db;
+    db = await Database.load('sqlite:karuna.db');
+    
+    await db.execute(`
+        CREATE TABLE IF NOT EXISTS DOCENTE(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            nombre TEXT,
+            apellido TEXT,
+            institucion TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+    
+    console.log('Base de datos inicializada');
+    return db;
 }
 
-export async function registrarUsuario(email:string, passowrd:string, nombre:string, apellido:string, institucion?: string){
-
+export async function registrarUsuario(
+    email: string, 
+    password: string, 
+    nombre: string, 
+    apellido: string, 
+    institucion?: string
+) {
     const database = await initDatabase();
-
-    try{
+    
+    try {
+        // 🔐 Hashear contraseña usando Rust
+        const passwordHasheado = await invoke<string>('hashear_password', { password });
+        
+        // Guardar contraseña hasheada en la BD
         await database.execute(
-            `
-                INSERT INTO DOCENTE(email, password, nombre, apellido, institucion) values(?,?,?,?,?),
-            `,
-
-            [email, passowrd, nombre, apellido, institucion || null]
+            'INSERT INTO DOCENTE(email, password, nombre, apellido, institucion) VALUES(?,?,?,?,?)',
+            [email, passwordHasheado, nombre, apellido, institucion || null]
         );
-
-        return {success: true};
-    } 
-    catch(error){
+        
+        return { success: true };
+    } catch (error) {
         console.error('Error al registrar usuario:', error);
-
-        return {success : false, error: 'El email ya esta registrado'}
+        return { success: false, error: 'El email ya está registrado' };
     }
-
 }
 
-export async function loginDocente(email:string, password:string){
-
+export async function loginDocente(email: string, password: string) {
     const database = await initDatabase();
-
+    
+    // Obtener el hash de la contraseña de la BD
     const docentes = await database.select<Array<{
-        id:number,
-        email:string,
-        nombre:string,
-        apellido:string
+        id: number,
+        email: string,
+        password: string,  // ← Ahora necesitamos el hash
+        nombre: string,
+        apellido: string
     }>>(
-        'SELECT id, email, nombre, apellido FROM USUARIOS WHERE email = ? AND password = ?',
-        [email, password]
+        'SELECT id, email, password, nombre, apellido FROM DOCENTE WHERE email = ?',
+        [email]
     );
-
-    if(docentes.length > 0) {
-        return {success: true, docente: docentes[0]};
+    
+    if (docentes.length === 0) {
+        return { success: false, error: 'Email o contraseña incorrectos' };
     }
-
-    return { success : false, error : "Email o clave incorrectos"};
-
+    
+    const docente = docentes[0];
+    
+    const passwordValido = await invoke<boolean>('verificar_password', {
+        password,
+        hashGuardado: docente.password
+    });
+    
+    if (passwordValido) {
+        // No incluir la contraseña en la respuesta
+        return { 
+            success: true, 
+            docente: {
+                id: docente.id,
+                email: docente.email,
+                nombre: docente.nombre,
+                apellido: docente.apellido
+            }
+        };
+    }
+    
+    return { success: false, error: 'Email o contraseña incorrectos' };
 }
-
-

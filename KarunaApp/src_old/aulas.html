@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Karuna - Panel del Profesor</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#D4AF37",
+                        "indigo-deep": "#1E1B4B",
+                        "slate-soft": "#F1F5F9",
+                        "teal-muted": "#2D6A4F",
+                        "indigo-light": "#312E81",
+                        "background-light": "#F8FAFC",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfaf1;
+        }
+
+        .sidebar-active {
+            background-color: rgba(244, 195, 47, 0.2);
+            border-left: 4px solid #f4c32f;
+        }
+
+        .card-gradient {
+            background: linear-gradient(to top, rgba(26, 48, 32, 0.8), transparent);
+        }
+
+        .font-serif-elegant {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .watercolor-1 {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(45, 106, 79, 0.2));
+        }
+
+        .watercolor-2 {
+            background: linear-gradient(135deg, rgba(49, 46, 129, 0.2), rgba(212, 175, 55, 0.2));
+        }
+
+        .watercolor-3 {
+            background: linear-gradient(135deg, rgba(45, 106, 79, 0.2), rgba(49, 46, 129, 0.2));
+        }
+
+        .metric-glow {
+            box-shadow: 0 4px 20px -5px rgba(212, 175, 55, 0.15);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Van Gogh inspired organic flow background */
+        .starry-bg {
+            background-color: #fdfaf1;
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%231E1B4B' stop-opacity='0.05'/%3E%3Cstop offset='1' stop-color='%23312E81' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='200' height='200' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 100 Q 50 50, 100 100 T 200 100' fill='none' stroke='url(%23a)' stroke-width='2'/%3E%3Cpath d='M0 120 Q 50 70, 100 120 T 200 120' fill='none' stroke='url(%23a)' stroke-width='1' opacity='0.5'/%3E%3Cpath d='M0 80 Q 50 30, 100 80 T 200 80' fill='none' stroke='url(%23a)' stroke-width='1.5' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+
+        .dark .starry-bg {
+            background-color: #1a1a2e;
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23D4AF37' stop-opacity='0.15'/%3E%3Cstop offset='1' stop-color='%232D6A4F' stop-opacity='0.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='300' height='300' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 150 Q 75 75, 150 150 T 300 150' fill='none' stroke='url(%23a)' stroke-width='1'/%3E%3Ccircle cx='150' cy='150' r='2' fill='%23D4AF37' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E");
+        }
+
+        .dark .bg-white {
+            background-color: #262640;
+            color: #e8e8f0;
+            border-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .dark .text-indigo-deep {
+            color: #e8e8f0;
+        }
+
+        .dark .bg-slate-soft {
+            background-color: #2a2a3e;
+        }
+
+        .dark .bg-slate-soft\/80 {
+            background-color: rgba(42, 42, 62, 0.8);
+        }
+
+        .dark .metric-glow {
+            box-shadow: 0 4px 20px -5px rgba(212, 175, 55, 0.25);
+            background: rgba(38, 38, 64, 0.8);
+            backdrop-filter: blur(8px);
+            border-color: rgba(212, 175, 55, 0.15);
+        }
+
+        .dark .border-forest\/5,
+        .dark .border-indigo-deep\/5 {
+            border-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .dark .text-indigo-deep\/50 {
+            color: rgba(232, 232, 240, 0.5);
+        }
+
+        .dark .text-indigo-deep\/40 {
+            color: rgba(232, 232, 240, 0.4);
+        }
+
+        .dark .text-indigo-deep\/60 {
+            color: rgba(232, 232, 240, 0.6);
+        }
+
+        .dark .watercolor-1,
+        .dark .watercolor-2,
+        .dark .watercolor-3 {
+            opacity: 0.85;
+        }
+
+        .dark .card-gradient {
+            background: linear-gradient(to top, rgba(26, 26, 46, 0.95), transparent);
+        }
+
+        .dark .bg-indigo-deep\/5 {
+            background-color: rgba(212, 175, 55, 0.08);
+        }
+
+        .dark .hover\:bg-indigo-deep\/10:hover {
+            background-color: rgba(212, 175, 55, 0.12);
+        }
+
+        .dark .border-forest\/10 {
+            border-color: rgba(212, 175, 55, 0.15);
+        }
+
+        .dark .text-forest {
+            color: #D4AF37;
+        }
+
+        .dark .text-forest\/60 {
+            color: rgba(212, 175, 55, 0.6);
+        }
+
+        .dark .text-forest\/40 {
+            color: rgba(212, 175, 55, 0.4);
+        }
+
+        .dark .hover\:bg-forest\/5:hover {
+            background-color: rgba(212, 175, 55, 0.08);
+        }
+
+        .dark .bg-teal-muted\/10 {
+            background-color: rgba(45, 106, 79, 0.2);
+        }
+
+        .dark .text-teal-muted {
+            color: #52c796;
+        }
+
+        .dark .border-t {
+            border-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .dark .shadow-sm {
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .dark .hover\:shadow-xl:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-soft/30 text-indigo-deep selection:bg-primary/30 starry-bg">
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-indigo-deep text-white/90 flex flex-col fixed h-screen z-20 transition-all">
+            <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
+                <span class="material-symbols-outlined text-[120px] text-primary">filter_vintage</span>
+            </div>
+            
+            <div class="p-6 flex items-center gap-3">
+                <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-forest">
+                    <span class="material-symbols-outlined font-bold text-white">filter_vintage</span>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
+            </div>
+            
+            <nav class="flex-1 mt-6 px-4 space-y-2">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 text-white" href="#">
+                    <span class="material-symbols-outlined">analytics</span>
+                    <span class="font-medium">Vista de Estadísticas</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" href="#">
+                    <span class="material-symbols-outlined">groups</span>
+                    <span class="font-medium">Aulas</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" href="#">
+                    <span class="material-symbols-outlined">assessment</span>
+                    <span class="font-medium">Reportes</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" href="#">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="font-medium">Configuración</span>
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-white/10">
+                <button class="flex items-center gap-4 px-4 py-3 w-full rounded-lg hover:bg-red-500/20 text-red-200 transition-colors">
+                    <span class="material-symbols-outlined text-red-400">logout</span>
+                    <span class="font-medium">Cerrar Sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 ml-64 min-h-screen">
+            <!-- Header -->
+            <header class="sticky top-0 z-10 bg-slate-soft/80 backdrop-blur-md border-b border-indigo-deep/10 px-8 py-4 flex items-center justify-between bg-white/40">
+                <div class="flex items-center gap-4 flex-1 max-w-xl">
+                    <div class="relative w-full">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-forest/40">search</span>
+                        <input class="w-full pl-10 pr-4 py-2 bg-indigo-deep/5 border-none rounded-xl focus:ring-2 focus:ring-primary text-indigo-deep placeholder:text-indigo-deep/40" placeholder="Buscar aulas o materiales..." type="text" />
+                    </div>
+                </div>
+                
+                <button class="p-2 rounded-full hover:bg-indigo-deep/10 dark:hover:bg-white/10 transition-colors text-indigo-deep dark:text-white flex items-center justify-center" id="theme-toggle" title="Alternar Modo Oscuro">
+                    <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined hidden dark:block">light_mode</span>
+                </button>
+                
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-3 pl-4 border-l border-forest/10">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-bold text-forest leading-none">Prof. Julián Thorne</p>
+                            <p class="text-xs text-forest/60 mt-1">Instructor Principal</p>
+                        </div>
+                        <div class="size-10 rounded-full bg-primary/20 border-2 border-primary/60 overflow-hidden">
+                            <img alt="Perfil del profesor" class="w-full h-full object-cover" data-alt="Close up portrait of a male teacher" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q" />
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-8 space-y-8">
+                <!-- Welcome & Action Section -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <h2 class="text-5xl font-bold text-indigo-deep tracking-tight font-serif-elegant">Gestión de Estadísticas</h2>
+                        <p class="text-indigo-deep/60 text-lg mt-2">Análisis de rendimiento en tiempo real para tus aulas activas.</p>
+                    </div>
+                </div>
+
+                <!-- Classroom Grid -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-forest flex items-center gap-2 font-serif-elegant">
+                            <span class="material-symbols-outlined text-primary">monitoring</span>
+                            Resumen de Rendimiento de Aulas
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <button class="p-2 hover:bg-forest/5 rounded-lg text-forest/60 transition-colors">
+                                <span class="material-symbols-outlined">grid_view</span>
+                            </button>
+                            <button class="p-2 hover:bg-forest/5 rounded-lg text-forest/60 transition-colors">
+                                <span class="material-symbols-outlined">list</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Card 1 -->
+                        <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-forest/5 group">
+                            <div class="h-48 relative overflow-hidden watercolor-1">
+                                <img alt="Portada del aula" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Sunlight filtering through deep forest trees" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwDJn_9KN6mmttxC405aqJD85FZ5poikD8J8ru8xPoD2q3Juu121PqAB6Eo248kQoB1vulCuqO-29dMBHQel33DgZsfv9LAFxSzs8UiJ-AWTcLZqDN2UCJHqCkoKhedVAaM5f_mCBFgm6eRm3fR1f_9lNoa8jVTYBOKyZl0n3rG5C8scWJ_MVFBQP4DUduc7h_rI3T5ky_EpDUDrP-mMHuEzYf93Zaw8Wh6w6j8njLgONbcBFUN4WSstamfK017W29zJN1wgzRx70" />
+                                <div class="absolute inset-0 card-gradient flex items-end p-4 metric-glow">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold text-white uppercase tracking-wider">Ciencia y Naturaleza</span>
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-3xl font-bold text-indigo-deep font-serif-elegant">Biología Ambiental 101</h4>
+                                    <span class="px-3 py-1 bg-teal-muted/10 text-teal-muted rounded-lg text-xs font-bold">Actualización en Vivo</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 mt-6">
+                                    <div class="p-4 bg-slate-soft rounded-xl border border-indigo-deep/5 metric-glow">
+                                        <p class="text-xs text-indigo-deep/50 uppercase font-bold tracking-wider">Calificación Prom.</p>
+                                        <p class="text-3xl font-bold text-indigo-deep font-serif-elegant">84.2%</p>
+                                    </div>
+                                    <div class="p-4 bg-slate-soft rounded-xl border border-indigo-deep/5 metric-glow">
+                                        <p class="text-xs text-indigo-deep/50 uppercase font-bold tracking-wider">Asistencia</p>
+                                        <p class="text-3xl font-bold text-indigo-deep font-serif-elegant">96%</p>
+                                    </div>
+                                </div>
+                                <div class="mt-6 pt-5 border-t border-indigo-deep/5 flex items-center justify-between">
+                                    <div class="flex-1 mr-4">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span class="text-[10px] uppercase font-bold text-indigo-deep/40 tracking-widest">Tendencia de Calificaciones</span>
+                                            <span class="text-[10px] font-bold text-primary">+2.4%</span>
+                                        </div>
+                                        <div class="w-full">
+                                            <svg class="w-full h-full" viewbox="0 0 200 40">
+                                                <defs>
+                                                    <lineargradient id="grad1" x1="0%" x2="100%" y1="0%" y2="0%">
+                                                        <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:0.2"></stop>
+                                                        <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1"></stop>
+                                                    </lineargradient>
+                                                    <filter id="glow">
+                                                        <fegaussianblur result="coloredBlur" stddeviation="1.5"></fegaussianblur>
+                                                        <femerge>
+                                                            <femergenode in="coloredBlur"></femergenode>
+                                                            <femergenode in="SourceGraphic"></femergenode>
+                                                        </femerge>
+                                                    </filter>
+                                                </defs>
+                                                <path d="M0,35 Q20,10 40,25 T80,15 T120,30 T160,10 T200,20" fill="none" filter="url(#glow)" stroke="url(#grad1)" stroke-linecap="round" stroke-width="2.5" style="stroke-dasharray: 0;"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button class="text-xs font-bold text-indigo-deep/40 hover:text-primary transition-colors underline underline-offset-4 mr-4 uppercase tracking-widest" onclick="document.getElementById('detail-modal').classList.remove('hidden')">Ver Detalles</button>
+                                    <button class="px-6 py-2 bg-indigo-deep text-white rounded-lg text-sm font-bold hover:bg-primary hover:text-indigo-deep transition-all shadow-lg shadow-indigo-deep/20">
+                                        Gestionar Calificaciones
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-forest/5 group">
+                            <div class="h-48 relative overflow-hidden watercolor-2">
+                                <img alt="Portada del aula" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Close up of a green leaf with water droplets" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJQrc96e2hSrqj-PBx9YMpd5aEapFA2iBWceLv5FuOUVrAqDVkWXMqh5fU9Z7WJSI42CW5RDijNBlKXNeVRgsgDYTWDqB_S3ue5OFGaMuPsWTu1Xc3L5o-I54k6g8u0bO8VOqvfLVW9nJnYCab9Bjgl3WAGdX3tvAsVMem4wwsKFAfWU3Gg9IoJ-X_OqFfLnSzihWIOx3UKyW6L1XkHDTD7I5aSrFMOAMmdPDLvpOi6_GlX_Xx4hi0u7N4VisUf8dJI20yMmDCKoM" />
+                                <div class="absolute inset-0 card-gradient flex items-end p-4 metric-glow">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold text-white uppercase tracking-wider">Arte y Expresión</span>
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-3xl font-bold text-indigo-deep font-serif-elegant">Ilustración Digital II</h4>
+                                    <span class="px-3 py-1 bg-teal-muted/10 text-teal-muted rounded-lg text-xs font-bold">Actualización en Vivo</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 mt-6">
+                                    <div class="p-4 bg-slate-soft rounded-xl border border-indigo-deep/5 metric-glow">
+                                        <p class="text-xs text-indigo-deep/50 uppercase font-bold tracking-wider">Calificación Prom.</p>
+                                        <p class="text-3xl font-bold text-indigo-deep font-serif-elegant">91.8%</p>
+                                    </div>
+                                    <div class="p-4 bg-slate-soft rounded-xl border border-indigo-deep/5 metric-glow">
+                                        <p class="text-xs text-indigo-deep/50 uppercase font-bold tracking-wider">Asistencia</p>
+                                        <p class="text-3xl font-bold text-indigo-deep font-serif-elegant">92%</p>
+                                    </div>
+                                </div>
+                                <div class="mt-6 pt-5 border-t border-indigo-deep/5 flex items-center justify-between">
+                                    <div class="flex-1 mr-4">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span class="text-[10px] uppercase font-bold text-indigo-deep/40 tracking-widest">Tendencia de Calificaciones</span>
+                                            <span class="text-[10px] font-bold text-primary">+5.1%</span>
+                                        </div>
+                                        <div class="w-full">
+                                            <svg class="w-full h-full" viewbox="0 0 200 40">
+                                                <defs>
+                                                    <lineargradient id="grad2" x1="0%" x2="100%" y1="0%" y2="0%">
+                                                        <stop offset="0%" style="stop-color:#312E81;stop-opacity:0.2"></stop>
+                                                        <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1"></stop>
+                                                    </lineargradient>
+                                                </defs>
+                                                <path d="M0,30 Q30,40 60,20 T100,25 T140,10 T180,30 T200,15" fill="none" filter="url(#glow)" stroke="url(#grad2)" stroke-linecap="round" stroke-width="2.5"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button class="text-xs font-bold text-indigo-deep/40 hover:text-primary transition-colors underline underline-offset-4 mr-4 uppercase tracking-widest" onclick="document.getElementById('detail-modal').classList.remove('hidden')">Ver Detalles</button>
+                                    <button class="px-6 py-2 bg-indigo-deep text-white rounded-lg text-sm font-bold hover:bg-primary hover:text-indigo-deep transition-all shadow-lg shadow-indigo-deep/20">
+                                        Gestionar Calificaciones
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-forest/5 group">
+                            <div class="h-48 relative overflow-hidden watercolor-3">
+                                <img alt="Portada del aula" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Cosmic nebula with artistic stars and clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8SiOFcN-dEu_6UC69lESM55rSFHHz4UiiCSC7O6TnmU_Azjvd4wrL6t7meYoFWPxDwdVzX3lFiP7Xb-LhUZyJKC29cR7WN04UZNX3xFQJmQxplz0LjYeBai13Jb921eg4QP6kvqlTafN_F1bXWJY1qkp5AC1sOCsogjZnSXbAzR5goIGIly9oKH9Akhaj_ysHVwqSNqLdkuW0-g7MJSUu72gMws4sNFs2P0ahw85Ok79csTAlax15mvh7P3bzHIbCGSPrdnYyQiA" />
+                                <div class="absolute inset-0 card-gradient flex items-end p-4 metric-glow">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold text-white uppercase tracking-wider">Humanidades</span>
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-3xl font-bold text-indigo-deep font-serif-elegant">Filosofía de la Atención Plena</h4>
+                                    <span class="px-3 py-1 bg-teal-muted/10 text-teal-muted rounded-lg text-xs font-bold">Finalizando</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 mt-6">
+                                    <div class="p-4 bg-slate-soft rounded-xl border border-indigo-deep/5 metric-glow">
+                                        <p class="text-xs text-indigo-deep/50 uppercase font-bold tracking-wider">Calificación Prom.</p>
+                                        <p class="text-3xl font-bold text-indigo-deep font-serif-elegant">88.5%</p>
+                                    </div>
+                                    <div class="p-4 bg-slate-soft rounded-xl border border-indigo-deep/5 metric-glow">
+                                        <p class="text-xs text-indigo-deep/50 uppercase font-bold tracking-wider">Asistencia</p>
+                                        <p class="text-3xl font-bold text-indigo-deep font-serif-elegant">98%</p>
+                                    </div>
+                                </div>
+                                <div class="mt-6 pt-5 border-t border-indigo-deep/5 flex items-center justify-between">
+                                    <div class="flex-1 mr-4">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span class="text-[10px] uppercase font-bold text-indigo-deep/40 tracking-widest">Tendencia de Calificaciones</span>
+                                            <span class="text-[10px] font-bold text-primary">Estable</span>
+                                        </div>
+                                        <div class="w-full">
+                                            <svg class="w-full h-full" viewbox="0 0 200 40">
+                                                <defs>
+                                                    <lineargradient id="grad3" x1="0%" x2="100%" y1="0%" y2="0%">
+                                                        <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:0.1"></stop>
+                                                        <stop offset="50%" style="stop-color:#D4AF37;stop-opacity:0.8"></stop>
+                                                        <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:0.2"></stop>
+                                                    </lineargradient>
+                                                </defs>
+                                                <path d="M0,20 C40,20 60,10 100,20 C140,30 160,20 200,20" fill="none" filter="url(#glow)" stroke="url(#grad3)" stroke-linecap="round" stroke-width="3"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button class="text-xs font-bold text-indigo-deep/40 hover:text-primary transition-colors underline underline-offset-4 mr-4 uppercase tracking-widest" onclick="document.getElementById('detail-modal').classList.remove('hidden')">Ver Detalles</button>
+                                    <button class="px-6 py-2 bg-indigo-deep text-white rounded-lg text-sm font-bold hover:bg-primary hover:text-indigo-deep transition-all shadow-lg shadow-indigo-deep/20">
+                                        Gestionar Calificaciones
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-indigo-deep/40 backdrop-blur-xl" id="detail-modal">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl border border-white/20 starry-bg">
+            <div class="p-8 flex justify-between items-center border-b border-indigo-deep/5">
+                <div>
+                    <h3 class="text-3xl font-bold text-indigo-deep font-serif-elegant">Tendencia de Rendimiento Académico</h3>
+                    <p class="text-indigo-deep/60">Análisis detallado de crecimiento del semestre a la fecha</p>
+                </div>
+                <button class="p-2 hover:bg-indigo-deep/5 rounded-full text-indigo-deep" onclick="document.getElementById('detail-modal').classList.add('hidden')">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-8">
+                <div class="h-80 w-full relative">
+                    <svg class="w-full h-full" viewbox="0 0 800 300">
+                        <defs>
+                            <lineargradient id="modalGrad" x1="0%" x2="100%" y1="0%" y2="0%">
+                                <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:0.2"></stop>
+                                <stop offset="50%" style="stop-color:#312E81;stop-opacity:0.8"></stop>
+                                <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1"></stop>
+                            </lineargradient>
+                            <filter id="glowLarge">
+                                <fegaussianblur result="coloredBlur" stddeviation="4"></fegaussianblur>
+                                <femerge>
+                                    <femergenode in="coloredBlur"></femergenode>
+                                    <femergenode in="SourceGraphic"></femergenode>
+                                </femerge>
+                            </filter>
+                        </defs>
+                        <g stroke="#1E1B4B" stroke-opacity="0.1" stroke-width="1">
+                            <line x1="0" x2="800" y1="250" y2="250"></line>
+                            <line x1="0" x2="800" y1="200" y2="200"></line>
+                            <line x1="0" x2="800" y1="150" y2="150"></line>
+                            <line x1="0" x2="800" y1="100" y2="100"></line>
+                            <line x1="0" x2="800" y1="50" y2="50"></line>
+                        </g>
+                        <path d="M0,250 Q100,100 200,180 T400,120 T600,220 T800,80" fill="none" filter="url(#glowLarge)" stroke="url(#modalGrad)" stroke-linecap="round" stroke-width="5"></path>
+                        <circle cx="200" cy="180" fill="#D4AF37" r="6"></circle>
+                        <circle cx="400" cy="120" fill="#312E81" r="6"></circle>
+                        <circle cx="600" cy="220" fill="#D4AF37" r="6"></circle>
+                        <circle cx="800" cy="80" fill="#D4AF37" r="6"></circle>
+                    </svg>
+                    <div class="flex justify-between mt-4 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-widest">
+                        <span>Semana 1</span>
+                        <span>Semana 4</span>
+                        <span>Semana 8</span>
+                        <span>Semana 12</span>
+                        <span>Actual</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-indigo-deep/5 flex justify-end gap-4">
+                <button class="px-8 py-3 bg-indigo-deep text-white rounded-xl font-bold shadow-lg" onclick="document.getElementById('detail-modal').classList.add('hidden')">Descargar Reporte</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.remove('light');
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            htmlElement.classList.remove('light');
+        } else {
+            htmlElement.classList.remove('dark');
+            htmlElement.classList.add('light');
+        }
+    </script>
+</body>
+
+</html>
