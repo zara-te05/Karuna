@@ -2,6 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
+  <style>
+    #splash { position:fixed; inset:0; z-index:9999; background:#fdfbf3;
+               display:flex; align-items:center; justify-content:center; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { width:48px; height:48px; border:3px solid #e6e3db;
+               border-top-color:#1b3a1e; border-radius:50%;
+               animation: spin 0.8s linear infinite; margin:0 auto 16px; }
+  </style>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
@@ -52,6 +60,10 @@
     }
   </script>
   <style>
+    
+    body {
+      transition: opacity 0.4s ease;
+    }
     .mandala-bg {
       background: linear-gradient(135deg, #1b3a1e 0%, #0d1f10 100%);
       background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuASQYkwX6GjIFSlDAnMgSLLUh-rTo6yU9ZmbG8b2Nk7P8QzTY2RGn1g5AWH4gd_LnLFuzcTxMfrATPKe5Ba1SFTfU1TiW55bMxTkm_vjNH7IWx0Q8tB5IoJvMfNXOC-q2nNhBAwpDuQhc_evPG9aVjED6KxZzcRWIGGYGtdvyM1lTsu3q37xVGAyX6HyMHlPU-nm4Vzc8mQ9j19OVjjW3DJumB2UAP9W1p6h29skoV8m9lkUYw7XdYUmMs6DpYNhTr2nyQMntS1Ulg);
@@ -129,6 +141,28 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-display text-scholar-gray min-h-screen flex items-center justify-center p-4 md:p-8 paper-texture">
+  
+  <div id="page-overlay" style="
+    position:fixed; inset:0; z-index:99999;
+    background:#fdfbf3;
+    display:flex; align-items:center; justify-content:center;
+    font-family:serif;
+  ">
+    <div style="text-align:center">
+      <div style="
+        width:40px; height:40px; margin:0 auto 12px;
+        border:3px solid #e6e3db;
+        border-top-color:#1b3a1e;
+        border-radius:50%;
+        animation:spin 0.8s linear infinite;
+      "></div>
+      <p style="color:#1b3a1e; font-weight:bold; font-size:1.1rem;">Karuna</p>
+    </div>
+  </div>
+  <style>
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
+
   <div class="max-w-6xl w-full bg-parchment dark:bg-[#1a2e18] shadow-2xl rounded-xl overflow-hidden flex flex-col md:flex-row min-h-[700px] transition-all duration-500 ease-smooth hover:shadow-3xl">
     <!-- Lado Izquierdo: Sección Artística -->
     <div class="md:w-5/12 mandala-bg text-white p-12 flex flex-col justify-between relative order-2 md:order-1 transition-all duration-500">
@@ -507,6 +541,6 @@
       });
     });
   </script>
-  <script type="module" src="/home/zarate/Programacion/Karuna/KarunaApp/src_old/ts/login.ts"></script>
+  <script type="module" src="/login.ts"></script>
 </body>
 </html>

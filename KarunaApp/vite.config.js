@@ -4,7 +4,7 @@ const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
   clearScreen: false,
-  root: 'src_old',  // Le decimos a Vite que la raíz es src_old/
+  root: 'src/pages',  // Le decimos a Vite que la raíz es src_old/
   build: {
     target: "esnext",
     outDir: '../dist',  // El build sale a dist/ en la raíz

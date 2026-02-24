@@ -34,7 +34,7 @@ export async function registrarUsuario(
     const database = await initDatabase();
     
     try {
-        // 🔐 Hashear contraseña usando Rust
+        // Hashear contraseña usando Rust
         const passwordHasheado = await invoke<string>('hashear_password', { password });
         
         // Guardar contraseña hasheada en la BD
@@ -90,4 +90,18 @@ export async function loginDocente(email: string, password: string) {
     }
     
     return { success: false, error: 'Email o contraseña incorrectos' };
+}
+
+export async function obtenerDocentePorID(id: number) {
+    try {
+        const database = await initDatabase();
+        const resultados = await database.select<any[]>(
+            `SELECT nombre, apellido FROM DOCENTE WHERE id = ?`,
+            [id]
+        );
+        return resultados.length > 0 ? resultados[0] : null;
+    } catch (error) {
+        console.error("Error crítico al leer SQLite:", error);
+        return null;
+    }
 }
