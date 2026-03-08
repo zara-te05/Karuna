@@ -34,7 +34,12 @@ function cargarFotoGuardada() {
     const rutaGuardada = localStorage.getItem('foto_perfil');
     if (rutaGuardada) {
         const foto = document.getElementById('profile-photo') as HTMLImageElement;
-        foto.src = convertFileSrc(rutaGuardada);
+        const fotoPerfil = document.getElementById('foto-perfil') as HTMLImageElement;
+        
+        const src = convertFileSrc(rutaGuardada);
+        
+        if (foto) foto.src = src;
+        if (fotoPerfil) fotoPerfil.src = src;  // ← Esto faltaba
     }
 }
 
@@ -79,6 +84,10 @@ document.addEventListener('DOMContentLoaded', async(e) => {
 
         // Mostrar la foto
         const foto = document.getElementById('profile-photo') as HTMLImageElement;
+
+        const foto_perfil = document.getElementById('foto-perfil') as HTMLImageElement;
+
+        foto_perfil.src = convertFileSrc(archivo as string);
         foto.src = convertFileSrc(archivo as string);
     });
 

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary":          "#3e4a89",
+                        "secondary":        "#f4c32f",
+                        "background-light": "#fdfaf3",
+                        "background-dark":  "#1a1c2c",
+                        "accent-indigo":    "#2a3363",
+                        "soft-cream":       "#f8f1e5",
+                        "indigo-deep":      "#1E1B4B"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "serif":   ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg":      "1rem",
+                        "xl":      "1.5rem",
+                        "full":    "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .fluid-bg {
+            background: linear-gradient(135deg, #fdfaf3 0%, #f4f0e6 100%);
+            position: relative;
+        }
+        .fluid-bg::before {
+            content: "";
+            position: absolute;
+            top: -10%; right: -10%;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(62,74,137,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .watercolor-card {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(62,74,137,0.1);
+        }
+        
+        body { transition: opacity 0.4s ease; font-family: 'Inter', sans-serif; background-color: #fdfaf1; }
+        .font-serif-elegant { font-family: 'Playfair Display', serif; }
+        .glow-primary { box-shadow: 0 0 15px rgba(212,175,55,0.4); }
+        .starry-wave { background: linear-gradient(135deg, #1E1B4B 0%, #283593 40%, #D4AF37 100%); opacity: 0.08; filter: blur(80px); position: absolute; top: -10%; right: -10%; width: 70%; height: 70%; z-index: 0; border-radius: 50%; }
+        .starry-bg {
+            background-color: #fdfaf1;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%231E1B4B' stop-opacity='0.05'/%3E%3Cstop offset='1' stop-color='%23312E81' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='200' height='200' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 100 Q 50 50, 100 100 T 200 100' fill='none' stroke='url(%23a)' stroke-width='2'/%3E%3Cpath d='M0 120 Q 50 70, 100 120 T 200 120' fill='none' stroke='url(%23a)' stroke-width='1' opacity='0.5'/%3E%3Cpath d='M0 80 Q 50 30, 100 80 T 200 80' fill='none' stroke='url(%23a)' stroke-width='1.5' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+        .dark .starry-bg { background-color: #1a1a2e; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23D4AF37' stop-opacity='0.15'/%3E%3Cstop offset='1' stop-color='%232D6A4F' stop-opacity='0.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='300' height='300' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 150 Q 75 75, 150 150 T 300 150' fill='none' stroke='url(%23a)' stroke-width='1'/%3E%3Ccircle cx='150' cy='150' r='2' fill='%23D4AF37' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E"); }
+        .dark .bg-white\/60 { background-color: rgba(38,38,64,0.6); }
+        .dark .bg-white\/5 { background-color: rgba(255,255,255,0.05); }
+        .dark .text-indigo-deep { color: #e8e8f0; }
+        .dark .bg-slate-soft { background-color: #2a2a3e; }
+        .dark .border-t { border-color: rgba(212,175,55,0.1); }
+        .dark .text-teal-muted { color: #52c796; }
+        .dark .bg-slate-soft\/80 {
+            background-color: rgba(42, 42, 62, 0.8);
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        * {
+            transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+            transition-duration: 0.8s;
+            transition-timing-function: ease;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light font-display text-slate-900 starry-bg">
+    <div id="page-overlay" style="position:fixed;inset:0;z-index:99999;background:#fdfaf1;display:flex;align-items:center;justify-content:center;font-family:serif;">
+        <div style="text-align:center">
+            <div style="width:40px;height:40px;margin:0 auto 12px;border:3px solid #e6e3db;border-top-color:#1b3a1e;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+            <p style="color:#1b3a1e;font-weight:bold;font-size:1.1rem;">Karuna</p>
+        </div>
+    </div>
+<div class="flex h-screen overflow-hidden">
+
+     <!-- Sidebar -->
+        <aside class="w-64 bg-indigo-deep text-white/90 flex flex-col fixed h-screen z-20 transition-all">
+            <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
+                <span class="material-symbols-outlined text-[120px] text-primary">filter_vintage</span>
+            </div>
+            
+            <div class="p-6 flex items-center gap-3">
+                <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-forest">
+                    <span class="material-symbols-outlined font-bold text-white">temple_buddhist</span>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
+            </div>
+            
+             <nav class="flex-1 mt-2 px-4 space-y-1">
+            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="aulas.html">
+                <span class="material-symbols-outlined">analytics</span>
+                <span class="font-medium">Vista de Estadísticas</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-secondary text-white" href="manejo_aulas.html">
+                <span class="material-symbols-outlined">groups</span>
+                <span class="font-medium">Aulas</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="#">
+                <span class="material-symbols-outlined">assessment</span>
+                <span class="font-medium">Reportes</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="profile.html">
+                <span class="material-symbols-outlined">account_circle</span>
+                <span class="font-medium">Perfil</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+            <a href="crear_aulas.html"
+                class="w-full bg-primary hover:bg-primary/90 text-indigo-deep font-bold py-3 rounded-xl transition-all shadow-md flex shadow-primary/10 items-center justify-center gap-2">
+                <span class="material-symbols-outlined">add</span>
+                <span>Nuevo Salón</span>
+            </a>
+        </div>
+        </aside>
+
+    <!-- Page wrapper -->
+    <div class="flex flex-col flex-1 ml-64 h-screen overflow-hidden">
+
+        <!-- Top bar / header -->
+        <header class="shrink-0 z-10 bg-white/60 backdrop-blur-md border-b border-accent-indigo/10 px-8 py-4 flex items-center justify-between">
+            <div>
+                <nav class="flex text-xs text-primary/50 gap-2 mb-0.5">
+                    <span>Aulas</span>
+                    <span>/</span>
+                    <span class="text-primary font-medium">Detalle</span>
+                </nav>
+                <h2 class="text-2xl font-serif font-bold text-accent-indigo tracking-tight leading-tight">
+                    Environmental Biology 101
+                </h2>
+                <p class="text-slate-400 text-xs italic">Sección A • Semestre Otoño 2024</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button class="flex items-center gap-2 bg-secondary text-accent-indigo px-4 py-2 rounded-full font-bold text-xs shadow-md hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                    Editar Clase
+                </button>
+                <div class="flex items-center gap-3 pl-4 border-l border-accent-indigo/10">
+                    <p class="text-sm font-bold text-accent-indigo hidden sm:block" id="nombre_docente">Prof. Julián Thorne</p>
+                    <div class="size-9 rounded-full bg-primary/20 border-2 border-primary/40 overflow-hidden">
+                        <img id="imagen-perfil" alt="Perfil" class="w-full h-full object-cover"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q"/>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable content -->
+        <main class="flex-1 overflow-y-auto fluid-bg px-8 py-8">
+
+            <div class="grid grid-cols-12 gap-8">
+
+                <!-- Left Column -->
+                <div class="col-span-12 lg:col-span-7 space-y-8">
+
+                    <!-- Students Section -->
+                    <section class="watercolor-card rounded-xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-xl font-serif font-bold text-accent-indigo">Alumnos Inscritos</h3>
+                                <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                    3 alumnos
+                                </span>
+                            </div>
+                            <button class="flex items-center gap-1.5 bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-accent-indigo transition-colors">
+                                <span class="material-symbols-outlined text-sm">person_add</span>
+                                Agregar alumno
+                            </button>
+                        </div>
+
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b border-primary/5">
+                                    <th class="pb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Estudiante</th>
+                                    <th class="pb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">ID</th>
+                                    <th class="pb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-primary/5">
+                                <tr class="hover:bg-primary/[0.02] transition-colors">
+                                    <td class="py-3 text-sm font-semibold text-accent-indigo">Ana Rivera</td>
+                                    <td class="py-3 text-[10px] text-slate-400 font-mono">2023001</td>
+                                    <td class="py-3 text-right">
+                                        <div class="flex items-center justify-end gap-1">
+                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 transition-all">
+                                                <span class="material-symbols-outlined text-sm">edit</span>
+                                            </button>
+                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+                                                <span class="material-symbols-outlined text-sm">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-primary/[0.02] transition-colors">
+                                    <td class="py-3 text-sm font-semibold text-accent-indigo">Carlos Gómez</td>
+                                    <td class="py-3 text-[10px] text-slate-400 font-mono">2023002</td>
+                                    <td class="py-3 text-right">
+                                        <div class="flex items-center justify-end gap-1">
+                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 transition-all">
+                                                <span class="material-symbols-outlined text-sm">edit</span>
+                                            </button>
+                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+                                                <span class="material-symbols-outlined text-sm">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-primary/[0.02] transition-colors">
+                                    <td class="py-3 text-sm font-semibold text-accent-indigo">Lucía Fernández</td>
+                                    <td class="py-3 text-[10px] text-slate-400 font-mono">2023003</td>
+                                    <td class="py-3 text-right">
+                                        <div class="flex items-center justify-end gap-1">
+                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 transition-all">
+                                                <span class="material-symbols-outlined text-sm">edit</span>
+                                            </button>
+                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+                                                <span class="material-symbols-outlined text-sm">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <!-- Grade Management Section -->
+                    <section class="watercolor-card rounded-xl p-6 shadow-sm border-l-4 border-secondary">
+                        <div class="flex items-center gap-2 mb-6">
+                            <span class="material-symbols-outlined text-secondary">verified_user</span>
+                            <h3 class="text-xl font-serif font-bold text-accent-indigo">Gestión de Calificaciones</h3>
+                            <span class="ml-auto text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vista de Profesor</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+
+                            <!-- Trabajos -->
+                            <div class="p-5 rounded-xl bg-primary/5 border border-primary/10">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="material-symbols-outlined text-primary">assignment</span>
+                                    <h4 class="font-bold text-accent-indigo">Trabajos</h4>
+                                </div>
+                                <p class="text-xs text-slate-500 mb-4 leading-relaxed">Tareas y proyectos del semestre.</p>
+                                <button class="w-full py-2 bg-white text-primary border border-primary/20 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all">
+                                    Gestionar
+                                </button>
+                            </div>
+
+                            <!-- Exámenes -->
+                            <div class="p-5 rounded-xl bg-secondary/5 border border-secondary/20">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="material-symbols-outlined text-secondary">quiz</span>
+                                    <h4 class="font-bold text-accent-indigo">Exámenes</h4>
+                                </div>
+                                <p class="text-xs text-slate-500 mb-4 leading-relaxed">Evaluaciones parciales y finales.</p>
+                                <button class="w-full py-2 bg-accent-indigo text-white rounded-lg text-xs font-bold hover:bg-primary transition-all shadow-md">
+                                    Gestionar
+                                </button>
+                            </div>
+
+                            <!-- Asistencia (próximamente) -->
+                            <div class="p-5 rounded-xl bg-slate-50 border border-dashed border-slate-200">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="material-symbols-outlined text-slate-300">how_to_reg</span>
+                                    <h4 class="font-bold text-slate-400">Asistencia</h4>
+                                </div>
+                                <p class="text-xs text-slate-400 mb-4 leading-relaxed">Pasar lista del día.</p>
+                                <button disabled class="w-full py-2 bg-white text-slate-300 border border-slate-200 rounded-lg text-xs font-bold cursor-not-allowed">
+                                    Próximamente
+                                </button>
+                            </div>
+
+                        </div>
+                    </section>
+
+                </div>
+
+                <!-- Right Column: Settings -->
+                <div class="col-span-12 lg:col-span-5">
+                    <section class="watercolor-card rounded-xl p-6 shadow-sm sticky top-4">
+                        <div class="flex items-center gap-2 mb-6">
+                            <span class="material-symbols-outlined text-primary">tune</span>
+                            <h3 class="text-xl font-serif font-bold text-accent-indigo">Configuración de Clase</h3>
+                        </div>
+
+                        <div class="space-y-6">
+
+                            <!-- Semester Duration -->
+                            <div>
+                                <p class="text-sm font-bold text-accent-indigo mb-3 flex items-center gap-2">
+                                    <span class="size-1.5 rounded-full bg-secondary inline-block"></span>
+                                    Duración del Semestre
+                                </p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fecha Inicio</label>
+                                        <input class="w-full bg-white/50 border-primary/10 rounded-lg text-sm focus:ring-primary" type="date" value="2024-08-15"/>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fecha Fin</label>
+                                        <input class="w-full bg-white/50 border-primary/10 rounded-lg text-sm focus:ring-primary" type="date" value="2024-12-10"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Attendance Days -->
+                            <div>
+                                <p class="text-sm font-bold text-accent-indigo mb-3 flex items-center gap-2">
+                                    <span class="size-1.5 rounded-full bg-secondary inline-block"></span>
+                                    Días de Asistencia
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <label class="relative cursor-pointer">
+                                        <input checked class="peer sr-only" type="checkbox"/>
+                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">L</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input class="peer sr-only" type="checkbox"/>
+                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">M</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input checked class="peer sr-only" type="checkbox"/>
+                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">M</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input class="peer sr-only" type="checkbox"/>
+                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">J</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input checked class="peer sr-only" type="checkbox"/>
+                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">V</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input class="peer sr-only" type="checkbox"/>
+                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">S</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input class="peer sr-only" type="checkbox"/>
+                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">D</div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Notifications Toggle -->
+                            <div class="pt-4 border-t border-primary/5">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-slate-600">Notificaciones automáticas</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input checked class="sr-only peer" type="checkbox"/>
+                                        <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="bg-primary/5 p-4 rounded-xl">
+                                <div class="flex gap-3">
+                                    <span class="material-symbols-outlined text-primary">info</span>
+                                    <p class="text-xs text-slate-500 leading-normal italic">
+                                        Cualquier cambio en la duración del semestre afectará el calendario de todos los alumnos inscritos.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button class="w-full bg-accent-indigo text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-primary transition-colors">
+                                Guardar Configuración
+                            </button>
+
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+
+            <!-- Footer Decor -->
+            <div class="mt-16 flex justify-center opacity-20 select-none">
+                <div class="flex gap-4">
+                    <span class="material-symbols-outlined text-4xl text-primary">waves</span>
+                    <span class="material-symbols-outlined text-4xl text-secondary">star</span>
+                    <span class="material-symbols-outlined text-4xl text-primary">waves</span>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const overlay = document.getElementById('page-overlay');
+            if (overlay) {
+                overlay.style.transition = 'opacity 0.4s ease';
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 400);
+            }
+        });
+    </script>
+</body>
+</html>
