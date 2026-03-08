@@ -19,6 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -234,7 +235,7 @@
             
             <div class="p-6 flex items-center gap-3">
                 <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-forest">
-                    <span class="material-symbols-outlined font-bold text-white">filter_vintage</span>
+                    <span class="material-symbols-outlined font-bold text-white">temple_buddhist</span>
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
             </div>
@@ -252,9 +253,9 @@
                     <span class="material-symbols-outlined">assessment</span>
                     <span class="font-medium">Reportes</span>
                 </a>
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" href="#">
-                    <span class="material-symbols-outlined">settings</span>
-                    <span class="font-medium">Configuración</span>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white" href="profile.html">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <span class="font-medium">Perfil</span>
                 </a>
             </nav>
             
@@ -564,6 +565,18 @@
             htmlElement.classList.add('light');
         }
     </script>
+
+    <script>
+        window.addEventListener('load', () => {
+            const overlay = document.getElementById('page-overlay');
+            if (overlay) {
+                overlay.style.transition = 'opacity 0.4s ease';
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 400);
+            }
+        });
+    </script>
+
     <script type="module" src="/aulas.ts"></script>
 </body>
 

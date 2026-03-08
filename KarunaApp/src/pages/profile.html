@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Karuna - Profile Customization</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#D4AF37",
+                        "indigo-deep": "#1E1B4B",
+                        "slate-soft": "#F1F5F9",
+                        "teal-muted": "#2D6A4F",
+                        "indigo-light": "#312E81",
+                        "background-light": "#F8FAFC",
+                    },
+                    fontFamily: { "display": ["Inter", "sans-serif"] },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body { transition: opacity 0.4s ease; font-family: 'Inter', sans-serif; background-color: #fdfaf1; }
+        .font-serif-elegant { font-family: 'Playfair Display', serif; }
+        .glow-primary { box-shadow: 0 0 15px rgba(212,175,55,0.4); }
+        .starry-wave { background: linear-gradient(135deg, #1E1B4B 0%, #283593 40%, #D4AF37 100%); opacity: 0.08; filter: blur(80px); position: absolute; top: -10%; right: -10%; width: 70%; height: 70%; z-index: 0; border-radius: 50%; }
+        .starry-bg {
+            background-color: #fdfaf1;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%231E1B4B' stop-opacity='0.05'/%3E%3Cstop offset='1' stop-color='%23312E81' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='200' height='200' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 100 Q 50 50, 100 100 T 200 100' fill='none' stroke='url(%23a)' stroke-width='2'/%3E%3Cpath d='M0 120 Q 50 70, 100 120 T 200 120' fill='none' stroke='url(%23a)' stroke-width='1' opacity='0.5'/%3E%3Cpath d='M0 80 Q 50 30, 100 80 T 200 80' fill='none' stroke='url(%23a)' stroke-width='1.5' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+        .dark .starry-bg { background-color: #1a1a2e; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23D4AF37' stop-opacity='0.15'/%3E%3Cstop offset='1' stop-color='%232D6A4F' stop-opacity='0.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='300' height='300' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 150 Q 75 75, 150 150 T 300 150' fill='none' stroke='url(%23a)' stroke-width='1'/%3E%3Ccircle cx='150' cy='150' r='2' fill='%23D4AF37' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E"); }
+        .dark .bg-white\/60 { background-color: rgba(38,38,64,0.6); }
+        .dark .bg-white\/5 { background-color: rgba(255,255,255,0.05); }
+        .dark .text-indigo-deep { color: #e8e8f0; }
+        .dark .bg-slate-soft { background-color: #2a2a3e; }
+        .dark .border-t { border-color: rgba(212,175,55,0.1); }
+        .dark .text-teal-muted { color: #52c796; }
+        .dark .bg-slate-soft\/80 {
+            background-color: rgba(42, 42, 62, 0.8);
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body class="text-indigo-deep dark:text-slate-100 min-h-screen starry-bg">
+
+    <div id="page-overlay" style="position:fixed;inset:0;z-index:99999;background:#fdfaf1;display:flex;align-items:center;justify-content:center;font-family:serif;">
+        <div style="text-align:center">
+            <div style="width:40px;height:40px;margin:0 auto 12px;border:3px solid #e6e3db;border-top-color:#1b3a1e;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+            <p style="color:#1b3a1e;font-weight:bold;font-size:1.1rem;">Karuna</p>
+        </div>
+    </div>
+
+    <div class="flex min-h-screen">
+
+        <!-- ── SIDEBAR MASTER (idéntica a aulas.html, activo: Perfil) ── -->
+        <aside class="w-64 bg-indigo-deep text-white/90 flex flex-col fixed h-screen z-20 transition-all">
+            <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
+                <span class="material-symbols-outlined text-[120px] text-primary">filter_vintage</span>
+            </div>
+            <div class="p-6 flex items-center gap-3">
+                <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-forest">
+                    <span class="material-symbols-outlined font-bold text-white">temple_buddhist</span>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
+            </div>
+            <nav class="flex-1 mt-6 px-4 space-y-2">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" href="aulas.html">
+                    <span class="material-symbols-outlined">analytics</span>
+                    <span class="font-medium">Vista de Estadísticas</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" href="#">
+                    <span class="material-symbols-outlined">groups</span>
+                    <span class="font-medium">Aulas</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" href="#">
+                    <span class="material-symbols-outlined">assessment</span>
+                    <span class="font-medium">Reportes</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white" href="#">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <span class="font-medium">Perfil</span>
+                </a>
+                </a>
+            </nav>
+            <div class="p-4 border-t border-white/10">
+                <button class="flex items-center gap-4 px-4 py-3 w-full rounded-lg hover:bg-red-500/20 text-red-200 transition-colors">
+                    <span class="material-symbols-outlined text-red-400">logout</span>
+                    <span class="font-medium">Cerrar Sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="flex-1 ml-64 min-h-screen flex flex-col">
+
+            <!-- Header (idéntico a aulas.html) -->
+            <header class="sticky top-0 z-10 bg-slate-soft/80 backdrop-blur-md border-b border-indigo-deep/10 px-8 py-4 flex items-center justify-between bg-white/40">
+                <button class="p-2 rounded-full hover:bg-indigo-deep/10 dark:hover:bg-white/10 transition-colors text-indigo-deep dark:text-white flex items-center justify-center" id="theme-toggle" title="Alternar Modo Oscuro">
+                    <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined hidden dark:block">light_mode</span>
+                </button>
+                
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-3 pl-4 border-l border-forest/10">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-bold text-forest leading-none" id="nombre_docente">Prof. Julián Thorne</p>
+                        </div>
+                        <div class="size-10 rounded-full bg-primary/20 border-2 border-primary/60 overflow-hidden">
+                            <img alt="Perfil del profesor" class="w-full h-full object-cover" data-alt="Close up portrait of a male teacher" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q" />
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="relative flex-1 overflow-y-auto">
+                <div class="starry-wave"></div>
+                <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-4xl mx-auto px-8 py-12">
+                    <header class="mb-12">
+                        <h2 class="font-serif-elegant text-5xl text-indigo-deep dark:text-primary mb-4 italic leading-tight">Personalizacion del Perfil</h2>
+                        <p class="text-indigo-deep/60 dark:text-slate-400 text-lg">Edita los elementos basicos de tu perfil a tu gusto.</p>
+                    </header>
+
+                    <div class="bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-xl border border-white/40 dark:border-white/10 p-10 shadow-sm">
+
+                        <!-- Foto -->
+                        <div class="flex flex-col items-center mb-12">
+                            <div class="relative group">
+                                <div class="absolute -inset-1 bg-gradient-to-tr from-primary via-indigo-deep to-primary rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                                <div class="relative w-40 h-40 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl">
+                                    <img id="profile-photo" alt="Profile Photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBApAtlo_IplBrTlhGG5_Uc7OShtK9bLpSlhLsHBFTH-NXmLJ9CIOf-Oocs2ZyfZ3MDz9-Ukf4cxGQDCzNmfkOSPK5q-_t882VRz5WHE8jSrma9JPic8dJOk7PSQVjipFh79eitPhGEMmg1tBevJmX8BUzIIGz7rH2HampC1Rv0ycgWmNx9hcKWomTKyPyXGeli35Jk9JmjpOr6KirxfjVplFrbElFAo7YVJnbQ-rAUpCSPF1kUQKioMkwC34YiwHjgsw_vGVjgnWA" />
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                        <span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <h3 class="font-serif-elegant text-2xl font-bold dark:text-slate-200">Docente principal</h3>
+                                <button id="cambio_foto" class="mt-2 text-indigo-deep dark:text-primary font-bold text-sm hover:underline flex items-center gap-1 mx-auto">
+                                    <span class="material-symbols-outlined text-lg">upload</span>
+                                    Cambia tu foto
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Campos -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-indigo-deep/50 dark:text-slate-400 ml-1">Nombre Completo</label>
+                                <input id="input-nombre" class="w-full bg-slate-soft dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary transition-all text-lg dark:text-slate-100" placeholder="Ingresa tu primer nombre" type="text"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-indigo-deep/50 dark:text-slate-400 ml-1">Apellidos</label>
+                                <input id="input-apellido" class="w-full bg-slate-soft dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary transition-all text-lg dark:text-slate-100" placeholder="Ingresa tu apellido" type="text"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-indigo-deep/50 dark:text-slate-400 ml-1">Titulo de trabajo / Posicion</label>
+                                <input id="input-puesto" class="w-full bg-slate-soft dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary transition-all text-lg dark:text-slate-100" placeholder="Docente" type="text"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-indigo-deep/50 dark:text-slate-400 ml-1">Genero</label>
+                                <select id="select-genero" class="w-full bg-slate-soft dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary transition-all text-lg dark:text-slate-100">
+                                    <option>Mujer</option><option>Hombre</option><option>No binario</option><option>Prefiero no mencionarlo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-indigo-deep/5 dark:border-slate-800 gap-4">
+                            <p class="text-sm text-indigo-deep/40 italic" id="last-updated">Last updated: Oct 24, 2023</p>
+                            <div class="flex gap-4 w-full md:w-auto">
+                                <button onclick="window.history.back()" class="flex-1 md:flex-none px-8 py-3 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors dark:text-slate-200">Cancelar</button>
+                                <button id="btn-save" class="flex-1 md:flex-none px-10 py-3 rounded-xl bg-primary text-indigo-deep font-bold glow-primary hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined">save</span>Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.remove('light');
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            htmlElement.classList.remove('light');
+        } else {
+            htmlElement.classList.remove('dark');
+            htmlElement.classList.add('light');
+        }
+    </script>
+
+    <script>
+        window.addEventListener('load', () => {
+            const overlay = document.getElementById('page-overlay');
+            if (overlay) {
+                overlay.style.transition = 'opacity 0.4s ease';
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 400);
+            }
+        });
+    </script>
+    <script type="module" src="/profile.ts"></script>
+</body>
+</html>

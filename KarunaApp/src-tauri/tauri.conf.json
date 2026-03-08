@@ -17,24 +17,31 @@
         "height": 600
       }
     ],
-    "security": {
-      "csp": null,
-      "capabilities": [
-        {
-          "identifier": "main-capability",
-          "description": "Capability for the main window",
-          "windows": ["main"],
-          "permissions": [
-            "core:default",
-            "sql:default",
-            "sql:allow-load",
-            "sql:allow-execute",
-            "sql:allow-select",
-            "sql:allow-close"
-          ]
-        }
+  
+  "security": {
+  "csp": null,
+   "assetProtocol": {
+    "enable": true,
+    "scope": ["**"]
+  },
+  "capabilities": [
+    {
+      "identifier": "main-capability",
+      "description": "Capability for the main window",
+      "windows": ["main"],
+      "permissions": [
+        "core:default",
+        "sql:default",
+        "sql:allow-load",
+        "sql:allow-execute",
+        "sql:allow-select",
+        "sql:allow-close",
+        "dialog:default",
+        "dialog:allow-open"
       ]
     }
+  ]
+}
   },
   "bundle": {
     "active": true,

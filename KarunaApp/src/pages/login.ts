@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async(e) => {
             console.log('Formulario encontrado');
             
             loginForm.addEventListener('submit', async (e) => {
+                
                 console.log('Submit event triggered');
                 e.preventDefault();
                 console.log('Default prevented');
