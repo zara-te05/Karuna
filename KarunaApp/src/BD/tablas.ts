@@ -105,3 +105,17 @@ export async function obtenerDocentePorID(id: number) {
         return null;
     }
 }
+
+export async function actualizarDocente(nombre: string, apellido: string, id: number) {
+    try {
+        const database = await initDatabase();
+        await database.execute(
+            `UPDATE DOCENTE SET nombre = ?, apellido = ? WHERE id = ?`,
+            [nombre, apellido, id]
+        );
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error };
+    }
+}

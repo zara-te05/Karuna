@@ -1,0 +1,50 @@
+import { initTransitions } from "../transitions";
+import { obtenerDocentePorID } from "../BD/tablas";
+import { open } from '@tauri-apps/plugin-dialog';
+import { convertFileSrc } from '@tauri-apps/api/core';
+
+function cargarFotoGuardada() {
+    const rutaGuardada = localStorage.getItem('foto_perfil');
+    if (rutaGuardada) {
+        const fotoPerfil = document.getElementById('foto-perfil') as HTMLImageElement;
+        
+        const src = convertFileSrc(rutaGuardada);
+        
+        if (fotoPerfil) fotoPerfil.src = src;  // ← Esto faltaba
+    }
+}
+
+async function cargarDatosPerfil() {
+    try {
+        // 1. Obtener el elemento (Usa el ID exacto que pusiste en el HTML)
+        const nombreDocente = document.getElementById('nombre_docente');
+        
+        if (!nombreDocente) {
+            console.error("No se encontró el elemento #nombre_docente en el HTML");
+            return;
+        }
+
+        // 2. Consultar la BD (ID 1 es el supuesto)
+        const docente = await obtenerDocentePorID(1);
+
+        // 3. Validar si el docente existe
+        if (docente) {
+            nombreDocente.textContent = `Prof. ${docente.nombre} ${docente.apellido}`;
+            console.log("DOM actualizado con:", docente.nombre);
+        } 
+        else {
+            console.warn("La base de datos respondió, pero el ID 1 no existe.");
+            nombreDocente.textContent = "Docente no encontrado";
+        }
+    } 
+    catch (error) {
+        console.error("Error en el flujo de carga:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async(e) => {
+
+    cargarFotoGuardada();
+    setTimeout(cargarDatosPerfil, 100); 
+
+})
