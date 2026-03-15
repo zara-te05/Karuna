@@ -21,14 +21,22 @@
                         "indigo-light": "#312E81",
                         "background-light": "#F8FAFC",
                     },
-                    fontFamily: { "display": ["Inter", "sans-serif"] },
-                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
                 },
             },
         }
     </script>
     <style>
-        body { transition: opacity 0.4s ease; font-family: 'Inter', sans-serif; background-color: #fdfaf1; }
+        body { transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease, opacity 0.4s ease; font-family: 'Inter', sans-serif; background-color: #fdfaf1; }
         .font-serif-elegant { font-family: 'Playfair Display', serif; }
         .glow-primary { box-shadow: 0 0 15px rgba(212,175,55,0.4); }
         .starry-wave { background: linear-gradient(135deg, #1E1B4B 0%, #283593 40%, #D4AF37 100%); opacity: 0.08; filter: blur(80px); position: absolute; top: -10%; right: -10%; width: 70%; height: 70%; z-index: 0; border-radius: 50%; }
@@ -38,16 +46,23 @@
             background-attachment: fixed;
         }
         .dark .starry-bg { background-color: #1a1a2e; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23D4AF37' stop-opacity='0.15'/%3E%3Cstop offset='1' stop-color='%232D6A4F' stop-opacity='0.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='300' height='300' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 150 Q 75 75, 150 150 T 300 150' fill='none' stroke='url(%23a)' stroke-width='1'/%3E%3Ccircle cx='150' cy='150' r='2' fill='%23D4AF37' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E"); }
+        
         .dark .bg-white\/60 { background-color: rgba(38,38,64,0.6); }
         .dark .bg-white\/5 { background-color: rgba(255,255,255,0.05); }
         .dark .text-indigo-deep { color: #e8e8f0; }
         .dark .bg-slate-soft { background-color: #2a2a3e; }
         .dark .border-t { border-color: rgba(212,175,55,0.1); }
-        .dark .text-teal-muted { color: #52c796; }
+        
         .dark .bg-slate-soft\/80 {
             background-color: rgba(42, 42, 62, 0.8);
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        * {
+            transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+            transition-duration: 0.8s;
+            transition-timing-function: ease;
+        }
     </style>
 </head>
 
@@ -62,7 +77,7 @@
 
     <div class="flex min-h-screen">
 
-        <!-- ── SIDEBAR MASTER (idéntica a aulas.html, activo: Perfil) ── -->
+        <!-- Sidebar Master -->
         <aside class="w-64 bg-indigo-deep text-white/90 flex flex-col fixed h-screen z-20 transition-all">
             <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
                 <span class="material-symbols-outlined text-[120px] text-primary">filter_vintage</span>
@@ -73,20 +88,24 @@
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
             </div>
-            <nav class="flex-1 mt-6 px-4 space-y-2">
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="aulas.html">
+            <nav class="flex-1 mt-2 px-4 space-y-1">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="aulas.html">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="font-medium">Vista de Estadísticas</span>
                 </a>
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="manejo_aulas.html">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="lobby_aulas.html">
                     <span class="material-symbols-outlined">groups</span>
                     <span class="font-medium">Aulas</span>
                 </a>
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="#">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="#">
                     <span class="material-symbols-outlined">assessment</span>
                     <span class="font-medium">Reportes</span>
                 </a>
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white" href="profile.html">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white"
+                    href="profile.html">
                     <span class="material-symbols-outlined">account_circle</span>
                     <span class="font-medium">Perfil</span>
                 </a>
@@ -229,6 +248,6 @@
             }
         });
     </script>
-    <script type="module" src="/profile.ts"></script>
+    <script type="module" src="/scripts/profile.ts"></script>
 </body>
 </html>

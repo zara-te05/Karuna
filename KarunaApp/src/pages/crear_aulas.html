@@ -18,12 +18,12 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#f4c32f",
-                        "indigo-deep": "#1a1c4b",
-                        "indigo-flow": "#2d3269",
-                        "cream-soft": "#fdfaf1",
-                        "background-light": "#f8f8f5",
-                        "background-dark": "#121008",
+                        "primary": "#D4AF37",
+                        "indigo-deep": "#1E1B4B",
+                        "slate-soft": "#F1F5F9",
+                        "teal-muted": "#2D6A4F",
+                        "indigo-light": "#312E81",
+                        "background-light": "#F8FAFC",
                     },
                     fontFamily: {
                         "display": ["Inter", "sans-serif"],
@@ -42,7 +42,9 @@
     <style>
         @keyframes spin { to { transform:rotate(360deg); } }
 
-        /* ── Fondo unificado con profile.html ── */
+        body { transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease, opacity 0.4s ease; font-family: 'Inter', sans-serif; background-color: #fdfaf1; }
+        .font-serif-elegant { font-family: 'Playfair Display', serif; }
+        
         .starry-bg {
             background-color: #fdfaf1;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%231E1B4B' stop-opacity='0.05'/%3E%3Cstop offset='1' stop-color='%23312E81' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='200' height='200' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 100 Q 50 50, 100 100 T 200 100' fill='none' stroke='url(%23a)' stroke-width='2'/%3E%3Cpath d='M0 120 Q 50 70, 100 120 T 200 120' fill='none' stroke='url(%23a)' stroke-width='1' opacity='0.5'/%3E%3Cpath d='M0 80 Q 50 30, 100 80 T 200 80' fill='none' stroke='url(%23a)' stroke-width='1.5' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E");
@@ -104,7 +106,7 @@
 
     <div class="flex h-screen overflow-hidden">
 
-        <!-- Sidebar -->
+        <!-- Sidebar Master -->
         <aside class="w-64 bg-indigo-deep text-white/90 flex flex-col fixed h-screen z-20 transition-all">
             <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
                 <span class="material-symbols-outlined text-[120px] text-primary">filter_vintage</span>
@@ -115,20 +117,24 @@
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
             </div>
-            <nav class="flex-1 mt-6 px-4 space-y-2">
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="aulas.html">
+            <nav class="flex-1 mt-2 px-4 space-y-1">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="aulas.html">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="font-medium">Vista de Estadísticas</span>
                 </a>
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white" href="manejo_aulas.html">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white"
+                    href="lobby_aulas.html">
                     <span class="material-symbols-outlined">groups</span>
                     <span class="font-medium">Aulas</span>
                 </a>
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="#">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="#">
                     <span class="material-symbols-outlined">assessment</span>
                     <span class="font-medium">Reportes</span>
                 </a>
-                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="profile.html">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="profile.html">
                     <span class="material-symbols-outlined">account_circle</span>
                     <span class="font-medium">Perfil</span>
                 </a>
@@ -445,6 +451,6 @@
             }
         });
     </script>
-    <script type="module" src="crear_aulas.ts"></script>
+    <script type="module" src="/scripts/crear_aulas.ts"></script>
 </body>
 </html>

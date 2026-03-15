@@ -5,21 +5,43 @@
     <meta charset="utf-8" />
 
     <style>
-        #splash { position:fixed; inset:0; z-index:9999; background:#fdfbf3;
-                display:flex; align-items:center; justify-content:center; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .spinner { width:48px; height:48px; border:3px solid #e6e3db;
-                border-top-color:#1b3a1e; border-radius:50%;
-                animation: spin 0.8s linear infinite; margin:0 auto 16px; }
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #fdfbf3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid #e6e3db;
+            border-top-color: #1b3a1e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
     </style>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Karuna - Estadísticas y Rendimiento</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet" />
+
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -139,7 +161,7 @@
         .dark .text-indigo-deep\/60 {
             color: rgba(232, 232, 240, 0.6);
         }
-        
+
         * {
             transition-property: background-color, border-color, color, fill, stroke, box-shadow;
             transition-duration: 0.8s;
@@ -208,7 +230,7 @@
 </head>
 
 <body class="bg-slate-soft/30 text-indigo-deep selection:bg-primary/30 starry-bg">
-   
+
     <div id="page-overlay" style="
         position:fixed; inset:0; z-index:99999;
         background:#fdfaf1;
@@ -227,9 +249,13 @@
     </div>
 
     <style>
-        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
-   
+
     <div class="flex min-h-screen">
 
         <!-- Sidebar -->
@@ -237,66 +263,78 @@
             <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
                 <span class="material-symbols-outlined text-[120px] text-primary">filter_vintage</span>
             </div>
-            
+
             <div class="p-6 flex items-center gap-3">
                 <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-forest">
                     <span class="material-symbols-outlined font-bold text-white">temple_buddhist</span>
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
             </div>
-            
-        <nav class="flex-1 mt-2 px-4 space-y-1">
-            <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white" href="aulas.html">
-                <span class="material-symbols-outlined">analytics</span>
-                <span class="font-medium">Vista de Estadísticas</span>
-            </a>
-            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="manejo_aulas.html">
-                <span class="material-symbols-outlined">groups</span>
-                <span class="font-medium">Aulas</span>
-            </a>
-            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="#">
-                <span class="material-symbols-outlined">assessment</span>
-                <span class="font-medium">Reportes</span>
-            </a>
-            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="profile.html">
-                <span class="material-symbols-outlined">account_circle</span>
-                <span class="font-medium">Perfil</span>
-            </a>
-        </nav>
 
-        <div class="p-4 border-t border-white/10">
-            <a href="crear_aulas.html"
-                class="w-full bg-primary hover:bg-primary/90 text-indigo-deep font-bold py-3 rounded-xl transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined">add</span>
-                <span>Nuevo Salón</span>
-            </a>
-        </div>
+            <nav class="flex-1 mt-2 px-4 space-y-1">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white"
+                    href="aulas.html">
+                    <span class="material-symbols-outlined">analytics</span>
+                    <span class="font-medium">Vista de Estadísticas</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="lobby_aulas.html">
+                    <span class="material-symbols-outlined">groups</span>
+                    <span class="font-medium">Aulas</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="#">
+                    <span class="material-symbols-outlined">assessment</span>
+                    <span class="font-medium">Reportes</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="profile.html">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <span class="font-medium">Perfil</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-white/10">
+                <a href="crear_aulas.html"
+                    class="w-full bg-primary hover:bg-primary/90 text-indigo-deep font-bold py-3 rounded-xl transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">add</span>
+                    <span>Nuevo Salón</span>
+                </a>
+            </div>
         </aside>
 
         <!-- Main -->
         <main class="flex-1 ml-64 min-h-screen">
 
             <!-- Header -->
-            <header class="sticky top-0 z-10 bg-slate-soft/80 backdrop-blur-md border-b border-indigo-deep/10 px-8 py-4 flex items-center justify-between bg-white/40">
+            <header
+                class="sticky top-0 z-10 bg-slate-soft/80 backdrop-blur-md border-b border-indigo-deep/10 px-8 py-4 flex items-center justify-between bg-white/40">
                 <div class="flex items-center gap-4 flex-1 max-w-xl">
                     <div class="relative w-full">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-forest/40">search</span>
-                        <input class="w-full pl-10 pr-4 py-2 bg-indigo-deep/5 border-none rounded-xl focus:ring-2 focus:ring-primary text-indigo-deep placeholder:text-indigo-deep/40" placeholder="Buscar aulas o materiales..." type="text" />
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-forest/40">search</span>
+                        <input
+                            class="w-full pl-10 pr-4 py-2 bg-indigo-deep/5 border-none rounded-xl focus:ring-2 focus:ring-primary text-indigo-deep placeholder:text-indigo-deep/40"
+                            placeholder="Buscar aulas o materiales..." type="text" />
                     </div>
                 </div>
-                
-                <button class="p-2 rounded-full hover:bg-indigo-deep/10 dark:hover:bg-white/10 transition-colors text-indigo-deep dark:text-white flex items-center justify-center" id="theme-toggle" title="Alternar Modo Oscuro">
+
+                <button
+                    class="p-2 rounded-full hover:bg-indigo-deep/10 dark:hover:bg-white/10 transition-colors text-indigo-deep dark:text-white flex items-center justify-center"
+                    id="theme-toggle" title="Alternar Modo Oscuro">
                     <span class="material-symbols-outlined dark:hidden">dark_mode</span>
                     <span class="material-symbols-outlined hidden dark:block">light_mode</span>
                 </button>
-                
+
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-3 pl-4 border-l border-forest/10">
                         <div class="text-right hidden sm:block">
-                            <p class="text-sm font-bold text-forest leading-none" id="nombre_docente">Prof. Julián Thorne</p>
+                            <p class="text-sm font-bold text-forest leading-none" id="nombre_docente">Prof. Julián
+                                Thorne</p>
                         </div>
                         <div class="size-10 rounded-full bg-primary/20 border-2 border-primary/60 overflow-hidden">
-                            <img id="imagen-perfil" alt="Perfil del profesor" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q" />
+                            <img id="imagen-perfil" alt="Perfil del profesor" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q" />
                         </div>
                     </div>
                 </div>
@@ -307,7 +345,8 @@
 
                 <!-- Title -->
                 <div>
-                    <h2 class="text-5xl font-bold text-indigo-deep tracking-tight font-serif-elegant">Estadísticas de Aulas</h2>
+                    <h2 class="text-5xl font-bold text-indigo-deep tracking-tight font-serif-elegant">Estadísticas de
+                        Aulas</h2>
                     <p class="text-indigo-deep/60 text-lg mt-1">Resumen global del semestre en curso.</p>
                 </div>
 
@@ -339,7 +378,8 @@
                     </div>
                     <div class="bg-white rounded-xl p-4 border border-forest/5 metric-glow">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-primary" style="font-size:18px">assignment_turned_in</span>
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size:18px">assignment_turned_in</span>
                             <p class="text-[10px] text-indigo-deep/50 uppercase font-bold tracking-wider">Entregas</p>
                         </div>
                         <p class="text-3xl font-bold text-indigo-deep font-serif-elegant">76%</p>
@@ -347,7 +387,8 @@
                     </div>
                     <div class="bg-white rounded-xl p-4 border border-forest/5 metric-glow">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-primary" style="font-size:18px">event_available</span>
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size:18px">event_available</span>
                             <p class="text-[10px] text-indigo-deep/50 uppercase font-bold tracking-wider">Asistencia</p>
                         </div>
                         <p class="text-3xl font-bold text-indigo-deep font-serif-elegant">95.3%</p>
@@ -361,41 +402,49 @@
                     <!-- Gráfica (3 cols) -->
                     <div class="md:col-span-3 bg-white rounded-xl border border-forest/5 metric-glow p-5">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-base font-bold text-indigo-deep font-serif-elegant">Tendencia de Calificaciones</h3>
-                            <span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full uppercase tracking-wider">Semanas 1–12</span>
+                            <h3 class="text-base font-bold text-indigo-deep font-serif-elegant">Tendencia de
+                                Calificaciones</h3>
+                            <span
+                                class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full uppercase tracking-wider">Semanas
+                                1–12</span>
                         </div>
                         <div class="relative h-40">
                             <svg class="w-full h-full" viewBox="0 0 600 130" preserveAspectRatio="none">
                                 <defs>
                                     <linearGradient id="gBio" x1="0%" x2="100%" y1="0%" y2="0%">
-                                        <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:0.4"/>
-                                        <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1"/>
+                                        <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:0.4" />
+                                        <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1" />
                                     </linearGradient>
                                     <linearGradient id="gIlus" x1="0%" x2="100%" y1="0%" y2="0%">
-                                        <stop offset="0%" style="stop-color:#312E81;stop-opacity:0.4"/>
-                                        <stop offset="100%" style="stop-color:#312E81;stop-opacity:1"/>
+                                        <stop offset="0%" style="stop-color:#312E81;stop-opacity:0.4" />
+                                        <stop offset="100%" style="stop-color:#312E81;stop-opacity:1" />
                                     </linearGradient>
                                     <linearGradient id="gFil" x1="0%" x2="100%" y1="0%" y2="0%">
-                                        <stop offset="0%" style="stop-color:#2D6A4F;stop-opacity:0.4"/>
-                                        <stop offset="100%" style="stop-color:#2D6A4F;stop-opacity:1"/>
+                                        <stop offset="0%" style="stop-color:#2D6A4F;stop-opacity:0.4" />
+                                        <stop offset="100%" style="stop-color:#2D6A4F;stop-opacity:1" />
                                     </linearGradient>
                                     <filter id="sg">
-                                        <feGaussianBlur stdDeviation="1.5" result="b"/>
-                                        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                                        <feGaussianBlur stdDeviation="1.5" result="b" />
+                                        <feMerge>
+                                            <feMergeNode in="b" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
                                     </filter>
                                 </defs>
                                 <g stroke="#1E1B4B" stroke-opacity="0.05" stroke-width="1">
-                                    <line x1="0" y1="26"  x2="600" y2="26"/>
-                                    <line x1="0" y1="52"  x2="600" y2="52"/>
-                                    <line x1="0" y1="78"  x2="600" y2="78"/>
-                                    <line x1="0" y1="104" x2="600" y2="104"/>
+                                    <line x1="0" y1="26" x2="600" y2="26" />
+                                    <line x1="0" y1="52" x2="600" y2="52" />
+                                    <line x1="0" y1="78" x2="600" y2="78" />
+                                    <line x1="0" y1="104" x2="600" y2="104" />
                                 </g>
-                                <path d="M0,100 Q75,55 150,72 T300,48 T450,35 T600,25"
-                                    fill="none" stroke="url(#gBio)" stroke-width="2.5" stroke-linecap="round" filter="url(#sg)"/>
-                                <path d="M0,85 Q75,95 150,62 T300,40 T450,26 T600,18"
-                                    fill="none" stroke="url(#gIlus)" stroke-width="2.5" stroke-linecap="round" filter="url(#sg)" stroke-dasharray="6 3"/>
-                                <path d="M0,65 Q75,70 150,60 T300,55 T450,52 T600,50"
-                                    fill="none" stroke="url(#gFil)" stroke-width="2.5" stroke-linecap="round" filter="url(#sg)" stroke-dasharray="2 4"/>
+                                <path d="M0,100 Q75,55 150,72 T300,48 T450,35 T600,25" fill="none" stroke="url(#gBio)"
+                                    stroke-width="2.5" stroke-linecap="round" filter="url(#sg)" />
+                                <path d="M0,85 Q75,95 150,62 T300,40 T450,26 T600,18" fill="none" stroke="url(#gIlus)"
+                                    stroke-width="2.5" stroke-linecap="round" filter="url(#sg)"
+                                    stroke-dasharray="6 3" />
+                                <path d="M0,65 Q75,70 150,60 T300,55 T450,52 T600,50" fill="none" stroke="url(#gFil)"
+                                    stroke-width="2.5" stroke-linecap="round" filter="url(#sg)"
+                                    stroke-dasharray="2 4" />
                             </svg>
                         </div>
                         <div class="flex items-center gap-5 mt-3 pt-3 border-t border-indigo-deep/5">
@@ -415,10 +464,12 @@
                     </div>
 
                     <!-- Tabla resumen (2 cols) -->
-                    <div class="md:col-span-2 bg-white rounded-xl border border-forest/5 metric-glow overflow-hidden flex flex-col">
+                    <div
+                        class="md:col-span-2 bg-white rounded-xl border border-forest/5 metric-glow overflow-hidden flex flex-col">
                         <div class="px-5 py-4 border-b border-indigo-deep/5">
                             <h3 class="text-base font-bold text-indigo-deep font-serif-elegant flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary" style="font-size:18px">table_chart</span>
+                                <span class="material-symbols-outlined text-primary"
+                                    style="font-size:18px">table_chart</span>
                                 Resumen por Aula
                             </h3>
                         </div>
@@ -426,21 +477,36 @@
                             <table class="w-full text-sm">
                                 <thead>
                                     <tr class="border-b border-indigo-deep/5 bg-indigo-deep/[0.02]">
-                                        <th class="text-left px-5 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">Aula</th>
-                                        <th class="text-center px-3 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">Prom.</th>
-                                        <th class="text-center px-3 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">Asist.</th>
-                                        <th class="text-center px-3 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">Entregados</th>
-                                        <th class="text-center px-3 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">Exámenes</th>
+                                        <th
+                                            class="text-left px-5 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">
+                                            Aula</th>
+                                        <th
+                                            class="text-center px-3 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">
+                                            Prom.</th>
+                                        <th
+                                            class="text-center px-3 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">
+                                            Asist.</th>
+                                        <th
+                                            class="text-center px-3 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">
+                                            Entregados</th>
+                                        <th
+                                            class="text-center px-3 py-2 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-wider">
+                                            Exámenes</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-indigo-deep/5">
                                     <tr class="hover:bg-indigo-deep/[0.02] transition-colors">
                                         <td class="px-5 py-3">
-                                            <p class="font-bold text-indigo-deep text-xs leading-tight">Biología Ambiental</p>
+                                            <p class="font-bold text-indigo-deep text-xs leading-tight">Biología
+                                                Ambiental</p>
                                             <p class="text-[10px] text-indigo-deep/40">28 alumnos</p>
                                         </td>
-                                        <td class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">84.2%</td>
-                                        <td class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">96%</td>
+                                        <td
+                                            class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">
+                                            84.2%</td>
+                                        <td
+                                            class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">
+                                            96%</td>
                                         <td class="px-3 py-3 text-center">
                                             <span class="text-xs font-bold text-teal-muted">21/28</span>
                                             <div class="w-full bg-indigo-deep/5 rounded-full h-1 mt-1">
@@ -453,11 +519,16 @@
                                     </tr>
                                     <tr class="hover:bg-indigo-deep/[0.02] transition-colors">
                                         <td class="px-5 py-3">
-                                            <p class="font-bold text-indigo-deep text-xs leading-tight">Ilustración Digital II</p>
+                                            <p class="font-bold text-indigo-deep text-xs leading-tight">Ilustración
+                                                Digital II</p>
                                             <p class="text-[10px] text-indigo-deep/40">31 alumnos</p>
                                         </td>
-                                        <td class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">91.8%</td>
-                                        <td class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">92%</td>
+                                        <td
+                                            class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">
+                                            91.8%</td>
+                                        <td
+                                            class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">
+                                            92%</td>
                                         <td class="px-3 py-3 text-center">
                                             <span class="text-xs font-bold text-teal-muted">29/31</span>
                                             <div class="w-full bg-indigo-deep/5 rounded-full h-1 mt-1">
@@ -470,11 +541,16 @@
                                     </tr>
                                     <tr class="hover:bg-indigo-deep/[0.02] transition-colors">
                                         <td class="px-5 py-3">
-                                            <p class="font-bold text-indigo-deep text-xs leading-tight">Filosofía Atención Plena</p>
+                                            <p class="font-bold text-indigo-deep text-xs leading-tight">Filosofía
+                                                Atención Plena</p>
                                             <p class="text-[10px] text-indigo-deep/40">28 alumnos</p>
                                         </td>
-                                        <td class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">88.5%</td>
-                                        <td class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">98%</td>
+                                        <td
+                                            class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">
+                                            88.5%</td>
+                                        <td
+                                            class="px-3 py-3 text-center font-bold text-indigo-deep text-sm font-serif-elegant">
+                                            98%</td>
                                         <td class="px-3 py-3 text-center">
                                             <span class="text-xs font-bold text-primary">19/28</span>
                                             <div class="w-full bg-indigo-deep/5 rounded-full h-1 mt-1">
@@ -489,7 +565,9 @@
                             </table>
                         </div>
                         <div class="px-5 py-3 border-t border-indigo-deep/5 bg-indigo-deep/[0.01]">
-                            <button class="text-[10px] font-bold text-indigo-deep/40 hover:text-primary transition-colors uppercase tracking-widest" onclick="document.getElementById('detail-modal').classList.remove('hidden')">
+                            <button
+                                class="text-[10px] font-bold text-indigo-deep/40 hover:text-primary transition-colors uppercase tracking-widest"
+                                onclick="document.getElementById('detail-modal').classList.remove('hidden')">
                                 Ver gráfica completa →
                             </button>
                         </div>
@@ -501,14 +579,18 @@
     </div>
 
     <!-- Modal -->
-    <div class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-indigo-deep/40 backdrop-blur-xl" id="detail-modal">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl border border-white/20 starry-bg">
+    <div class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-indigo-deep/40 backdrop-blur-xl"
+        id="detail-modal">
+        <div
+            class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl border border-white/20 starry-bg">
             <div class="p-8 flex justify-between items-center border-b border-indigo-deep/5">
                 <div>
-                    <h3 class="text-3xl font-bold text-indigo-deep font-serif-elegant">Tendencia de Rendimiento Académico</h3>
+                    <h3 class="text-3xl font-bold text-indigo-deep font-serif-elegant">Tendencia de Rendimiento
+                        Académico</h3>
                     <p class="text-indigo-deep/60">Análisis detallado de crecimiento del semestre a la fecha</p>
                 </div>
-                <button class="p-2 hover:bg-indigo-deep/5 rounded-full text-indigo-deep" onclick="document.getElementById('detail-modal').classList.add('hidden')">
+                <button class="p-2 hover:bg-indigo-deep/5 rounded-full text-indigo-deep"
+                    onclick="document.getElementById('detail-modal').classList.add('hidden')">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
@@ -536,13 +618,15 @@
                             <line x1="0" x2="800" y1="100" y2="100"></line>
                             <line x1="0" x2="800" y1="50" y2="50"></line>
                         </g>
-                        <path d="M0,250 Q100,100 200,180 T400,120 T600,220 T800,80" fill="none" filter="url(#glowLarge)" stroke="url(#modalGrad)" stroke-linecap="round" stroke-width="5"></path>
+                        <path d="M0,250 Q100,100 200,180 T400,120 T600,220 T800,80" fill="none" filter="url(#glowLarge)"
+                            stroke="url(#modalGrad)" stroke-linecap="round" stroke-width="5"></path>
                         <circle cx="200" cy="180" fill="#D4AF37" r="6"></circle>
                         <circle cx="400" cy="120" fill="#312E81" r="6"></circle>
                         <circle cx="600" cy="220" fill="#D4AF37" r="6"></circle>
                         <circle cx="800" cy="80" fill="#D4AF37" r="6"></circle>
                     </svg>
-                    <div class="flex justify-between mt-4 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-widest">
+                    <div
+                        class="flex justify-between mt-4 text-[10px] font-bold text-indigo-deep/40 uppercase tracking-widest">
                         <span>Semana 1</span>
                         <span>Semana 4</span>
                         <span>Semana 8</span>
@@ -552,7 +636,8 @@
                 </div>
             </div>
             <div class="p-6 bg-indigo-deep/5 flex justify-end gap-4">
-                <button class="px-8 py-3 bg-indigo-deep text-white rounded-xl font-bold shadow-lg" onclick="document.getElementById('detail-modal').classList.add('hidden')">Descargar Reporte</button>
+                <button class="px-8 py-3 bg-indigo-deep text-white rounded-xl font-bold shadow-lg"
+                    onclick="document.getElementById('detail-modal').classList.add('hidden')">Descargar Reporte</button>
             </div>
         </div>
     </div>
@@ -593,7 +678,7 @@
         });
     </script>
 
-    <script type="module" src="/aulas.ts"></script>
+    <script type="module" src="/scripts/aulas.ts"></script>
 </body>
 
 </html>

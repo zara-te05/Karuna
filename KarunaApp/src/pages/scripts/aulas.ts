@@ -1,6 +1,6 @@
 // En tu archivo de entrada (ej. aulas.ts)
-import { initTransitions } from "../transitions";
-import { obtenerDocentePorID } from "../BD/tablas";
+import { initTransitions } from "./transitions";
+import { obtenerDocentePorID } from "../../BD/docentes";
 import { open } from '@tauri-apps/plugin-dialog';
 import { convertFileSrc } from '@tauri-apps/api/core';
 
@@ -9,9 +9,9 @@ function cargarFotoGuardada() {
     const rutaGuardada = localStorage.getItem('foto_perfil');
     if (rutaGuardada) {
         const fotoPerfil = document.getElementById('imagen-perfil') as HTMLImageElement;
-        
+
         const src = convertFileSrc(rutaGuardada);
-        
+
         if (fotoPerfil) fotoPerfil.src = src;  // ← Esto faltaba
     }
 }
@@ -21,7 +21,7 @@ async function cargarDatosPerfil() {
     try {
         // 1. Obtener el elemento (Usa el ID exacto que pusiste en el HTML)
         const nombreDocente = document.getElementById('nombre_docente');
-        
+
         if (!nombreDocente) {
             console.error("No se encontró el elemento #nombre_docente en el HTML");
             return;
@@ -48,5 +48,5 @@ document.addEventListener("DOMContentLoaded", () => {
     initTransitions();
     // Un pequeño delay opcional si notas que falla por milisegundos
     cargarFotoGuardada();
-    setTimeout(cargarDatosPerfil, 100); 
+    setTimeout(cargarDatosPerfil, 100);
 });

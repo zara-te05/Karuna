@@ -1,33 +1,33 @@
 import { invoke } from "@tauri-apps/api/core";
-import { actualizarDocente } from "../BD/tablas";
-import { obtenerDocentePorID } from "../BD/tablas";
+import { actualizarDocente } from "../../BD/docentes";
+import { obtenerDocentePorID } from "../../BD/docentes";
 import { open } from '@tauri-apps/plugin-dialog';
 import { convertFileSrc } from '@tauri-apps/api/core';
 
-async function cargarDatosPerfil(){
+async function cargarDatosPerfil() {
     try {
-            // 1. Obtener el elemento (Usa el ID exacto que pusiste en el HTML)
-            const nombreDocente = document.getElementById('nombre_docente');
-            
-            if (!nombreDocente) {
-                console.error("No se encontró el elemento #nombre_docente en el HTML");
-                return;
-            }
-    
-            // 2. Consultar la BD (ID 1 es el supuesto)
-            const docente = await obtenerDocentePorID(1);
-    
-            // 3. Validar si el docente existe
-            if (docente) {
-                nombreDocente.textContent = `Prof. ${docente.nombre} ${docente.apellido}`;
-                console.log("DOM actualizado con:", docente.nombre);
-            } else {
-                console.warn("La base de datos respondió, pero el ID 1 no existe.");
-                nombreDocente.textContent = "Docente no encontrado";
-            }
-        } catch (error) {
-            console.error("Error en el flujo de carga:", error);
+        // 1. Obtener el elemento (Usa el ID exacto que pusiste en el HTML)
+        const nombreDocente = document.getElementById('nombre_docente');
+
+        if (!nombreDocente) {
+            console.error("No se encontró el elemento #nombre_docente en el HTML");
+            return;
         }
+
+        // 2. Consultar la BD (ID 1 es el supuesto)
+        const docente = await obtenerDocentePorID(1);
+
+        // 3. Validar si el docente existe
+        if (docente) {
+            nombreDocente.textContent = `Prof. ${docente.nombre} ${docente.apellido}`;
+            console.log("DOM actualizado con:", docente.nombre);
+        } else {
+            console.warn("La base de datos respondió, pero el ID 1 no existe.");
+            nombreDocente.textContent = "Docente no encontrado";
+        }
+    } catch (error) {
+        console.error("Error en el flujo de carga:", error);
+    }
 }
 
 function cargarFotoGuardada() {
@@ -35,22 +35,22 @@ function cargarFotoGuardada() {
     if (rutaGuardada) {
         const foto = document.getElementById('profile-photo') as HTMLImageElement;
         const fotoPerfil = document.getElementById('foto-perfil') as HTMLImageElement;
-        
+
         const src = convertFileSrc(rutaGuardada);
-        
+
         if (foto) foto.src = src;
         if (fotoPerfil) fotoPerfil.src = src;  // ← Esto faltaba
     }
 }
 
 
-document.addEventListener('DOMContentLoaded', async(e) => {
+document.addEventListener('DOMContentLoaded', async (e) => {
 
     const nombre = (document.getElementById("input-nombre") as HTMLInputElement);
     const apellido = (document.getElementById("input-apellido") as HTMLInputElement);
     const puesto = (document.getElementById("input-puesto") as HTMLInputElement);
     const genero = (document.getElementById("select-genero") as HTMLInputElement);
-    
+
     const button_save = (document.getElementById("btn-save") as HTMLButtonElement);
 
     const button_photo = (document.getElementById("cambio_foto") as HTMLButtonElement);

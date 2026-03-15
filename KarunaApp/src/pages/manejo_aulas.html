@@ -13,23 +13,22 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary":          "#3e4a89",
-                        "secondary":        "#f4c32f",
-                        "background-light": "#fdfaf3",
-                        "background-dark":  "#1a1c2c",
-                        "accent-indigo":    "#2a3363",
-                        "soft-cream":       "#f8f1e5",
-                        "indigo-deep":      "#1E1B4B"
+                        "primary": "#D4AF37",
+                        "indigo-deep": "#1E1B4B",
+                        "slate-soft": "#F1F5F9",
+                        "teal-muted": "#2D6A4F",
+                        "indigo-light": "#312E81",
+                        "background-light": "#F8FAFC",
                     },
                     fontFamily: {
                         "display": ["Inter", "sans-serif"],
-                        "serif":   ["Playfair Display", "serif"]
+                        "serif": ["Playfair Display", "serif"],
                     },
                     borderRadius: {
                         "DEFAULT": "0.5rem",
-                        "lg":      "1rem",
-                        "xl":      "1.5rem",
-                        "full":    "9999px"
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
                     },
                 },
             },
@@ -55,7 +54,7 @@
             border: 1px solid rgba(62,74,137,0.1);
         }
         
-        body { transition: opacity 0.4s ease; font-family: 'Inter', sans-serif; background-color: #fdfaf1; }
+        body { transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease, opacity 0.4s ease; font-family: 'Inter', sans-serif; background-color: #fdfaf1; }
         .font-serif-elegant { font-family: 'Playfair Display', serif; }
         .glow-primary { box-shadow: 0 0 15px rgba(212,175,55,0.4); }
         .starry-wave { background: linear-gradient(135deg, #1E1B4B 0%, #283593 40%, #D4AF37 100%); opacity: 0.08; filter: blur(80px); position: absolute; top: -10%; right: -10%; width: 70%; height: 70%; z-index: 0; border-radius: 50%; }
@@ -70,12 +69,12 @@
         .dark .text-indigo-deep { color: #e8e8f0; }
         .dark .bg-slate-soft { background-color: #2a2a3e; }
         .dark .border-t { border-color: rgba(212,175,55,0.1); }
-        .dark .text-teal-muted { color: #52c796; }
         .dark .bg-slate-soft\/80 {
             background-color: rgba(42, 42, 62, 0.8);
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* Sync transitions with master */
         * {
             transition-property: background-color, border-color, color, fill, stroke, box-shadow;
             transition-duration: 0.8s;
@@ -93,71 +92,78 @@
     </div>
 <div class="flex h-screen overflow-hidden">
 
-     <!-- Sidebar -->
+        <!-- Sidebar Master -->
         <aside class="w-64 bg-indigo-deep text-white/90 flex flex-col fixed h-screen z-20 transition-all">
             <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
                 <span class="material-symbols-outlined text-[120px] text-primary">filter_vintage</span>
             </div>
-            
             <div class="p-6 flex items-center gap-3">
                 <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-forest">
                     <span class="material-symbols-outlined font-bold text-white">temple_buddhist</span>
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
             </div>
-            
-             <nav class="flex-1 mt-2 px-4 space-y-1">
-            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="aulas.html">
-                <span class="material-symbols-outlined">analytics</span>
-                <span class="font-medium">Vista de Estadísticas</span>
-            </a>
-            <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-secondary text-white" href="manejo_aulas.html">
-                <span class="material-symbols-outlined">groups</span>
-                <span class="font-medium">Aulas</span>
-            </a>
-            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="#">
-                <span class="material-symbols-outlined">assessment</span>
-                <span class="font-medium">Reportes</span>
-            </a>
-            <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80" href="profile.html">
-                <span class="material-symbols-outlined">account_circle</span>
-                <span class="font-medium">Perfil</span>
-            </a>
-        </nav>
-
-        <div class="p-4 border-t border-white/10">
-            <a href="crear_aulas.html"
-                class="w-full bg-primary hover:bg-primary/90 text-indigo-deep font-bold py-3 rounded-xl transition-all shadow-md flex shadow-primary/10 items-center justify-center gap-2">
-                <span class="material-symbols-outlined">add</span>
-                <span>Nuevo Salón</span>
-            </a>
-        </div>
+            <nav class="flex-1 mt-2 px-4 space-y-1">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="aulas.html">
+                    <span class="material-symbols-outlined">analytics</span>
+                    <span class="font-medium">Vista de Estadísticas</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-white/10 border-l-4 border-primary text-white"
+                    href="lobby_aulas.html">
+                    <span class="material-symbols-outlined">groups</span>
+                    <span class="font-medium">Aulas</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="#">
+                    <span class="material-symbols-outlined">assessment</span>
+                    <span class="font-medium">Reportes</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80"
+                    href="profile.html">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <span class="font-medium">Perfil</span>
+                </a>
+            </nav>
+            <div class="p-4 border-t border-white/10">
+                <a href="crear_aulas.html"
+                    class="w-full bg-primary hover:bg-primary/90 text-indigo-deep font-bold py-3 rounded-xl transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">add</span>
+                    <span>Nuevo Salón</span>
+                </a>
+            </div>
         </aside>
 
     <!-- Page wrapper -->
     <div class="flex flex-col flex-1 ml-64 h-screen overflow-hidden">
 
         <!-- Top bar / header -->
-        <header class="shrink-0 z-10 bg-white/60 backdrop-blur-md border-b border-accent-indigo/10 px-8 py-4 flex items-center justify-between">
+        <header class="shrink-0 z-10 bg-white/60 backdrop-blur-md border-b border-indigo-deep/10 px-8 py-4 flex items-center justify-between bg-white/40">
             <div>
                 <nav class="flex text-xs text-primary/50 gap-2 mb-0.5">
                     <span>Aulas</span>
                     <span>/</span>
                     <span class="text-primary font-medium">Detalle</span>
                 </nav>
-                <h2 class="text-2xl font-serif font-bold text-accent-indigo tracking-tight leading-tight">
+                <h2 class="text-2xl font-serif font-bold text-indigo-deep tracking-tight leading-tight">
                     Environmental Biology 101
                 </h2>
                 <p class="text-slate-400 text-xs italic">Sección A • Semestre Otoño 2024</p>
             </div>
 
             <div class="flex items-center gap-4">
-                <button class="flex items-center gap-2 bg-secondary text-accent-indigo px-4 py-2 rounded-full font-bold text-xs shadow-md hover:scale-105 transition-transform">
+                <button
+                    class="p-2 rounded-full hover:bg-indigo-deep/10 dark:hover:bg-white/10 transition-colors text-indigo-deep dark:text-white flex items-center justify-center"
+                    id="theme-toggle" title="Alternar Modo Oscuro">
+                    <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined hidden dark:block">light_mode</span>
+                </button>
+                <button class="flex items-center gap-2 bg-primary text-indigo-deep px-4 py-2 rounded-full font-bold text-xs shadow-md hover:scale-105 transition-transform">
                     <span class="material-symbols-outlined text-sm">edit</span>
                     Editar Clase
                 </button>
-                <div class="flex items-center gap-3 pl-4 border-l border-accent-indigo/10">
-                    <p class="text-sm font-bold text-accent-indigo hidden sm:block" id="nombre_docente">Prof. Julián Thorne</p>
+                <div class="flex items-center gap-3 pl-4 border-l border-indigo-deep/10">
+                    <p class="text-sm font-bold text-indigo-deep hidden sm:block" id="nombre_docente">Prof. Julián Thorne</p>
                     <div class="size-9 rounded-full bg-primary/20 border-2 border-primary/40 overflow-hidden">
                         <img id="imagen-perfil" alt="Perfil" class="w-full h-full object-cover"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q"/>
@@ -406,6 +412,29 @@
 </div>
 
     <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.remove('light');
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            htmlElement.classList.remove('light');
+        } else {
+            htmlElement.classList.remove('dark');
+            htmlElement.classList.add('light');
+        }
+
         window.addEventListener('load', () => {
             const overlay = document.getElementById('page-overlay');
             if (overlay) {
@@ -415,5 +444,6 @@
             }
         });
     </script>
+    <script type="module" src="/scripts/manejo_aulas.ts"></script>
 </body>
 </html>
