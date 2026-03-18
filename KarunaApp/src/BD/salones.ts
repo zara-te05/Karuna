@@ -103,3 +103,18 @@ export async function eliminarSalon(id: number) {
         return { success: false, error };
     }
 }
+
+// ─── Obtener salón por ID ─────────────────────────────────────────────────
+export async function obtenerSalonPorId(id: number): Promise<Salon | null> {
+    try {
+        const database = await getDatabase();
+        const rows = await database.select<Salon[]>(
+            `SELECT * FROM SALON WHERE id = ?`,
+            [id]
+        );
+        return rows[0] ?? null;
+    } catch (error) {
+        console.error('Error al obtener salón por ID:', error);
+        return null;
+    }
+}

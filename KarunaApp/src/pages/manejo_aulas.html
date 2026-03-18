@@ -1,12 +1,33 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<html class="light" lang="es">
 
+<head>
+    <meta charset="utf-8" />
+    <style>
+        #page-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #fdfbf3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Karuna - Gestión de Aula</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -16,9 +37,9 @@
                         "primary": "#D4AF37",
                         "indigo-deep": "#1E1B4B",
                         "slate-soft": "#F1F5F9",
-                        "teal-muted": "#2D6A4F",
                         "indigo-light": "#312E81",
                         "background-light": "#F8FAFC",
+                        "background-dark": "#1a1a2e",
                     },
                     fontFamily: {
                         "display": ["Inter", "sans-serif"],
@@ -35,70 +56,167 @@
         }
     </script>
     <style>
-        .fluid-bg {
-            background: linear-gradient(135deg, #fdfaf3 0%, #f4f0e6 100%);
-            position: relative;
+        body {
+            transition: background-color 0.8s ease, color 0.8s ease;
+            font-family: 'Inter', sans-serif;
         }
-        .fluid-bg::before {
-            content: "";
-            position: absolute;
-            top: -10%; right: -10%;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(62,74,137,0.05) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .watercolor-card {
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(62,74,137,0.1);
-        }
-        
-        body { transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease, opacity 0.4s ease; font-family: 'Inter', sans-serif; background-color: #fdfaf1; }
-        .font-serif-elegant { font-family: 'Playfair Display', serif; }
-        .glow-primary { box-shadow: 0 0 15px rgba(212,175,55,0.4); }
-        .starry-wave { background: linear-gradient(135deg, #1E1B4B 0%, #283593 40%, #D4AF37 100%); opacity: 0.08; filter: blur(80px); position: absolute; top: -10%; right: -10%; width: 70%; height: 70%; z-index: 0; border-radius: 50%; }
-        .starry-bg {
-            background-color: #fdfaf1;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%231E1B4B' stop-opacity='0.05'/%3E%3Cstop offset='1' stop-color='%23312E81' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='200' height='200' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 100 Q 50 50, 100 100 T 200 100' fill='none' stroke='url(%23a)' stroke-width='2'/%3E%3Cpath d='M0 120 Q 50 70, 100 120 T 200 120' fill='none' stroke='url(%23a)' stroke-width='1' opacity='0.5'/%3E%3Cpath d='M0 80 Q 50 30, 100 80 T 200 80' fill='none' stroke='url(%23a)' stroke-width='1.5' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E");
-            background-attachment: fixed;
-        }
-        .dark .starry-bg { background-color: #1a1a2e; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23D4AF37' stop-opacity='0.15'/%3E%3Cstop offset='1' stop-color='%232D6A4F' stop-opacity='0.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='300' height='300' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 150 Q 75 75, 150 150 T 300 150' fill='none' stroke='url(%23a)' stroke-width='1'/%3E%3Ccircle cx='150' cy='150' r='2' fill='%23D4AF37' opacity='0.3'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23b)'/%3E%3C/svg%3E"); }
-        .dark .bg-white\/60 { background-color: rgba(38,38,64,0.6); }
-        .dark .bg-white\/5 { background-color: rgba(255,255,255,0.05); }
-        .dark .text-indigo-deep { color: #e8e8f0; }
-        .dark .bg-slate-soft { background-color: #2a2a3e; }
-        .dark .border-t { border-color: rgba(212,175,55,0.1); }
-        .dark .bg-slate-soft\/80 {
-            background-color: rgba(42, 42, 62, 0.8);
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Sync transitions with master */
+        .font-serif-elegant {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .fluid-waves {
+            background-color: #fdfaf1;
+            background-image:
+                radial-gradient(at 0% 0%, hsla(46, 15%, 90%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(230, 20%, 92%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(46, 15%, 90%, 1) 0, transparent 50%);
+        }
+
+        .dark .fluid-waves {
+            background-color: #1a1a2e;
+            background-image:
+                radial-gradient(at 0% 0%, hsla(230, 20%, 15%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(46, 15%, 10%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(230, 20%, 15%, 1) 0, transparent 50%);
+        }
+
+        .dark .bg-white {
+            background-color: #262640;
+            color: #e8e8f0;
+            border-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .dark .text-slate-900 {
+            color: #e8e8f0;
+        }
+
+        .dark .text-slate-600 {
+            color: rgba(232, 232, 240, 0.7);
+        }
+
+        .dark .text-slate-500 {
+            color: rgba(232, 232, 240, 0.6);
+        }
+
+        .dark .text-slate-400 {
+            color: rgba(232, 232, 240, 0.5);
+        }
+
+        .dark .bg-slate-50 {
+            background-color: rgba(42, 42, 62, 0.6);
+        }
+
+        .dark .border-slate-100 {
+            border-color: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Tab indicator */
+        .tab-btn {
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.tab-active {
+            color: #1E1B4B;
+            font-weight: 700;
+        }
+
+        .dark .tab-btn.tab-active {
+            color: #D4AF37;
+        }
+
+        .tab-btn.tab-active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #D4AF37;
+            border-radius: 2px;
+        }
+
+        /* Day toggles */
+        .dia-btn {
+            transition: all 0.2s;
+        }
+
+        .dia-btn.activo {
+            background: #D4AF37;
+            border-color: #D4AF37;
+            color: #1E1B4B;
+            font-weight: 700;
+        }
+
+        /* Criteria row */
+        .criterio-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Attendance row */
+        .attend-toggle {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .attend-toggle.presente {
+            background: #D4AF37;
+            border-color: #D4AF37;
+            color: #1E1B4B;
+        }
+
+        .attend-toggle.ausente {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: white;
+        }
+
         * {
             transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-            transition-duration: 0.8s;
+            transition-duration: 0.3s;
             transition-timing-function: ease;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
         }
     </style>
 </head>
 
-<body class="bg-background-light font-display text-slate-900 starry-bg">
-    <div id="page-overlay" style="position:fixed;inset:0;z-index:99999;background:#fdfaf1;display:flex;align-items:center;justify-content:center;font-family:serif;">
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+
+    <!-- Loading overlay -->
+    <div id="page-overlay"
+        style="position:fixed;inset:0;z-index:99999;background:#fdfaf1;display:flex;align-items:center;justify-content:center;font-family:serif;">
         <div style="text-align:center">
-            <div style="width:40px;height:40px;margin:0 auto 12px;border:3px solid #e6e3db;border-top-color:#1b3a1e;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+            <div
+                style="width:40px;height:40px;margin:0 auto 12px;border:3px solid #e6e3db;border-top-color:#1b3a1e;border-radius:50%;animation:spin 0.8s linear infinite;">
+            </div>
             <p style="color:#1b3a1e;font-weight:bold;font-size:1.1rem;">Karuna</p>
         </div>
     </div>
-<div class="flex h-screen overflow-hidden">
 
-        <!-- Sidebar Master -->
-        <aside class="w-64 bg-indigo-deep text-white/90 flex flex-col fixed h-screen z-20 transition-all">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- ── Sidebar ── -->
+        <aside class="w-64 bg-indigo-deep text-white/90 flex flex-col fixed h-screen z-20">
             <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
                 <span class="material-symbols-outlined text-[120px] text-primary">filter_vintage</span>
             </div>
             <div class="p-6 flex items-center gap-3">
-                <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-forest">
+                <div class="size-10 bg-primary rounded-lg flex items-center justify-center">
                     <span class="material-symbols-outlined font-bold text-white">temple_buddhist</span>
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white font-serif-elegant">Karuna</h1>
@@ -127,323 +245,510 @@
             </nav>
             <div class="p-4 border-t border-white/10">
                 <a href="crear_aulas.html"
-                    class="w-full bg-primary hover:bg-primary/90 text-indigo-deep font-bold py-3 rounded-xl transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2">
+                    class="w-full bg-primary hover:bg-primary/90 text-indigo-deep font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined">add</span>
                     <span>Nuevo Salón</span>
                 </a>
             </div>
         </aside>
 
-    <!-- Page wrapper -->
-    <div class="flex flex-col flex-1 ml-64 h-screen overflow-hidden">
+        <!-- ── Main wrapper ── -->
+        <div class="flex flex-col flex-1 ml-64 h-screen overflow-hidden">
 
-        <!-- Top bar / header -->
-        <header class="shrink-0 z-10 bg-white/60 backdrop-blur-md border-b border-indigo-deep/10 px-8 py-4 flex items-center justify-between bg-white/40">
-            <div>
-                <nav class="flex text-xs text-primary/50 gap-2 mb-0.5">
-                    <span>Aulas</span>
-                    <span>/</span>
-                    <span class="text-primary font-medium">Detalle</span>
-                </nav>
-                <h2 class="text-2xl font-serif font-bold text-indigo-deep tracking-tight leading-tight">
-                    Environmental Biology 101
-                </h2>
-                <p class="text-slate-400 text-xs italic">Sección A • Semestre Otoño 2024</p>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <button
-                    class="p-2 rounded-full hover:bg-indigo-deep/10 dark:hover:bg-white/10 transition-colors text-indigo-deep dark:text-white flex items-center justify-center"
-                    id="theme-toggle" title="Alternar Modo Oscuro">
-                    <span class="material-symbols-outlined dark:hidden">dark_mode</span>
-                    <span class="material-symbols-outlined hidden dark:block">light_mode</span>
-                </button>
-                <button class="flex items-center gap-2 bg-primary text-indigo-deep px-4 py-2 rounded-full font-bold text-xs shadow-md hover:scale-105 transition-transform">
-                    <span class="material-symbols-outlined text-sm">edit</span>
-                    Editar Clase
-                </button>
-                <div class="flex items-center gap-3 pl-4 border-l border-indigo-deep/10">
-                    <p class="text-sm font-bold text-indigo-deep hidden sm:block" id="nombre_docente">Prof. Julián Thorne</p>
-                    <div class="size-9 rounded-full bg-primary/20 border-2 border-primary/40 overflow-hidden">
-                        <img id="imagen-perfil" alt="Perfil" class="w-full h-full object-cover"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q"/>
+            <!-- Header -->
+            <header
+                class="flex-shrink-0 sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-indigo-deep/10 dark:border-white/10 px-8 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <a href="lobby_aulas.html"
+                        class="flex items-center gap-2 text-indigo-deep/50 hover:text-indigo-deep dark:text-white/40 dark:hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-xl">arrow_back</span>
+                        <span class="text-xs font-bold uppercase tracking-wider">Mis Aulas</span>
+                    </a>
+                    <span class="text-slate-300 dark:text-white/20">›</span>
+                    <!-- Nombre del salón cargado desde DB -->
+                    <div>
+                        <p id="salon-nombre"
+                            class="font-serif-elegant text-lg font-bold text-indigo-deep dark:text-primary">—</p>
+                        <p id="salon-materia" class="text-xs text-slate-500 dark:text-slate-400">—</p>
                     </div>
                 </div>
-            </div>
-        </header>
-
-        <!-- Scrollable content -->
-        <main class="flex-1 overflow-y-auto fluid-bg px-8 py-8">
-
-            <div class="grid grid-cols-12 gap-8">
-
-                <!-- Left Column -->
-                <div class="col-span-12 lg:col-span-7 space-y-8">
-
-                    <!-- Students Section -->
-                    <section class="watercolor-card rounded-xl p-6 shadow-sm">
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-xl font-serif font-bold text-accent-indigo">Alumnos Inscritos</h3>
-                                <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                                    3 alumnos
-                                </span>
-                            </div>
-                            <button class="flex items-center gap-1.5 bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-accent-indigo transition-colors">
-                                <span class="material-symbols-outlined text-sm">person_add</span>
-                                Agregar alumno
-                            </button>
+                <div class="flex items-center gap-4">
+                    <button id="theme-toggle"
+                        class="p-2 rounded-full hover:bg-indigo-deep/10 dark:hover:bg-white/10 transition-colors text-indigo-deep dark:text-white">
+                        <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+                        <span class="material-symbols-outlined hidden dark:block">light_mode</span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-4 border-l border-indigo-deep/10 dark:border-white/10">
+                        <p class="text-sm font-bold text-indigo-deep dark:text-primary hidden sm:block"
+                            id="nombre_docente">Prof.</p>
+                        <div class="size-10 rounded-full bg-primary/20 border-2 border-primary/60 overflow-hidden">
+                            <img id="imagen-perfil" alt="Perfil" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q" />
                         </div>
-
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b border-primary/5">
-                                    <th class="pb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Estudiante</th>
-                                    <th class="pb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">ID</th>
-                                    <th class="pb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-primary/5">
-                                <tr class="hover:bg-primary/[0.02] transition-colors">
-                                    <td class="py-3 text-sm font-semibold text-accent-indigo">Ana Rivera</td>
-                                    <td class="py-3 text-[10px] text-slate-400 font-mono">2023001</td>
-                                    <td class="py-3 text-right">
-                                        <div class="flex items-center justify-end gap-1">
-                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 transition-all">
-                                                <span class="material-symbols-outlined text-sm">edit</span>
-                                            </button>
-                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
-                                                <span class="material-symbols-outlined text-sm">delete</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-primary/[0.02] transition-colors">
-                                    <td class="py-3 text-sm font-semibold text-accent-indigo">Carlos Gómez</td>
-                                    <td class="py-3 text-[10px] text-slate-400 font-mono">2023002</td>
-                                    <td class="py-3 text-right">
-                                        <div class="flex items-center justify-end gap-1">
-                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 transition-all">
-                                                <span class="material-symbols-outlined text-sm">edit</span>
-                                            </button>
-                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
-                                                <span class="material-symbols-outlined text-sm">delete</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-primary/[0.02] transition-colors">
-                                    <td class="py-3 text-sm font-semibold text-accent-indigo">Lucía Fernández</td>
-                                    <td class="py-3 text-[10px] text-slate-400 font-mono">2023003</td>
-                                    <td class="py-3 text-right">
-                                        <div class="flex items-center justify-end gap-1">
-                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 transition-all">
-                                                <span class="material-symbols-outlined text-sm">edit</span>
-                                            </button>
-                                            <button class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
-                                                <span class="material-symbols-outlined text-sm">delete</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </section>
-
-                    <!-- Grade Management Section -->
-                    <section class="watercolor-card rounded-xl p-6 shadow-sm border-l-4 border-secondary">
-                        <div class="flex items-center gap-2 mb-6">
-                            <span class="material-symbols-outlined text-secondary">verified_user</span>
-                            <h3 class="text-xl font-serif font-bold text-accent-indigo">Gestión de Calificaciones</h3>
-                            <span class="ml-auto text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vista de Profesor</span>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-4">
-
-                            <!-- Trabajos -->
-                            <div class="p-5 rounded-xl bg-primary/5 border border-primary/10">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span class="material-symbols-outlined text-primary">assignment</span>
-                                    <h4 class="font-bold text-accent-indigo">Trabajos</h4>
-                                </div>
-                                <p class="text-xs text-slate-500 mb-4 leading-relaxed">Tareas y proyectos del semestre.</p>
-                                <button class="w-full py-2 bg-white text-primary border border-primary/20 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all">
-                                    Gestionar
-                                </button>
-                            </div>
-
-                            <!-- Exámenes -->
-                            <div class="p-5 rounded-xl bg-secondary/5 border border-secondary/20">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span class="material-symbols-outlined text-secondary">quiz</span>
-                                    <h4 class="font-bold text-accent-indigo">Exámenes</h4>
-                                </div>
-                                <p class="text-xs text-slate-500 mb-4 leading-relaxed">Evaluaciones parciales y finales.</p>
-                                <button class="w-full py-2 bg-accent-indigo text-white rounded-lg text-xs font-bold hover:bg-primary transition-all shadow-md">
-                                    Gestionar
-                                </button>
-                            </div>
-
-                            <!-- Asistencia (próximamente) -->
-                            <div class="p-5 rounded-xl bg-slate-50 border border-dashed border-slate-200">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span class="material-symbols-outlined text-slate-300">how_to_reg</span>
-                                    <h4 class="font-bold text-slate-400">Asistencia</h4>
-                                </div>
-                                <p class="text-xs text-slate-400 mb-4 leading-relaxed">Pasar lista del día.</p>
-                                <button disabled class="w-full py-2 bg-white text-slate-300 border border-slate-200 rounded-lg text-xs font-bold cursor-not-allowed">
-                                    Próximamente
-                                </button>
-                            </div>
-
-                        </div>
-                    </section>
-
+                    </div>
                 </div>
+            </header>
 
-                <!-- Right Column: Settings -->
-                <div class="col-span-12 lg:col-span-5">
-                    <section class="watercolor-card rounded-xl p-6 shadow-sm sticky top-4">
-                        <div class="flex items-center gap-2 mb-6">
-                            <span class="material-symbols-outlined text-primary">tune</span>
-                            <h3 class="text-xl font-serif font-bold text-accent-indigo">Configuración de Clase</h3>
+            <!-- Tab bar -->
+            <div
+                class="flex-shrink-0 bg-white/60 dark:bg-white/5 border-b border-indigo-deep/10 dark:border-white/10 px-8">
+                <div class="flex gap-1">
+                    <button id="btn-tab-alumnos"
+                        class="tab-btn tab-active px-6 py-4 text-sm flex items-center gap-2"><span
+                            class="material-symbols-outlined text-lg">group</span> Alumnos</button>
+                    <button id="btn-tab-calificaciones"
+                        class="tab-btn px-6 py-4 text-sm text-slate-500 flex items-center gap-2"><span
+                            class="material-symbols-outlined text-lg">assignment</span> Calificaciones</button>
+                    <button id="btn-tab-asistencia"
+                        class="tab-btn px-6 py-4 text-sm text-slate-500 flex items-center gap-2"><span
+                            class="material-symbols-outlined text-lg">event_available</span> Asistencia</button>
+                    <button id="btn-tab-configuracion"
+                        class="tab-btn px-6 py-4 text-sm text-slate-500 flex items-center gap-2"><span
+                            class="material-symbols-outlined text-lg">settings</span> Configuración</button>
+                </div>
+            </div>
+
+            <!-- ── Scrollable content area ── -->
+            <main class="flex-1 overflow-y-auto fluid-waves">
+                <div class="p-8 max-w-screen-xl mx-auto space-y-6">
+
+                    <!-- ════════════ PANEL ALUMNOS ════════════ -->
+                    <div id="panel-alumnos" class="grid grid-cols-12 gap-6">
+
+                        <!-- Left: Form registro -->
+                        <div class="col-span-12 lg:col-span-4 space-y-4">
+                            <div
+                                class="bg-white dark:bg-slate-800/60 rounded-xl shadow-sm border border-slate-100 dark:border-primary/10 p-6">
+                                <div class="flex items-center gap-3 mb-5">
+                                    <div
+                                        class="size-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-xl">person_add</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-indigo-deep dark:text-white text-base">Nuevo Alumno
+                                        </h4>
+                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                            Registro</p>
+                                    </div>
+                                </div>
+                                <form id="form-registro-alumno" class="space-y-3">
+                                    <div>
+                                        <label
+                                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nombre(s)</label>
+                                        <input id="input-nombre" type="text" required placeholder="Ej. Sofía Alejandra"
+                                            class="w-full mt-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all dark:text-white placeholder:text-slate-400" />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Apellido(s)</label>
+                                        <input id="input-apellido" type="text" required
+                                            placeholder="Ej. Martínez García"
+                                            class="w-full mt-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all dark:text-white placeholder:text-slate-400" />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">ID
+                                            Control</label>
+                                        <input id="input-control" type="text" required placeholder="KAR-2024-XXXX"
+                                            class="w-full mt-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-mono font-bold text-indigo-deep dark:text-primary focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder:text-slate-400" />
+                                    </div>
+                                    <button type="submit"
+                                        class="w-full py-3 bg-indigo-deep dark:bg-primary text-white dark:text-indigo-deep font-black text-[10px] uppercase tracking-[0.25em] rounded-xl hover:opacity-90 transition-all mt-1 shadow-md">
+                                        Agregar Alumno
+                                    </button>
+                                </form>
+                            </div>
                         </div>
 
-                        <div class="space-y-6">
+                        <!-- Right: Student list -->
+                        <div class="col-span-12 lg:col-span-8">
+                            <div
+                                class="bg-white dark:bg-slate-800/60 rounded-xl shadow-sm border border-slate-100 dark:border-primary/10 overflow-hidden">
+                                <div
+                                    class="px-6 py-4 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+                                    <h3 class="font-serif font-bold text-indigo-deep dark:text-white text-xl">Lista de
+                                        Alumnos</h3>
+                                    <span id="contador-alumnos"
+                                        class="text-xs font-bold text-slate-400 bg-slate-50 dark:bg-white/10 px-3 py-1 rounded-full">0
+                                        alumnos</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left">
+                                        <thead class="bg-slate-50/50 dark:bg-white/5">
+                                            <tr>
+                                                <th
+                                                    class="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                    Estudiante</th>
+                                                <th
+                                                    class="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                    ID Control</th>
+                                                <th
+                                                    class="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">
+                                                    Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody-alumnos" class="divide-y divide-slate-100 dark:divide-white/5">
+                                            <tr>
+                                                <td colspan="3" class="px-6 py-10 text-center text-slate-400 text-sm">
+                                                    <span
+                                                        class="material-symbols-outlined text-4xl block mb-2 text-slate-300">person_search</span>
+                                                    No hay alumnos registrados aún.
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Semester Duration -->
-                            <div>
-                                <p class="text-sm font-bold text-accent-indigo mb-3 flex items-center gap-2">
-                                    <span class="size-1.5 rounded-full bg-secondary inline-block"></span>
-                                    Duración del Semestre
-                                </p>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fecha Inicio</label>
-                                        <input class="w-full bg-white/50 border-primary/10 rounded-lg text-sm focus:ring-primary" type="date" value="2024-08-15"/>
+
+                    <!-- ════════════ PANEL CALIFICACIONES ════════════ -->
+                    <div id="panel-calificaciones" class="hidden space-y-6">
+
+                        <!-- ── Exámenes Parciales ── -->
+                        <div
+                            class="bg-white dark:bg-slate-800/60 rounded-xl shadow-sm border border-slate-100 dark:border-primary/10 overflow-hidden">
+                            <div
+                                class="px-6 py-4 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="size-8 bg-indigo-deep/10 rounded-lg flex items-center justify-center text-indigo-deep dark:text-primary">
+                                        <span class="material-symbols-outlined text-lg">quiz</span>
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fecha Fin</label>
-                                        <input class="w-full bg-white/50 border-primary/10 rounded-lg text-sm focus:ring-primary" type="date" value="2024-12-10"/>
+                                        <h3 class="font-serif font-bold text-indigo-deep dark:text-white text-lg">
+                                            Exámenes Parciales</h3>
+                                        <p class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">
+                                            Evaluaciones periódicas</p>
                                     </div>
                                 </div>
+                                <button id="btn-nuevo-examen"
+                                    class="flex items-center gap-2 bg-indigo-deep hover:opacity-90 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm">
+                                    <span class="material-symbols-outlined text-sm">add</span> Agregar Parcial
+                                </button>
                             </div>
+                            <!-- Tabla horizontal. La columna de Estudiante es sticky a la izquierda -->
+                            <div class="overflow-x-auto">
+                                <table class="text-left border-collapse" style="min-width:100%">
+                                    <thead class="bg-slate-50/50 dark:bg-white/5" id="thead-examenes">
+                                        <tr>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 min-w-[200px]">
+                                                Estudiante</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black text-primary uppercase tracking-widest text-center min-w-[100px]">
+                                                Promedio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-examenes" class="divide-y divide-slate-100 dark:divide-white/5">
+                                        <tr>
+                                            <td colspan="2" class="px-6 py-8 text-center text-slate-400 text-sm">
+                                                <span
+                                                    class="material-symbols-outlined text-3xl block mb-1 text-slate-300">quiz</span>
+                                                Agrega un examen parcial para comenzar.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-                            <!-- Attendance Days -->
-                            <div>
-                                <p class="text-sm font-bold text-accent-indigo mb-3 flex items-center gap-2">
-                                    <span class="size-1.5 rounded-full bg-secondary inline-block"></span>
-                                    Días de Asistencia
-                                </p>
-                                <div class="flex flex-wrap gap-2">
-                                    <label class="relative cursor-pointer">
-                                        <input checked class="peer sr-only" type="checkbox"/>
-                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">L</div>
-                                    </label>
-                                    <label class="relative cursor-pointer">
-                                        <input class="peer sr-only" type="checkbox"/>
-                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">M</div>
-                                    </label>
-                                    <label class="relative cursor-pointer">
-                                        <input checked class="peer sr-only" type="checkbox"/>
-                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">M</div>
-                                    </label>
-                                    <label class="relative cursor-pointer">
-                                        <input class="peer sr-only" type="checkbox"/>
-                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">J</div>
-                                    </label>
-                                    <label class="relative cursor-pointer">
-                                        <input checked class="peer sr-only" type="checkbox"/>
-                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">V</div>
-                                    </label>
-                                    <label class="relative cursor-pointer">
-                                        <input class="peer sr-only" type="checkbox"/>
-                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">S</div>
-                                    </label>
-                                    <label class="relative cursor-pointer">
-                                        <input class="peer sr-only" type="checkbox"/>
-                                        <div class="size-10 flex items-center justify-center rounded-lg border-2 border-primary/10 text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-bold text-xs">D</div>
-                                    </label>
+                        <!-- ── Tareas ── -->
+                        <div
+                            class="bg-white dark:bg-slate-800/60 rounded-xl shadow-sm border border-slate-100 dark:border-primary/10 overflow-hidden">
+                            <div
+                                class="px-6 py-4 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="size-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-lg">assignment</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-serif font-bold text-indigo-deep dark:text-white text-lg">Tareas
+                                            y Actividades</h3>
+                                        <p class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">
+                                            Evaluaciones continuas</p>
+                                    </div>
                                 </div>
+                                <button id="btn-nueva-tarea"
+                                    class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-indigo-deep font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm">
+                                    <span class="material-symbols-outlined text-sm">add</span> Nueva Tarea
+                                </button>
                             </div>
+                            <!-- ⚠️  Puede haber N tareas → se scrollea horizontalmente. Columna Estudiante pegada. -->
+                            <div class="overflow-x-auto" style="max-height: 480px; overflow-y: auto;">
+                                <table class="text-left border-collapse" style="min-width:100%">
+                                    <thead class="bg-slate-50/50 dark:bg-white/5 sticky top-0 z-10" id="thead-tareas">
+                                        <tr>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 min-w-[200px] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)]">
+                                                Estudiante</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black text-primary uppercase tracking-widest text-center min-w-[100px]">
+                                                Promedio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-tareas" class="divide-y divide-slate-100 dark:divide-white/5">
+                                        <tr>
+                                            <td colspan="2" class="px-6 py-8 text-center text-slate-400 text-sm">
+                                                <span
+                                                    class="material-symbols-outlined text-3xl block mb-1 text-slate-300">assignment</span>
+                                                Agrega una tarea para comenzar.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Notifications Toggle -->
-                            <div class="pt-4 border-t border-primary/5">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-sm font-medium text-slate-600">Notificaciones automáticas</span>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input checked class="sr-only peer" type="checkbox"/>
-                                        <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                    </label>
+
+                    <!-- ════════════ PANEL ASISTENCIA ════════════ -->
+                    <div id="panel-asistencia" class="hidden grid grid-cols-12 gap-6">
+
+                        <!-- Left: Pase de lista -->
+                        <div class="col-span-12 lg:col-span-8 space-y-4">
+                            <div
+                                class="bg-white dark:bg-slate-800/60 rounded-xl shadow-sm border border-slate-100 dark:border-primary/10 p-6">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                    <div>
+                                        <h3 class="font-serif font-bold text-indigo-deep dark:text-white text-xl">Pase
+                                            de Lista</h3>
+                                        <p class="text-xs text-slate-400 mt-0.5">Selecciona una fecha y registra la
+                                            asistencia.</p>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <input id="fecha-asistencia" type="date"
+                                            class="px-4 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary dark:text-white transition-all" />
+                                        <button id="btn-guardar-lista"
+                                            class="flex items-center gap-2 bg-indigo-deep dark:bg-primary text-white dark:text-indigo-deep font-bold text-sm px-4 py-2 rounded-xl hover:opacity-90 transition-all shadow-sm">
+                                            <span class="material-symbols-outlined text-sm">save</span> Guardar
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="bg-primary/5 p-4 rounded-xl">
-                                <div class="flex gap-3">
-                                    <span class="material-symbols-outlined text-primary">info</span>
-                                    <p class="text-xs text-slate-500 leading-normal italic">
-                                        Cualquier cambio en la duración del semestre afectará el calendario de todos los alumnos inscritos.
+                                <div id="lista-asistencia" class="space-y-2">
+                                    <p class="text-sm text-slate-400 text-center py-8">
+                                        <span
+                                            class="material-symbols-outlined text-4xl block mb-2 text-slate-300">group</span>
+                                        Agrega alumnos primero.
                                     </p>
                                 </div>
                             </div>
+                        </div>
 
-                            <button class="w-full bg-accent-indigo text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-primary transition-colors">
-                                Guardar Configuración
-                            </button>
+                        <!-- Right: Configure days -->
+                        <div class="col-span-12 lg:col-span-4 space-y-4">
+                            <div
+                                class="bg-white dark:bg-slate-800/60 rounded-xl shadow-sm border border-slate-100 dark:border-primary/10 p-6">
+                                <div class="flex items-center gap-3 mb-5">
+                                    <div
+                                        class="size-10 bg-indigo-deep/10 dark:bg-white/10 rounded-xl flex items-center justify-center text-indigo-deep dark:text-white">
+                                        <span class="material-symbols-outlined text-xl">calendar_month</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-indigo-deep dark:text-white text-base">Días de Clase
+                                        </h4>
+                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Días
+                                            con asistencia</p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-2 mb-5" id="dias-asistencia-container">
+                                    <button type="button" data-dia="Lun"
+                                        class="dia-btn px-3 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-white/20 text-slate-500 dark:text-white/60 hover:border-primary/50">Lun</button>
+                                    <button type="button" data-dia="Mar"
+                                        class="dia-btn px-3 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-white/20 text-slate-500 dark:text-white/60 hover:border-primary/50">Mar</button>
+                                    <button type="button" data-dia="Mié"
+                                        class="dia-btn px-3 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-white/20 text-slate-500 dark:text-white/60 hover:border-primary/50">Mié</button>
+                                    <button type="button" data-dia="Jue"
+                                        class="dia-btn px-3 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-white/20 text-slate-500 dark:text-white/60 hover:border-primary/50">Jue</button>
+                                    <button type="button" data-dia="Vie"
+                                        class="dia-btn px-3 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-white/20 text-slate-500 dark:text-white/60 hover:border-primary/50">Vie</button>
+                                    <button type="button" data-dia="Sáb"
+                                        class="dia-btn px-3 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-white/20 text-slate-500 dark:text-white/60 hover:border-primary/50">Sáb</button>
+                                </div>
+
+                                <div class="space-y-2 mb-5">
+                                    <label
+                                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mínimo
+                                        para aprobar (%)</label>
+                                    <input id="input-min-asistencia" type="number" value="80" min="0" max="100"
+                                        class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-lg font-black focus:ring-2 focus:ring-primary dark:text-white transition-all text-center" />
+                                </div>
+
+                                <button id="btn-guardar-asistencia" type="button"
+                                    class="w-full py-3 bg-indigo-deep dark:bg-primary text-white dark:text-indigo-deep font-black text-[10px] uppercase tracking-[0.2em] rounded-xl hover:opacity-90 transition-all shadow-md">
+                                    Guardar Configuración
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ════════════ PANEL CONFIGURACIÓN ════════════ -->
+                    <div id="panel-configuracion" class="hidden grid grid-cols-12 gap-6">
+
+                        <!-- Criterios de evaluación -->
+                        <div class="col-span-12 lg:col-span-7">
+                            <div
+                                class="bg-white dark:bg-slate-800/60 rounded-xl shadow-sm border border-slate-100 dark:border-primary/10 p-6">
+                                <div class="flex items-center gap-3 mb-6">
+                                    <div
+                                        class="size-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-xl">percent</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-serif font-bold text-indigo-deep dark:text-white text-xl">
+                                            Criterios de Evaluación</h3>
+                                        <p class="text-xs text-slate-400">La suma de porcentajes debe ser 100%.</p>
+                                    </div>
+                                </div>
+
+                                <div id="criterios-container" class="space-y-3 mb-4">
+                                    <!-- Filas de criterio generadas por TS o pre-existentes -->
+                                </div>
+
+                                <button type="button" id="btn-agregar-criterio"
+                                    class="flex items-center gap-2 text-sm font-bold text-primary hover:opacity-70 transition-opacity mb-6">
+                                    <span class="material-symbols-outlined text-base">add_circle</span> Agregar Criterio
+                                </button>
+
+                                <div
+                                    class="pt-4 border-t border-slate-100 dark:border-white/10 flex items-center justify-between mb-4">
+                                    <span class="text-sm font-bold text-slate-500">Total</span>
+                                    <span id="total-porcentaje"
+                                        class="text-xl font-black text-indigo-deep dark:text-white">0%</span>
+                                </div>
+
+                                <button id="btn-guardar-criterios" type="button"
+                                    class="w-full py-3 bg-indigo-deep dark:bg-primary text-white dark:text-indigo-deep font-black text-[10px] uppercase tracking-[0.2em] rounded-xl hover:opacity-90 transition-all shadow-md">
+                                    Guardar Criterios
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <!-- Right: Parciales + Calificación mínima -->
+                        <div class="col-span-12 lg:col-span-5 space-y-4">
+
+                            <!-- Número de parciales -->
+                            <div
+                                class="bg-white dark:bg-slate-800/60 rounded-xl shadow-sm border border-slate-100 dark:border-primary/10 p-6">
+                                <div class="flex items-center gap-3 mb-5">
+                                    <div
+                                        class="size-10 bg-indigo-deep/10 dark:bg-white/10 rounded-xl flex items-center justify-center text-indigo-deep dark:text-white">
+                                        <span class="material-symbols-outlined text-xl">quiz</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-serif font-bold text-indigo-deep dark:text-white text-lg">
+                                            Exámenes Parciales</h3>
+                                        <p class="text-xs text-slate-400">Número de parciales del curso.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 mb-1">
+                                    <button id="btn-dec-parciales" type="button"
+                                        class="size-10 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-white font-black text-xl hover:bg-primary/20 hover:text-primary transition-all flex items-center justify-center">−</button>
+                                    <input id="input-num-parciales" type="number" value="3" min="1" max="10"
+                                        class="flex-1 px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-3xl font-black text-center focus:ring-2 focus:ring-primary dark:text-white transition-all" />
+                                    <button id="btn-inc-parciales" type="button"
+                                        class="size-10 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-white font-black text-xl hover:bg-primary/20 hover:text-primary transition-all flex items-center justify-center">+</button>
+                                </div>
+                                <p class="text-[10px] text-slate-400 text-center mb-4">Se crearán las columnas
+                                    automáticamente en Calificaciones</p>
+                            </div>
+
+                            <!-- Calificación mínima (0-100) -->
+                            <div class="bg-indigo-deep rounded-xl p-6 shadow-xl text-white relative overflow-hidden">
+                                <div class="absolute top-0 right-0 opacity-10 pointer-events-none">
+                                    <span class="material-symbols-outlined text-[140px] text-primary">grade</span>
+                                </div>
+                                <div class="relative z-10">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div class="size-10 bg-white/10 rounded-xl flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-xl text-primary">grade</span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-serif font-bold text-white text-lg">Calificación Mínima</h3>
+                                            <p class="text-xs text-white/50">Escala 0 – 100</p>
+                                        </div>
+                                    </div>
+                                    <input id="input-calmin" type="number" value="60" step="1" min="0" max="100"
+                                        class="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-xl text-4xl font-black text-white focus:ring-2 focus:ring-primary mb-5 transition-all text-center" />
+                                    <button id="btn-guardar-calmin" type="button"
+                                        class="w-full py-3 bg-primary text-indigo-deep font-black text-[10px] uppercase tracking-[0.2em] rounded-xl hover:opacity-90 transition-all shadow-md">
+                                        Guardar Configuración
+                                    </button>
+                                </div>
+                            </div>
 
                         </div>
-                    </section>
+
+                    </div>
+
+                </div><!-- /inner padding -->
+            </main>
+        </div><!-- /main wrapper -->
+    </div><!-- /flex container -->
+
+    <!-- ── Modal Editar Alumno ── -->
+    <div id="modal-editar-alumno"
+        class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 border border-slate-100 dark:border-primary/20">
+            <h3 class="font-serif-elegant text-2xl font-bold text-indigo-deep dark:text-white mb-6">Editar Alumno</h3>
+            <div class="space-y-4">
+                <div>
+                    <label
+                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nombre(s)</label>
+                    <input id="edit-nombre" type="text"
+                        class="w-full mt-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary dark:text-white transition-all" />
                 </div>
-
-            </div>
-
-            <!-- Footer Decor -->
-            <div class="mt-16 flex justify-center opacity-20 select-none">
-                <div class="flex gap-4">
-                    <span class="material-symbols-outlined text-4xl text-primary">waves</span>
-                    <span class="material-symbols-outlined text-4xl text-secondary">star</span>
-                    <span class="material-symbols-outlined text-4xl text-primary">waves</span>
+                <div>
+                    <label
+                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Apellido(s)</label>
+                    <input id="edit-apellido" type="text"
+                        class="w-full mt-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary dark:text-white transition-all" />
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">ID
+                        Control</label>
+                    <input id="edit-control" type="text"
+                        class="w-full mt-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-mono font-bold text-indigo-deep dark:text-primary focus:ring-2 focus:ring-primary transition-all" />
                 </div>
             </div>
-
-        </main>
+            <div class="flex gap-3 mt-6">
+                <button id="btn-cancelar-edicion"
+                    class="flex-1 py-3 rounded-xl border border-slate-200 dark:border-white/20 text-slate-500 dark:text-white/60 font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                    Cancelar
+                </button>
+                <button id="btn-guardar-edicion"
+                    class="flex-1 py-3 rounded-xl bg-indigo-deep dark:bg-primary text-white dark:text-indigo-deep font-black text-sm shadow-md hover:opacity-90 transition-all">
+                    Guardar Cambios
+                </button>
+            </div>
+        </div>
     </div>
 
-</div>
-
     <script>
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const htmlElement = document.documentElement;
-
-        themeToggleBtn.addEventListener('click', () => {
-            if (htmlElement.classList.contains('dark')) {
-                htmlElement.classList.remove('dark');
-                htmlElement.classList.add('light');
-                localStorage.setItem('theme', 'light');
-            } else {
-                htmlElement.classList.remove('light');
-                htmlElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
+        // Theme toggle
+        const htmlEl = document.documentElement;
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            htmlEl.classList.toggle('dark');
+            htmlEl.classList.toggle('light');
+            localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
         });
-
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            htmlElement.classList.add('dark');
-            htmlElement.classList.remove('light');
-        } else {
-            htmlElement.classList.remove('dark');
-            htmlElement.classList.add('light');
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlEl.classList.add('dark'); htmlEl.classList.remove('light');
         }
-
+        // Remove splash
         window.addEventListener('load', () => {
-            const overlay = document.getElementById('page-overlay');
-            if (overlay) {
-                overlay.style.transition = 'opacity 0.4s ease';
-                overlay.style.opacity = '0';
-                setTimeout(() => overlay.remove(), 400);
-            }
+            const o = document.getElementById('page-overlay');
+            if (o) { o.style.transition = 'opacity 0.4s ease'; o.style.opacity = '0'; setTimeout(() => o.remove(), 400); }
         });
     </script>
     <script type="module" src="/scripts/manejo_aulas.ts"></script>
 </body>
+
 </html>
