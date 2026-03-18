@@ -136,7 +136,7 @@ function renderizarSalones(salones: Salon[]) {
     // Event listeners
     grid.querySelectorAll<HTMLButtonElement>('.btn-abrir').forEach(btn => {
         btn.addEventListener('click', () => {
-            window.location.href = `aula.html?id=${btn.dataset.id}`;
+            window.location.href = `manejo_aulas.html?id=${btn.dataset.id}`;
         });
     });
 
