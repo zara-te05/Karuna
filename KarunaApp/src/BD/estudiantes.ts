@@ -32,6 +32,7 @@ export interface Estudiante {
     nombre: string;
     apellido: string;
     id_control: string;
+    participacion_extra: number;
 }
 
 // ─── Crear estudiante ─────────────────────────────────────────────────────

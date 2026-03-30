@@ -118,6 +118,32 @@ export async function obtenerAsignacionesSalon(
     }
 }
 
+// ─── Editar y Eliminar Asignación ─────────────────────────────────────────
+export async function editarAsignacion(id: number, titulo: string) {
+    try {
+        const database = await getDatabase();
+        await database.execute(
+            `UPDATE ASIGNACION SET titulo = ? WHERE id = ?`,
+            [titulo, id]
+        );
+        return { success: true };
+    } catch (error) {
+        console.error('Error al editar asignación:', error);
+        return { success: false, error };
+    }
+}
+
+export async function eliminarAsignacion(id: number) {
+    try {
+        const database = await getDatabase();
+        await database.execute(`DELETE FROM ASIGNACION WHERE id = ?`, [id]);
+        return { success: true };
+    } catch (error) {
+        console.error('Error al eliminar asignación:', error);
+        return { success: false, error };
+    }
+}
+
 // ─── Sincronizar exámenes parciales según el número configurado ───────────
 // Crea columnas nuevas si faltan; no elimina las que ya tienen datos.
 export async function sincronizarParciales(salon_id: number, num_parciales: number) {
