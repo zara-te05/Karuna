@@ -16,7 +16,8 @@ import {
 } from '../../BD/asistencia';
 import {
     crearAsignacion, obtenerAsignacionesSalon, guardarCalificacion,
-    obtenerCalificacionesSalon, sincronizarParciales, type TipoAsignacion
+    obtenerCalificacionesSalon, sincronizarParciales,
+    editarAsignacion, eliminarAsignacion, type TipoAsignacion
 } from '../../BD/asignaciones';
 
 // ─── Estado ───────────────────────────────────────────────────────────────
@@ -110,12 +111,12 @@ async function cargarEstudiantes(salon_id: number) {
         return `
         <tr class="group hover:bg-slate-50/70 dark:hover:bg-white/5 transition-all" data-id="${est.id}">
             <td class="px-6 py-3">
-                <div class="flex items-center gap-3">
+                <a href="detalle_alumno.html?salon_id=${salon_id}&estudiante_id=${est.id}" class="flex items-center gap-3 cursor-pointer p-1 -m-1 rounded-lg transition-colors hover:bg-slate-50 dark:hover:bg-white/5">
                     <div class="size-9 bg-indigo-deep dark:bg-primary/80 text-white dark:text-indigo-deep
                                 rounded-xl flex items-center justify-center font-bold text-sm
                                 group-hover:scale-105 transition-transform">${ini}</div>
-                    <span class="text-sm font-semibold text-slate-700 dark:text-white">${est.nombre} ${est.apellido}</span>
-                </div>
+                    <span class="text-sm font-semibold text-slate-700 dark:text-white group-hover:text-primary transition-colors">${est.nombre} ${est.apellido}</span>
+                </a>
             </td>
             <td class="px-6 py-3">
                 <code class="text-xs font-mono text-indigo-deep dark:text-primary bg-indigo-deep/5 dark:bg-primary/10 px-2 py-1 rounded-lg">${est.id_control}</code>
@@ -211,14 +212,14 @@ function inicializarFormRegistro(salon_id: number) {
 
 // ─── PANEL CALIFICACIONES ─────────────────────────────────────────────────
 
-function celdaEstudiante(nombre: string, apellido: string): string {
+function celdaEstudiante(salon_id: number, id: number, nombre: string, apellido: string): string {
     const ini = `${nombre[0]}${apellido[0]}`.toUpperCase();
     return `<td class="px-5 py-3 sticky left-0 bg-white dark:bg-slate-800 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] z-10">
-        <div class="flex items-center gap-2 min-w-[160px]">
+        <a href="detalle_alumno.html?salon_id=${salon_id}&estudiante_id=${id}" class="flex items-center gap-2 min-w-[160px] group cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 p-1 -m-1 rounded-lg transition-colors">
             <div class="size-8 bg-indigo-deep dark:bg-primary/80 text-white dark:text-indigo-deep rounded-lg
-                        flex items-center justify-center text-xs font-bold flex-shrink-0">${ini}</div>
-            <span class="text-sm font-medium dark:text-white truncate">${nombre} ${apellido}</span>
-        </div>
+                        flex items-center justify-center text-xs font-bold flex-shrink-0 group-hover:scale-105 transition-transform">${ini}</div>
+            <span class="text-sm font-medium dark:text-white truncate group-hover:text-primary transition-colors">${nombre} ${apellido}</span>
+        </a>
     </td>`;
 }
 
@@ -239,7 +240,14 @@ async function renderSeccion(
 
     thead.innerHTML = `<th class="${stickyTh}">Estudiante</th>`;
     asigs.forEach(a => {
-        thead.innerHTML += `<th class="${normalTh}">${a.titulo}</th>`;
+        const titleSafe = a.titulo.replace(/'/g, "\\'");
+        thead.innerHTML += `<th class="${normalTh} cursor-pointer hover:bg-slate-100 dark:hover:bg-white/5 transition-colors group/th"
+                            onclick="window.__abrirModalEditarAsignacion(${a.id}, '${titleSafe}')">
+            <div class="flex items-center justify-center gap-1 group-hover/th:text-primary transition-colors">
+                ${a.titulo}
+                <span class="material-symbols-outlined text-[10px] opacity-0 group-hover/th:opacity-100 transition-opacity">edit</span>
+            </div>
+        </th>`;
     });
     thead.innerHTML += `<th class="px-5 py-3 text-[10px] font-black text-primary uppercase tracking-widest text-center min-w-[100px]">Promedio</th>`;
 
@@ -261,7 +269,7 @@ async function renderSeccion(
             const v = mapaCalif[est.id]?.[a.id];
             const val = v != null ? String(v) : '';
             return `<td class="px-3 py-3 text-center">
-                <input type="number" min="0" max="10" step="0.1" value="${val}" placeholder="—"
+                <input type="number" min="0" max="100" step="1" value="${val}" placeholder="—"
                     class="w-20 px-2 py-1.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700
                            rounded-lg text-sm text-center focus:ring-2 focus:ring-primary dark:text-white font-bold"
                     data-asig="${a.id}" data-est="${est.id}" onchange="window.__saveCalif(this)" />
@@ -274,10 +282,10 @@ async function renderSeccion(
         const prom = vals.length > 0
             ? (vals.reduce((s, v) => s + v, 0) / vals.length).toFixed(1)
             : '—';
-        const promCls = vals.length > 0 && parseFloat(prom) < 6 ? 'text-red-500' : 'text-primary';
+        const promCls = vals.length > 0 && parseFloat(prom) < 60 ? 'text-red-500' : 'text-primary';
 
         return `<tr class="hover:bg-slate-50/50 dark:hover:bg-white/5 transition-all">
-            ${celdaEstudiante(est.nombre, est.apellido)}
+            ${celdaEstudiante(salon_id, est.id, est.nombre, est.apellido)}
             ${celdas}
             <td class="px-5 py-3 text-center">
                 <span class="text-sm font-black ${promCls}">${prom}</span>
@@ -293,6 +301,15 @@ async function cargarAsignaciones(salon_id: number) {
 
 function inicializarFormAsignacion(salon_id: number) {
     async function agregarItem(tipo: TipoAsignacion, msg: string) {
+        if (tipo === 'examen') {
+            const configAula = await obtenerConfigAula(salon_id);
+            const numPermitidos = configAula?.num_parciales || 3;
+            const asigsExamen = await obtenerAsignacionesSalon(salon_id, 'examen');
+            if (asigsExamen.length >= numPermitidos) {
+                mostrarToast(`No puedes crear más de ${numPermitidos} parciales según la configuración.`, 'error');
+                return;
+            }
+        }
         const titulo = prompt(msg);
         if (!titulo?.trim()) return;
         const res = await crearAsignacion(salon_id, titulo.trim(), tipo, null, null);
@@ -304,6 +321,44 @@ function inicializarFormAsignacion(salon_id: number) {
         ?.addEventListener('click', () => agregarItem('examen', 'Nombre del examen parcial (ej. Parcial 1):'));
     document.getElementById('btn-nueva-tarea')
         ?.addEventListener('click', () => agregarItem('tarea', 'Nombre de la tarea o actividad:'));
+
+    // Asignación (Edición/Eliminación) modal control
+    let currentAsigIdEdit: number | null = null;
+    (window as any).__abrirModalEditarAsignacion = (id: number, titulo: string) => {
+        currentAsigIdEdit = id;
+        const modal = document.getElementById('modal-editar-asignacion')!;
+        (document.getElementById('edit-titulo-asignacion') as HTMLInputElement).value = titulo;
+        modal.classList.replace('hidden', 'flex');
+    };
+
+    const cerrarModalAsig = () => {
+        document.getElementById('modal-editar-asignacion')!.classList.replace('flex', 'hidden');
+        currentAsigIdEdit = null;
+    };
+
+    document.getElementById('btn-cancelar-edit-asignacion')?.addEventListener('click', cerrarModalAsig);
+    document.getElementById('modal-editar-asignacion')?.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).id === 'modal-editar-asignacion') cerrarModalAsig();
+    });
+
+    document.getElementById('btn-guardar-edit-asignacion')?.addEventListener('click', async () => {
+        if (!currentAsigIdEdit) return;
+        const nTitle = (document.getElementById('edit-titulo-asignacion') as HTMLInputElement).value.trim();
+        if (!nTitle) { mostrarToast('El título es requerido.', 'error'); return; }
+        await editarAsignacion(currentAsigIdEdit, nTitle);
+        cerrarModalAsig();
+        await cargarAsignaciones(salon_id);
+        mostrarToast('Actividad actualizada.');
+    });
+
+    document.getElementById('btn-eliminar-asignacion')?.addEventListener('click', async () => {
+        if (!currentAsigIdEdit) return;
+        if (!confirm('¿Seguro que deseas eliminar esta actividad y todas sus calificaciones?')) return;
+        await eliminarAsignacion(currentAsigIdEdit);
+        cerrarModalAsig();
+        await cargarAsignaciones(salon_id);
+        mostrarToast('Actividad eliminada.');
+    });
 
     (window as any).__saveCalif = async (input: HTMLInputElement) => {
         const asigId = parseInt(input.dataset.asig!);
@@ -319,7 +374,7 @@ function inicializarFormAsignacion(salon_id: number) {
             const span = fila.querySelector<HTMLSpanElement>('td:last-child span');
             if (span) {
                 span.textContent = prom;
-                span.className = `text-sm font-black ${vals.length > 0 && parseFloat(prom) < 6 ? 'text-red-500' : 'text-primary'}`;
+                span.className = `text-sm font-black ${vals.length > 0 && parseFloat(prom) < 60 ? 'text-red-500' : 'text-primary'}`;
             }
         }
     };
