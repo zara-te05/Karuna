@@ -423,6 +423,7 @@ function renderMLCharts(resumen: Record<string, any>, tipo: string) {
         const nRep = resumen.n_reprueba ?? 0;
         const imp  = resumen.importancias ?? resumen.coeficientes ?? null;
         const probs= (resumen.probabilidades ?? []) as number[];
+        const hasProb = probs.length > 0;
 
         area.innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 p-6">
@@ -443,7 +444,7 @@ function renderMLCharts(resumen: Record<string, any>, tipo: string) {
             <!-- Distribución de probabilidades -->
             <div class="bg-slate-50 dark:bg-white/5 rounded-2xl p-5">
                 <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Probabilidad de Aprobar</p>
-                <div style="height:180px;"><canvas id="ml-c3"></canvas></div>
+                ${hasProb ? `<div style="height:180px;"><canvas id="ml-c3"></canvas></div>` : `<div class="flex h-44 items-center justify-center text-slate-500">No hay probabilidades disponibles</div>`}
             </div>
         </div>`;
 
@@ -474,7 +475,7 @@ function renderMLCharts(resumen: Record<string, any>, tipo: string) {
         }
 
         // C3: Histograma de probabilidades
-        if (probs.length > 0) {
+        if (hasProb) {
             const buckets = Array(10).fill(0);
             probs.forEach(p => { const b = Math.min(9, Math.floor(p * 10)); buckets[b]++; });
             const bLabels = ["0-10%","10-20%","20-30%","30-40%","40-50%","50-60%","60-70%","70-80%","80-90%","90-100%"];

@@ -236,6 +236,7 @@ def main():
     n_aprueba  = int(df["aprueba"].sum())
     n_reprueba = int(len(df) - n_aprueba)
 
+    probabilidades = res["model"].predict_proba(df[["cal_final","prom_tareas","prom_asist"]])[:,1]
     resumen = {
         "algoritmo":   "Random Forest",
         "modo":        modo,
@@ -247,7 +248,8 @@ def main():
             "cal_final":   round(float(res["model"].feature_importances_[0]), 4),
             "prom_tareas": round(float(res["model"].feature_importances_[1]), 4),
             "prom_asist":  round(float(res["model"].feature_importances_[2]), 4),
-        }
+        },
+        "probabilidades": [round(float(p), 3) for p in probabilidades],
     }
     print(json.dumps({"imagen": imagen_b64, "resumen": resumen}))
 
