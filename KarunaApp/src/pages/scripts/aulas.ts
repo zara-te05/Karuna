@@ -54,15 +54,22 @@ function createCanvas(containerId: string, canvasId: string) {
     return document.getElementById(canvasId) as HTMLCanvasElement | null;
 }
 
-const TREND_COLORS = ['#D4AF37', '#312E81', '#2D6A4F', '#F97316', '#6366F1', '#14B8A6'];
+const TREND_COLORS = ['#312E81', '#2D6A4F', '#F97316', '#6366F1', '#14B8A6', '#EC4899'];
 
-function buildTrendLegend(items: { label: string; color: string; hint?: string }[]) {
+function buildTrendLegend(items: { label: string; color: string; dashed?: boolean }[]) {
     const legend = document.getElementById('trend-chart-legend');
     if (!legend) return;
     legend.innerHTML = items.map(item => `
-        <div class="inline-flex items-center gap-2 rounded-full border border-indigo-deep/10 bg-indigo-deep/5 px-3 py-2 text-[11px] font-semibold text-indigo-deep">
-            <span class="inline-block w-2.5 h-2.5 rounded-full" style="background:${item.color}"></span>
-            ${item.label}${item.hint ? ` · ${item.hint}` : ''}
+        <div class="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold"
+             style="border-color:${item.color}22; background:${item.color}10; color:${item.color}">
+            ${item.dashed
+              ? `<span style="display:inline-flex;gap:2px;align-items:center">
+                   <span style="width:8px;height:2px;border-top:2px dashed ${item.color};display:inline-block"></span>
+                   <span style="width:8px;height:2px;border-top:2px dashed ${item.color};display:inline-block"></span>
+                 </span>`
+              : `<span style="width:10px;height:10px;border-radius:50%;background:${item.color};display:inline-block"></span>`
+            }
+            ${item.label}
         </div>`).join('');
 }
 
@@ -95,45 +102,99 @@ function computeSalonAverages(series: TendenciaPorSalonSerie[]) {
     });
 }
 
+// Build hex → rgba helper
+function hexAlpha(hex: string, alpha: number): string {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r},${g},${b},${alpha})`;
+}
+
 function buildTrendDatasets(series: TendenciaPorSalonSerie[]) {
     const labels = buildTrendLabels(series);
     const overall = computeOverallAverageSeries(series);
     const datasets: any[] = [];
 
-    datasets.push({
-        label: overall.label,
-        data: overall.data,
-        borderColor: overall.color,
-        backgroundColor: 'rgba(212,175,55,0.2)',
-        pointBackgroundColor: overall.color,
-        pointBorderColor: '#fff',
-        pointRadius: 5,
-        tension: 0.35,
-        fill: false,
-        borderWidth: 3.5,
-        spanGaps: true,
-    });
-
+    // ── Salon wave datasets (area, drawn first so overall sits on top) ──
     series.forEach((serie, index) => {
         if (!serie.puntos.length) return;
         const pointMap = new Map(serie.puntos.map((p) => [p.titulo, p.promedio]));
-        const color = TREND_COLORS[(index + 1) % TREND_COLORS.length];
+        const color = TREND_COLORS[index % TREND_COLORS.length];
         datasets.push({
             label: serie.salon_nombre,
-            data: labels.map((label) => pointMap.get(label) ?? null),
+            data: labels.map((lbl) => pointMap.get(lbl) ?? null),
             borderColor: color,
-            backgroundColor: `${color}22`,
-            pointBorderColor: '#fff',
+            backgroundColor: hexAlpha(color, 0.18),
             pointBackgroundColor: color,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 1.5,
             pointRadius: 4,
-            tension: 0.35,
-            fill: false,
-            borderWidth: 2.5,
+            pointHoverRadius: 6,
+            tension: 0.5,          // high tension = wave shape
+            fill: 'origin',        // fill down to zero = area wave
+            borderWidth: 2,
             spanGaps: true,
+            order: index + 1,      // lower = drawn on top; salons behind
         });
     });
 
+    // ── Overall average: dashed gold line, no fill, always on top ──
+    datasets.push({
+        label: 'Promedio global',
+        data: overall.data,
+        borderColor: '#D4AF37',
+        backgroundColor: 'transparent',
+        pointBackgroundColor: '#D4AF37',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        tension: 0.5,
+        fill: false,
+        borderWidth: 3,
+        borderDash: [6, 4],
+        spanGaps: true,
+        order: 0,                  // drawn on top of all salons
+    });
+
     return datasets;
+}
+
+function waveChartOptions(isDarkMode: boolean) {
+    const tc = isDarkMode ? 'rgba(232,232,240,0.6)' : '#475569';
+    const gc = isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(30,27,75,0.06)';
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index' as const, intersect: false },
+        animation: { duration: 900, easing: 'easeOutQuart' as const },
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: isDarkMode ? 'rgba(26,26,46,0.95)' : 'rgba(255,255,255,0.97)',
+                borderColor: 'rgba(212,175,55,0.3)',
+                borderWidth: 1,
+                titleColor: isDarkMode ? '#e8e8f0' : '#1E1B4B',
+                bodyColor: isDarkMode ? 'rgba(232,232,240,0.75)' : '#475569',
+                padding: 12,
+                callbacks: {
+                    label: (ctx: any) => ` ${ctx.dataset.label}: ${ctx.parsed.y != null ? ctx.parsed.y.toFixed(1) + '%' : '—'}`,
+                },
+            },
+        },
+        scales: {
+            x: {
+                grid: { display: false },
+                ticks: { color: tc, font: { size: 10 }, maxRotation: 30 },
+            },
+            y: {
+                min: 0,
+                max: 100,
+                grid: { color: gc },
+                ticks: { color: tc, callback: (v: any) => `${v}%`, font: { size: 10 } },
+            },
+        },
+    };
 }
 
 function renderTrendChart(series: TendenciaPorSalonSerie[]) {
@@ -146,40 +207,20 @@ function renderTrendChart(series: TendenciaPorSalonSerie[]) {
 
     const labels = buildTrendLabels(series);
     const datasets = buildTrendDatasets(series);
+    const dark = document.documentElement.classList.contains('dark');
+
     chartTrend = new (window as any).Chart(ctx, {
         type: 'line',
-        data: {
-            labels,
-            datasets,
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: { duration: 800, easing: 'easeOutQuart' },
-            plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: (ctx: any) => `${ctx.parsed.y?.toFixed(1) ?? 0}%` } },
-            },
-            scales: {
-                x: {
-                    grid: { display: false },
-                    ticks: { color: '#475569', font: { size: 10 } },
-                },
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    grid: { color: 'rgba(30,27,75,0.08)' },
-                    ticks: { color: '#475569', callback: (value: any) => `${value}%` },
-                },
-            },
-        },
+        data: { labels, datasets },
+        options: waveChartOptions(dark),
     });
 
-    const items = [{ label: 'Promedio global', color: '#D4AF37', hint: 'Todas las aulas' }];
+    // Legend: salons first, then the global dashed line
+    const items: { label: string; color: string; dashed?: boolean }[] = [];
     series.forEach((serie, index) => {
-        const color = TREND_COLORS[(index + 1) % TREND_COLORS.length];
-        items.push({ label: serie.salon_nombre, color, hint: `Grupo ${index + 1}` });
+        items.push({ label: serie.salon_nombre, color: TREND_COLORS[index % TREND_COLORS.length] });
     });
+    items.push({ label: 'Promedio global', color: '#D4AF37', dashed: true });
     buildTrendLegend(items);
 }
 
@@ -194,36 +235,21 @@ function renderDetailChart(series: TendenciaPorSalonSerie[]) {
     const labels = buildTrendLabels(series);
     const datasets = buildTrendDatasets(series).map((dataset: any) => ({
         ...dataset,
-        borderWidth: 3,
-        pointRadius: 5,
-        fill: false,
+        // Keep fills but increase point size for the larger modal chart
+        pointRadius: dataset.order === 0 ? 6 : 5,
+        pointHoverRadius: dataset.order === 0 ? 8 : 7,
+        borderWidth: dataset.order === 0 ? 3.5 : 2.5,
     }));
+    const dark = document.documentElement.classList.contains('dark');
 
     chartDetail = new (window as any).Chart(ctx, {
         type: 'line',
-        data: {
-            labels,
-            datasets,
-        },
+        data: { labels, datasets },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: { duration: 900, easing: 'easeOutQuart' },
-            plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: (ctx: any) => `${ctx.parsed.y?.toFixed(1) ?? 0}%` } },
-            },
+            ...waveChartOptions(dark),
             scales: {
-                x: {
-                    grid: { color: 'rgba(0,0,0,0.04)' },
-                    ticks: { color: '#475569', font: { size: 11 } },
-                },
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    grid: { color: 'rgba(0,0,0,0.08)' },
-                    ticks: { color: '#475569', callback: (value: any) => `${value}%` },
-                },
+                x: { grid: { display: false }, ticks: { color: dark ? 'rgba(232,232,240,0.6)' : '#475569', font: { size: 11 } } },
+                y: { min: 0, max: 100, grid: { color: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)' }, ticks: { color: dark ? 'rgba(232,232,240,0.6)' : '#475569', callback: (v: any) => `${v}%` } },
             },
         },
     });

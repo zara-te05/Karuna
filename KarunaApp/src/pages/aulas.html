@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html class="light" lang="es">
 
 <head>
     <meta charset="utf-8" />
@@ -329,8 +329,7 @@
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-3 pl-4 border-l border-forest/10">
                         <div class="text-right hidden sm:block">
-                            <p class="text-sm font-bold text-forest leading-none" id="nombre_docente">Prof. Julián
-                                Thorne</p>
+                            <p class="text-sm font-bold text-forest leading-none" id="nombre_docente">Cargando…</p>
                         </div>
                         <div class="size-10 rounded-full bg-primary/20 border-2 border-primary/60 overflow-hidden">
                             <img id="imagen-perfil" alt="Perfil del profesor" class="w-full h-full object-cover"
@@ -357,7 +356,7 @@
                             <span class="material-symbols-outlined text-primary" style="font-size:18px">school</span>
                             <p class="text-[10px] text-indigo-deep/50 uppercase font-bold tracking-wider">Aulas</p>
                         </div>
-                        <p id="total-salones-count" class="text-3xl font-bold text-indigo-deep font-serif-elegant">3</p>
+                        <p id="total-salones-count" class="text-3xl font-bold text-indigo-deep font-serif-elegant">—</p>
                         <p class="text-[10px] text-teal-muted font-bold mt-1">activas</p>
                     </div>
                     <div class="bg-white rounded-xl p-4 border border-forest/5 metric-glow">
@@ -365,16 +364,16 @@
                             <span class="material-symbols-outlined text-primary" style="font-size:18px">group</span>
                             <p class="text-[10px] text-indigo-deep/50 uppercase font-bold tracking-wider">Alumnos</p>
                         </div>
-                        <p id="total-alumnos-count" class="text-3xl font-bold text-indigo-deep font-serif-elegant">87</p>
-                        <p id="alumnos-context" class="text-[10px] text-indigo-deep/40 font-bold mt-1">en 3 aulas</p>
+                        <p id="total-alumnos-count" class="text-3xl font-bold text-indigo-deep font-serif-elegant">—</p>
+                        <p id="alumnos-context" class="text-[10px] text-indigo-deep/40 font-bold mt-1">cargando…</p>
                     </div>
                     <div class="bg-white rounded-xl p-4 border border-forest/5 metric-glow">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="material-symbols-outlined text-primary" style="font-size:18px">grade</span>
                             <p class="text-[10px] text-indigo-deep/50 uppercase font-bold tracking-wider">Promedio</p>
                         </div>
-                        <p id="promedio-general" class="text-3xl font-bold text-indigo-deep font-serif-elegant">88.2%</p>
-                        <p id="promedio-context" class="text-[10px] text-teal-muted font-bold mt-1">promedio semestral</p>
+                        <p id="promedio-general" class="text-3xl font-bold text-indigo-deep font-serif-elegant">—</p>
+                        <p id="promedio-context" class="text-[10px] text-teal-muted font-bold mt-1">promedio global</p>
                     </div>
                     <div class="bg-white rounded-xl p-4 border border-forest/5 metric-glow">
                         <div class="flex items-center gap-2 mb-2">
@@ -382,8 +381,8 @@
                                 style="font-size:18px">assignment_turned_in</span>
                             <p class="text-[10px] text-indigo-deep/50 uppercase font-bold tracking-wider">Entregas</p>
                         </div>
-                        <p id="tasa-entregas" class="text-3xl font-bold text-indigo-deep font-serif-elegant">76%</p>
-                        <p class="text-[10px] text-indigo-deep/40 font-bold mt-1">entregadas a tiempo</p>
+                        <p id="tasa-entregas" class="text-3xl font-bold text-indigo-deep font-serif-elegant">—</p>
+                        <p class="text-[10px] text-indigo-deep/40 font-bold mt-1">tasa de entrega</p>
                     </div>
                     <div class="bg-white rounded-xl p-4 border border-forest/5 metric-glow">
                         <div class="flex items-center gap-2 mb-2">
@@ -391,8 +390,8 @@
                                 style="font-size:18px">event_available</span>
                             <p class="text-[10px] text-indigo-deep/50 uppercase font-bold tracking-wider">Asistencia</p>
                         </div>
-                        <p id="asistencia-general" class="text-3xl font-bold text-indigo-deep font-serif-elegant">95.3%</p>
-                        <p class="text-[10px] text-teal-muted font-bold mt-1">↑ sobre el objetivo</p>
+                        <p id="asistencia-general" class="text-3xl font-bold text-indigo-deep font-serif-elegant">—</p>
+                        <p class="text-[10px] text-teal-muted font-bold mt-1">asistencia media</p>
                     </div>
                 </div>
 
@@ -402,14 +401,12 @@
                     <!-- Gráfica (3 cols) -->
                     <div class="md:col-span-3 bg-white rounded-xl border border-forest/5 metric-glow p-5">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-base font-bold text-indigo-deep font-serif-elegant">Tendencia de
-                                Calificaciones</h3>
+                            <h3 class="text-base font-bold text-indigo-deep font-serif-elegant">Desempeño de Grupos</h3>
                             <span
-                                class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full uppercase tracking-wider">Semanas
-                                1–12</span>
+                                class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full uppercase tracking-wider">Todos los salones</span>
                         </div>
-                        <div class="relative h-40" id="trend-chart-graphic"></div>
-                        <div id="trend-chart-legend" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3 pt-3 border-t border-indigo-deep/5"></div>
+                        <div class="relative h-64" id="trend-chart-graphic"></div>
+                        <div id="trend-chart-legend" class="flex flex-wrap gap-2 mt-4 pt-3 border-t border-indigo-deep/5"></div>
                     </div>
 
                     <!-- Tabla resumen (2 cols) -->
