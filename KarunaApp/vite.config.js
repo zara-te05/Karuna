@@ -17,6 +17,8 @@ export default defineConfig({
         lobby_aulas: 'src/pages/lobby_aulas.html',
         manejo_aulas: 'src/pages/manejo_aulas.html',
         profile: 'src/pages/profile.html',
+        reportes: 'src/pages/reportes.html',
+        detalle_alumno: 'src/pages/detalle_alumno.html',
       }
     }
   },
