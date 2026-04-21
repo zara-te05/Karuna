@@ -3,7 +3,3 @@
 interface ImportMetaEnv {
     readonly VITE_CLASSROOM_API_KEY: string;
 }
-
-interface ImportMeta {
-    readonly env: ImportMetaEnv;
-}
