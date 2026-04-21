@@ -55,8 +55,11 @@ def preparar_datos(df, umbral):
 
     min_ratio = conteos.min() / n
     if min_ratio < 0.20:
-        df_maj = df[y == conteos.argmax()]
-        df_min = df[y == conteos.argmin()]
+        clases_unicas, conteos_array = np.unique(y, return_counts=True)
+        clase_maj = clases_unicas[conteos_array.argmax()]   # ← valor real de clase (0 o 1)
+        clase_min = clases_unicas[conteos_array.argmin()]
+        df_maj = df[y == clase_maj]
+        df_min = df[y == clase_min]
         df_up  = resample(df_min, replace=True, n_samples=len(df_maj), random_state=42)
         df_bal = pd.concat([df_maj, df_up])
         X = df_bal[["cal_final", "prom_tareas", "prom_asist"]]
@@ -76,13 +79,17 @@ def preparar_datos(df, umbral):
 def entrenar(X, y, X_train, X_test, y_train, y_test, loo_mode):
     model = RandomForestClassifier(n_estimators=100, class_weight="balanced", random_state=42)
     if loo_mode:
+        # Evaluamos con LOO CV — accuracy viene del CV, NO del refit sobre entrenamiento
         scores = cross_val_score(model, X, y, cv=LeaveOneOut(), scoring="accuracy")
-        model.fit(X, y)
-        return {"model": model, "scores_loo": scores, "y_pred": model.predict(X),
-                "y_prob": model.predict_proba(X)[:, 1], "y_test": y, "X_test": X}
+        model.fit(X, y)  # refit final sobre todos los datos (para graficar importancias)
+        # y_pred / y_prob son para visualización únicamente; se advierte en modo LOO
+        return {"model": model, "scores_loo": scores,
+                "y_pred": model.predict(X), "y_prob": model.predict_proba(X)[:, 1],
+                "y_test": y, "X_test": X, "acc_from_cv": True}
     model.fit(X_train, y_train)
-    return {"model": model, "scores_loo": None, "y_pred": model.predict(X_test),
-            "y_prob": model.predict_proba(X_test)[:, 1], "y_test": y_test, "X_test": X_test}
+    return {"model": model, "scores_loo": None,
+            "y_pred": model.predict(X_test), "y_prob": model.predict_proba(X_test)[:, 1],
+            "y_test": y_test, "X_test": X_test, "acc_from_cv": False}
 
 
 def graficar(df, res, nombre_grupo, modo, umbral):
@@ -232,10 +239,15 @@ def main():
 
     y_pred     = np.array(res["y_pred"])
     y_test_arr = np.array(res["y_test"])
-    acc        = float(accuracy_score(y_test_arr, y_pred))
+    # En modo LOO la accuracy real viene del CV, no de predecir sobre datos de entrenamiento
+    if res.get("acc_from_cv") and res["scores_loo"] is not None:
+        acc = float(res["scores_loo"].mean())
+    else:
+        acc = float(accuracy_score(y_test_arr, y_pred))
     n_aprueba  = int(df["aprueba"].sum())
     n_reprueba = int(len(df) - n_aprueba)
 
+    probabilidades = res["model"].predict_proba(df[["cal_final","prom_tareas","prom_asist"]])[:,1]
     resumen = {
         "algoritmo":   "Random Forest",
         "modo":        modo,
@@ -247,7 +259,8 @@ def main():
             "cal_final":   round(float(res["model"].feature_importances_[0]), 4),
             "prom_tareas": round(float(res["model"].feature_importances_[1]), 4),
             "prom_asist":  round(float(res["model"].feature_importances_[2]), 4),
-        }
+        },
+        "probabilidades": [round(float(p), 3) for p in probabilidades],
     }
     print(json.dumps({"imagen": imagen_b64, "resumen": resumen}))
 

@@ -156,6 +156,83 @@ export async function obtenerDatosMLSalon(salon_id: number): Promise<DatosML[]> 
     }
 }
 
+export interface TendenciaGeneral {
+    label: string;
+    promedio: number | null;
+}
+
+export async function obtenerTendenciaGeneral(docente_id: number): Promise<TendenciaGeneral[]> {
+    try {
+        const database = await getDatabase();
+        const rows = await database.select<{ titulo: string; avg: number | null }[]>(
+            `SELECT a.titulo, AVG(c.calificacion) as avg
+             FROM ASIGNACION a
+             LEFT JOIN CALIFICACION c ON c.asignacion_id = a.id
+             WHERE a.salon_id IN (SELECT id FROM SALON WHERE docente_id = ?)
+             GROUP BY a.id, a.titulo
+             ORDER BY a.created_at ASC`, [docente_id]
+        );
+        return rows.map((r, index) => ({
+            label: r.titulo?.trim() || `Asignación ${index + 1}`,
+            promedio: r.avg != null ? Math.round(r.avg * 10) / 10 : null,
+        }));
+    } catch (err) {
+        console.error("Error tendencia global:", err);
+        return [];
+    }
+}
+
+export interface TendenciaSalonPunto {
+    titulo: string;
+    promedio: number | null;
+}
+
+export interface TendenciaPorSalonSerie {
+    salon_id: number;
+    salon_nombre: string;
+    puntos: TendenciaSalonPunto[];
+}
+
+export async function obtenerTendenciaPorSalones(docente_id: number): Promise<TendenciaPorSalonSerie[]> {
+    try {
+        const database = await getDatabase();
+        const rows = await database.select<{
+            salon_id: number;
+            salon_nombre: string;
+            titulo: string;
+            avg: number | null;
+        }[]>(
+            `SELECT s.id as salon_id, s.nombre as salon_nombre, a.titulo, AVG(c.calificacion) as avg
+             FROM ASIGNACION a
+             JOIN SALON s ON a.salon_id = s.id
+             LEFT JOIN CALIFICACION c ON c.asignacion_id = a.id
+             WHERE s.docente_id = ?
+             GROUP BY s.id, s.nombre, a.id, a.titulo
+             ORDER BY a.created_at ASC`, [docente_id]
+        );
+
+        const seriesMap = new Map<number, TendenciaPorSalonSerie>();
+        for (const row of rows) {
+            if (!seriesMap.has(row.salon_id)) {
+                seriesMap.set(row.salon_id, {
+                    salon_id: row.salon_id,
+                    salon_nombre: row.salon_nombre || `Aula ${row.salon_id}`,
+                    puntos: [],
+                });
+            }
+            seriesMap.get(row.salon_id)!.puntos.push({
+                titulo: row.titulo || 'Sin título',
+                promedio: row.avg != null ? Math.round(row.avg * 10) / 10 : null,
+            });
+        }
+
+        return Array.from(seriesMap.values());
+    } catch (err) {
+        console.error("Error tendencia por salones:", err);
+        return [];
+    }
+}
+
 // ─── Tendencia de calificaciones por asignación ───────────────────────────────
 export interface TendenciaPunto {
     label: string;

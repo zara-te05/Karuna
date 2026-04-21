@@ -167,3 +167,27 @@ export async function obtenerAsistenciaEstudiante(
         return [];
     }
 }
+
+// ─── Actualizar la asistencia global del salón en tabla SALON ────────────
+export async function actualizarAsistenciaGlobalSalon(salon_id: number) {
+    try {
+        const database = await getDatabase();
+        await database.execute(
+            `UPDATE SALON 
+             SET asistencia = (
+                 SELECT COALESCE(
+                     (SUM(presente) * 100.0) / NULLIF(COUNT(*), 0), 
+                     0
+                 )
+                 FROM REGISTRO_ASISTENCIA
+                 WHERE salon_id = ?
+             )
+             WHERE id = ?`,
+            [salon_id, salon_id]
+        );
+        return { success: true };
+    } catch (error) {
+        console.error('Error al actualizar asistencia global del salón:', error);
+        return { success: false, error };
+    }
+}
