@@ -149,7 +149,7 @@ async function iniciarOAuth() {
         // Show creds panel
         panelCreds.classList.remove("hidden");
         (document.getElementById("input-api-key") as HTMLInputElement).value
-            = currentConfig.api_key ?? (import.meta.env.VITE_CLASSROOM_API_KEY || "");
+            = currentConfig.api_key ?? ((import.meta as any).env.VITE_CLASSROOM_API_KEY || "");
         alert("Ingresa primero el Client ID y Client Secret en la sección de configuración de credenciales.");
         return;
     }
@@ -436,7 +436,7 @@ async function init() {
         } else {
             // Pre-fill the user's provided API key as default
             (document.getElementById("input-api-key") as HTMLInputElement).value
-                = import.meta.env.VITE_CLASSROOM_API_KEY || "";
+                = (import.meta as any).env.VITE_CLASSROOM_API_KEY || "";
         }
         if (currentConfig.client_id) (document.getElementById("input-client-id") as HTMLInputElement).value = currentConfig.client_id;
         if (currentConfig.client_secret) (document.getElementById("input-client-secret") as HTMLInputElement).value = currentConfig.client_secret;
