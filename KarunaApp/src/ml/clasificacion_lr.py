@@ -44,7 +44,10 @@ def preparar(df, umbral):
         k_folds = max(2, min(5, int(conteos.min())))
         return df,X,y,None,None,None,None,f"Datos escasos ({n}) — CV {k_folds}-fold",True,sc,k_folds
     if min_ratio < 0.20:
-        df_maj=df[y==conteos.argmax()]; df_min=df[y==conteos.argmin()]
+        clases_unicas, conteos_array = np.unique(y, return_counts=True)
+        clase_maj = clases_unicas[conteos_array.argmax()]   # ← valor real de clase (0 o 1)
+        clase_min = clases_unicas[conteos_array.argmin()]
+        df_maj=df[y==clase_maj]; df_min=df[y==clase_min]
         df_up=resample(df_min,replace=True,n_samples=len(df_maj),random_state=42)
         df_bal=pd.concat([df_maj,df_up])
         X_r2=df_bal[["cal_final","prom_tareas","prom_asist"]]
@@ -67,10 +70,12 @@ def entrenar(X,y,Xtr,Xte,ytr,yte,loo,k_folds=None):
             sc2=cross_val_score(m,X,y,cv=cv,scoring="accuracy")
         except Exception:
             sc2=np.array([])
-        m.fit(X,y)
-        return {"model":m,"scores_loo":sc2,"y_pred":m.predict(X),"y_prob":m.predict_proba(X)[:,1],"y_test":y}
+        m.fit(X,y)  # refit final — solo para coeficientes
+        return {"model":m,"scores_loo":sc2,"y_pred":m.predict(X),"y_prob":m.predict_proba(X)[:,1],
+                "y_test":y, "acc_from_cv": True}
     m.fit(Xtr,ytr)
-    return {"model":m,"scores_loo":None,"y_pred":m.predict(Xte),"y_prob":m.predict_proba(Xte)[:,1],"y_test":yte}
+    return {"model":m,"scores_loo":None,"y_pred":m.predict(Xte),"y_prob":m.predict_proba(Xte)[:,1],
+            "y_test":yte, "acc_from_cv": False}
 
 
 def graficar(df,res,nombre,modo,umbral):
@@ -181,15 +186,23 @@ def main():
     for col in ["cal_final","prom_tareas","prom_asist"]:
         if col not in df.columns: df[col]=0.0
     umbral=e.get("umbral",70); nombre=e.get("nombre_grupo","Grupo")
-    df,X,y,Xtr,Xte,ytr,yte,modo,loo,_sc,k_folds=preparar(df,umbral)
+    df,X,y,Xtr,Xte,ytr,yte,modo,loo,fitted_scaler,k_folds=preparar(df,umbral)
     res=entrenar(X,y,Xtr,Xte,ytr,yte,loo,k_folds)
     imagen=graficar(df,res,nombre,modo,umbral)
     yt=np.array(res["y_test"]); yp=np.array(res["y_pred"])
-    acc=float(accuracy_score(yt,yp)) if len(np.unique(yt))>=2 else None
+    # En modo CV/LOO la accuracy real viene del promedio del CV, no de predecir sobre entrenamiento
+    if res.get("acc_from_cv") and res["scores_loo"] is not None and len(res["scores_loo"]) > 0:
+        acc = float(res["scores_loo"].mean())
+    elif len(np.unique(yt)) >= 2:
+        acc = float(accuracy_score(yt, yp))
+    else:
+        acc = None
     coefs=res["model"].coef_[0]
 
-    # Probabilidades por alumno (con datos originales)
-    all_p=res["model"].predict_proba(pd.DataFrame(df[["cal_final","prom_tareas","prom_asist"]].values,columns=["cal_final","prom_tareas","prom_asist"]))[:,1]
+    # Probabilidades por alumno: SIEMPRE escalar con el scaler entrenado
+    X_raw = df[["cal_final","prom_tareas","prom_asist"]].values
+    X_scaled_for_pred = pd.DataFrame(fitted_scaler.transform(X_raw), columns=["cal_final","prom_tareas","prom_asist"])
+    all_p = res["model"].predict_proba(X_scaled_for_pred)[:,1]
 
     resumen={
         "algoritmo":"Logistic Regression","modo":modo,

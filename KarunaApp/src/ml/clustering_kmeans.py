@@ -41,7 +41,8 @@ def preparar(df):
     return df, X, sc.fit_transform(X)
 
 def clasificar(cal):
-    if cal >= 75: return "alto"
+    """Umbrales alineados con DBSCAN: alto ≥80, medio 65–80, bajo <65."""
+    if cal >= 80: return "alto"
     if cal >= 65: return "medio"
     return "bajo"
 
@@ -81,8 +82,8 @@ def graficar(df, X_scaled, labels, centers, sil_score, nombre_grupo, k):
     ax = fig.add_subplot(gs[0,0])
     ax.hist(df["cal_final"], bins=12, color=COLOR_MAIN, edgecolor="#0f0f1a", alpha=0.85)
     ax.axvline(df["cal_final"].mean(), color="#f87171", linestyle="--", lw=1.8, label=f"Media ({df['cal_final'].mean():.1f})")
-    ax.axvline(75, color="#4ade80", linestyle=":", lw=1.2, label="Alto (75)")
-    ax.axvline(65, color="#f87171", linestyle=":", lw=1.2, label="Bajo (65)")
+    ax.axvline(80, color="#4ade80", linestyle=":", lw=1.2, label="Alto (≥80)")
+    ax.axvline(65, color="#f87171", linestyle=":", lw=1.2, label="Bajo (<65)")
     ax.set_title("Dist. Calificación Final", color=COLOR_MAIN, fontweight="bold"); ax.legend(fontsize=7)
 
     ax = fig.add_subplot(gs[0,1])
@@ -115,12 +116,12 @@ def graficar(df, X_scaled, labels, centers, sil_score, nombre_grupo, k):
 
     ax = fig.add_subplot(gs[1,2])
     ax.scatter(df["cal_final"], df["prom_asist"], c=pc, edgecolors="#0f0f1a", linewidths=0.4, s=55, alpha=0.9)
-    ax.axvline(75, color="#4ade80", linestyle=":", lw=1); ax.axvline(65, color="#f87171", linestyle=":", lw=1)
+    ax.axvline(80, color="#4ade80", linestyle=":", lw=1); ax.axvline(65, color="#f87171", linestyle=":", lw=1)
     ax.set_title("Cal. final vs Asistencia", color=COLOR_MAIN, fontweight="bold"); ax.legend(handles=patches, fontsize=7)
 
     ax = fig.add_subplot(gs[1,3])
     ax.scatter(df["cal_final"], df["prom_tareas"], c=pc, edgecolors="#0f0f1a", linewidths=0.4, s=55, alpha=0.9)
-    ax.axvline(75, color="#4ade80", linestyle=":", lw=1); ax.axvline(65, color="#f87171", linestyle=":", lw=1)
+    ax.axvline(80, color="#4ade80", linestyle=":", lw=1); ax.axvline(65, color="#f87171", linestyle=":", lw=1)
     ax.set_title("Cal. final vs Tareas", color=COLOR_MAIN, fontweight="bold")
 
     ax = fig.add_subplot(gs[2,0]); ax2 = ax.twinx()
@@ -156,7 +157,7 @@ def graficar(df, X_scaled, labels, centers, sil_score, nombre_grupo, k):
     ax = fig.add_subplot(gs[2,3])
     idx_sort = np.argsort(df["cal_final"].values)
     ax.barh(range(n), df["cal_final"].values[idx_sort], color=[pc[i] for i in idx_sort], edgecolor="#0f0f1a", height=0.7, lw=0.3)
-    ax.axvline(75, color="#4ade80", linestyle="--", lw=1.2)
+    ax.axvline(80, color="#4ade80", linestyle="--", lw=1.2)
     ax.axvline(65, color="#f87171", linestyle="--", lw=1.2)
     ax.legend(handles=patches, fontsize=7, loc="lower right")
     ax.set_title("Cal. por Alumno (ordenado)", color=COLOR_MAIN, fontweight="bold"); ax.set_yticks([])

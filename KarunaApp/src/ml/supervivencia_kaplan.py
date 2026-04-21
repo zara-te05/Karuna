@@ -27,34 +27,44 @@ plt.rcParams.update({
 COLOR_MAIN = "#D4AF37"
 
 
-def derivar_tiempos(df: pd.DataFrame, seed=42) -> pd.DataFrame:
-    """Genera tiempo y evento simulados realísticamente a partir de calificaciones reales."""
-    rng = np.random.default_rng(seed)
-    df  = df.copy()
-    cal = df["cal_final"].values.astype(float)
-    tar = df["prom_tareas"].values.astype(float)
-    asi = df["prom_asist"].values.astype(float)
+def derivar_tiempos(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Deriva tiempos y eventos de forma DETERMINISTA a partir de calificaciones reales.
+    No usa random: los tiempos son proporcionales al riesgo calculado desde los datos.
 
-    # Reprobación
-    r_rep = (100-cal)/100*0.6 + (100-tar)/100*0.4
-    t_rep = np.clip(np.round(rng.exponential(1/(r_rep+0.05))*4),1,16).astype(int)
-    e_rep = (t_rep<16).astype(int)
-    mask  = cal>=75
-    e_rep[mask] = rng.choice([0,1], size=mask.sum(), p=[0.90,0.10])
+    Modelo:
+      - tiempo_rep: semana estimada de reprobación.  Riesgo alto = falla temprano.
+      - tiempo_des: semana estimada de deserción.    Riesgo alto = abandona pronto.
+      - tiempo_mej: semana estimada de mejora academ. Prob alta = mejora pronto.
+      Semana máxima = 16 (semestre). evento=1 si el suceso ocurrió, 0=censurado.
+    """
+    df   = df.copy()
+    cal  = df["cal_final"].values.astype(float)
+    tar  = df["prom_tareas"].values.astype(float)
+    asi  = df["prom_asist"].values.astype(float)
 
-    # Deserción
-    r_des = (100-asi)/100*0.5 + (100-cal)/100*0.3 + (100-tar)/100*0.2
-    t_des = np.clip(np.round(rng.exponential(1/(r_des+0.05))*4),1,16).astype(int)
-    e_des = (t_des<16).astype(int)
-    mask2 = asi>=80
-    e_des[mask2] = rng.choice([0,1], size=mask2.sum(), p=[0.88,0.12])
+    # --- Reprobación: riesgo = ponderación de deficiencias ---
+    r_rep = np.clip((100 - cal) / 100 * 0.6 + (100 - tar) / 100 * 0.4, 0.01, 0.99)
+    # Tiempo inversamente proporcional al riesgo: alto riesgo → semana temprana
+    t_rep = np.clip(np.round(16 * (1 - r_rep)).astype(int), 1, 16)
+    # Evento: reprobó si cal < 70 (umbral real)
+    e_rep = (cal < 70).astype(int)
+    # Alumnos sobre 70 son censurados (observados hasta sem. 16 sin reprobar)
+    t_rep[e_rep == 0] = 16
 
-    # Mejora
-    r_mej = tar/100*0.5 + asi/100*0.3 + cal/100*0.2
-    t_mej = np.clip(np.round(rng.exponential(1/(r_mej+0.05))*3),1,16).astype(int)
-    e_mej = (t_mej<16).astype(int)
-    mask3 = tar<50
-    e_mej[mask3] = rng.choice([0,1], size=mask3.sum(), p=[0.85,0.15])
+    # --- Deserción: riesgo basado en asistencia y calificación ---
+    r_des = np.clip((100 - asi) / 100 * 0.5 + (100 - cal) / 100 * 0.3 + (100 - tar) / 100 * 0.2, 0.01, 0.99)
+    t_des = np.clip(np.round(16 * (1 - r_des)).astype(int), 1, 16)
+    # Proxy de deserción: asistencia < 60%
+    e_des = (asi < 60).astype(int)
+    t_des[e_des == 0] = 16
+
+    # --- Mejora académica: probabilidad de mejorar (tareas como predictor principal) ---
+    r_mej = np.clip(tar / 100 * 0.5 + asi / 100 * 0.3 + cal / 100 * 0.2, 0.01, 0.99)
+    t_mej = np.clip(np.round(16 * (1 - r_mej)).astype(int), 1, 16)
+    # Evento: alumno con buen desempeño en tareas se consideró que mejoró
+    e_mej = (tar >= 75).astype(int)
+    t_mej[e_mej == 0] = 16
 
     df["tiempo_rep"] = t_rep; df["evento_rep"] = e_rep
     df["tiempo_des"] = t_des; df["evento_des"] = e_des
@@ -113,20 +123,13 @@ def graficar(df, nombre_grupo):
     pal_mej = ["#86efac","#22c55e","#14532d"]
 
     fig = plt.figure(figsize=(20,16))
-    fig.suptitle(f"📊 {nombre_grupo}  ·  Kaplan-Meier  ·  Reprobación | Deserción | Mejora",
+    fig.suptitle(f"📊 {nombre_grupo}  ·  Kaplan-Meier  ·  Riesgo estimado desde datos reales",
                  fontsize=13, fontweight="bold", color=COLOR_MAIN, y=1.005)
     gs = gridspec.GridSpec(4, 3, figure=fig, hspace=0.68, wspace=0.38)
 
     panel_km_global(fig.add_subplot(gs[0,0]), df,"tiempo_rep","evento_rep","#ef4444","Reprobación — grupo completo","P(no reprobar)")
     panel_km_global(fig.add_subplot(gs[0,1]), df,"tiempo_des","evento_des","#f59e0b","Deserción — grupo completo","P(no desertar)")
     panel_km_global(fig.add_subplot(gs[0,2]), df,"tiempo_mej","evento_mej","#22c55e","Mejora — grupo completo","P(aún sin mejorar)")
-
-    for col_i, (t,e,t_seg,pal,yl_rep,yl_des,yl_mej) in enumerate([
-        ("tiempo_rep","evento_rep","seg_cal",   pal_rep,"P(no reprobar)","P(no desertar)","P(sin mejorar)"),
-        ("tiempo_rep","evento_rep","seg_asist", pal_rep,"P(no reprobar)","P(no desertar)","P(sin mejorar)"),
-        ("tiempo_rep","evento_rep","seg_tareas",pal_rep,"P(no reprobar)","P(no desertar)","P(sin mejorar)"),
-    ]):
-        pass
 
     rows = [
         ("seg_cal",   "Cal.",   pal_rep, pal_des, pal_mej),

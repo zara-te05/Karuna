@@ -12,7 +12,7 @@ import {
 } from '../../BD/criterios';
 import {
     guardarConfigAsistencia, obtenerConfigAsistencia,
-    registrarAsistencia, obtenerAsistenciaFecha
+    registrarAsistencia, obtenerAsistenciaFecha, actualizarAsistenciaGlobalSalon
 } from '../../BD/asistencia';
 import {
     crearAsignacion, obtenerAsignacionesSalon, guardarCalificacion,
@@ -461,6 +461,7 @@ function inicializarBtnGuardarLista(salon_id: number) {
                 await registrarAsistencia(salon_id, estId, fecha, presente);
             }
         }
+        await actualizarAsistenciaGlobalSalon(salon_id);
         mostrarToast('¡Asistencia guardada!');
     });
 }
