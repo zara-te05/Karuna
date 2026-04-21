@@ -56,15 +56,15 @@ async function getDatabase(): Promise<Database> {
 // ─── Config / Credentials ─────────────────────────────────────────────────────
 
 export interface ClassroomConfig {
-    client_id:     string;
+    client_id: string;
     client_secret: string;
-    api_key:       string;
-    access_token:  string | null;
+    api_key: string;
+    access_token: string | null;
     refresh_token: string | null;
-    expires_at:    number | null;
-    email:         string | null;
+    expires_at: number | null;
+    email: string | null;
     nombre_cuenta: string | null;
-    foto_url:      string | null;
+    foto_url: string | null;
 }
 
 export async function obtenerConfigClassroom(): Promise<ClassroomConfig> {
@@ -157,10 +157,10 @@ export async function obtenerTokenValido(): Promise<string> {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
-            client_id:     cfg.client_id,
+            client_id: cfg.client_id,
             client_secret: cfg.client_secret,
             refresh_token: cfg.refresh_token,
-            grant_type:    "refresh_token",
+            grant_type: "refresh_token",
         }),
     });
 
@@ -241,16 +241,16 @@ async function listarSubmissions(courseId: string, cwId: string): Promise<any[]>
 // ─── Import pipeline ──────────────────────────────────────────────────────────
 
 export interface ImportLog {
-    tipo:    "info" | "ok" | "warn" | "error";
+    tipo: "info" | "ok" | "warn" | "error";
     mensaje: string;
 }
 
 export interface ImportResult {
-    salonId:    number;
-    alumnos:    number;
-    tareas:     number;
+    salonId: number;
+    alumnos: number;
+    tareas: number;
     calificaciones: number;
-    logs:       ImportLog[];
+    logs: ImportLog[];
 }
 
 /** Verifica si ya existe un salón con ese nombre. */
@@ -276,7 +276,7 @@ export async function buscarSalonPorCourseId(courseId: string): Promise<number |
 /** Elimina todos los datos de un salón (conserva el salón en sí). */
 export async function limpiarDatosSalon(salonId: number) {
     const database = await getDatabase();
-    
+
     // Eliminación manual de tablas pivote (SQLite puede tener foreign_keys apagado)
     await database.execute(
         `DELETE FROM CLASSROOM_ESTUDIANTE WHERE estudiante_id IN (SELECT id FROM ESTUDIANTE WHERE salon_id = ?)`, [salonId]
@@ -284,7 +284,7 @@ export async function limpiarDatosSalon(salonId: number) {
     await database.execute(
         `DELETE FROM CLASSROOM_ASIGNACION WHERE asignacion_id IN (SELECT id FROM ASIGNACION WHERE salon_id = ?)`, [salonId]
     );
-    
+
     // CASCADE deletes handle related records
     await database.execute(`DELETE FROM ASIGNACION WHERE salon_id = ?`, [salonId]);
     await database.execute(`DELETE FROM ESTUDIANTE  WHERE salon_id = ?`, [salonId]);
@@ -312,20 +312,20 @@ export async function importarCursoClassroom(
     const logs: ImportLog[] = [];
     const database = await getDatabase();
     let alumnosCount = 0;
-    let tareasCount  = 0;
-    let calsCount    = 0;
+    let tareasCount = 0;
+    let calsCount = 0;
 
     const courseName = salonNombreOverride ?? course.name;
 
     // 1. Crear o reutilizar salón
     if (salonId == null) {
         const colFrom = "#4285F4";
-        const colTo   = "#34A853";
+        const colTo = "#34A853";
         const result = await database.execute(
             `INSERT INTO SALON (docente_id, nombre, materia, seccion, color_from, color_to)
              VALUES (?, ?, ?, ?, ?, ?)`,
             [docente_id, courseName, course.section ?? "Google Classroom",
-             course.section ?? "", colFrom, colTo]
+                course.section ?? "", colFrom, colTo]
         );
         salonId = result.lastInsertId as number;
         logs.push({ tipo: "info", mensaje: `Salón creado: "${courseName}" (ID ${salonId})` });
@@ -362,7 +362,7 @@ export async function importarCursoClassroom(
         [salonId]
     );
     const localByEmail = new Map(localStudents.map(s => [s.id_control, s.id]));
-    const localByName  = new Map(localStudents.map(s => [`${s.nombre}|${s.apellido}`, s.id]));
+    const localByName = new Map(localStudents.map(s => [`${s.nombre}|${s.apellido}`, s.id]));
 
     // Map: googleUserId → local estudiante_id
     const userIdMap = new Map<string, number>();
@@ -371,8 +371,8 @@ export async function importarCursoClassroom(
     const newStudents: { gid: string; fname: string; lname: string; email: string }[] = [];
 
     for (const st of students) {
-        const gid   = st.userId as string;
-        const fname = st.profile?.name?.givenName  ?? "";
+        const gid = st.userId as string;
+        const fname = st.profile?.name?.givenName ?? "";
         const lname = st.profile?.name?.familyName ?? st.profile?.name?.fullName?.split(" ").slice(1).join(" ") ?? "";
         const email = st.profile?.emailAddress ?? gid;
 
@@ -414,7 +414,7 @@ export async function importarCursoClassroom(
                     values
                 );
                 // SQLite guarantees lastInsertId = last row; IDs are contiguous for bulk inserts
-                const lastId  = res.lastInsertId as number;
+                const lastId = res.lastInsertId as number;
                 const firstId = lastId - chunk.length + 1;
                 chunk.forEach((s, idx) => userIdMap.set(s.gid, firstId + idx));
                 alumnosCount += chunk.length;
@@ -525,7 +525,7 @@ export async function importarCursoClassroom(
                     `INSERT INTO ASIGNACION (salon_id, titulo, tipo, fecha_entrega) VALUES ${placeholders}`,
                     values
                 );
-                const lastId  = res.lastInsertId as number;
+                const lastId = res.lastInsertId as number;
                 const firstId = lastId - chunk.length + 1;
                 chunk.forEach((w, idx) => cwIdMap.set(w.cw.id, firstId + idx));
                 tareasCount += chunk.length;
@@ -575,7 +575,7 @@ export async function importarCursoClassroom(
         if (!asigId) continue;
 
         const maxPts = Number(cw.maxPoints ?? 100) || 100;
-        const subs   = await listarSubmissions(course.id, cw.id);
+        const subs = await listarSubmissions(course.id, cw.id);
 
         for (const sub of subs) {
             const grade = sub.assignedGrade ?? sub.draftGrade;
@@ -613,7 +613,7 @@ export async function importarCursoClassroom(
     }
 
     logs.push({ tipo: "ok", mensaje: `${calsCount} calificación(es) importada(s)` });
-    logs.push({ tipo: "ok", mensaje: `✅ Importación completada` });
+    logs.push({ tipo: "ok", mensaje: `Importación completada` });
 
     return { salonId, alumnos: alumnosCount, tareas: tareasCount, calificaciones: calsCount, logs };
 }

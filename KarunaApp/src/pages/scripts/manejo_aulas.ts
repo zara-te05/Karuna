@@ -159,6 +159,7 @@ function tabla_addEventListener(salon_id: number) {
                 nombre: btn.dataset.nombre!,
                 apellido: btn.dataset.apellido!,
                 id_control: btn.dataset.control!,
+                participacion_extra: 0,
             });
         });
     });

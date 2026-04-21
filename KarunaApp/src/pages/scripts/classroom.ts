@@ -1,4 +1,4 @@
-import { invoke }  from "@tauri-apps/api/core";
+import { invoke } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
 
 import {
@@ -21,37 +21,37 @@ import { verificarSesionOLogin } from "../../BD/sesion";
 import Database from "@tauri-apps/plugin-sql";
 
 // ─── DOM refs ─────────────────────────────────────────────────────────────────
-const panelNoConectado  = document.getElementById("panel-no-conectado")!;
-const panelEsperando    = document.getElementById("panel-esperando")!;
-const panelConectado    = document.getElementById("panel-conectado")!;
-const panelError        = document.getElementById("panel-error")!;
-const headerStatus      = document.getElementById("header-status")!;
-const headerFoto        = document.getElementById("header-foto") as HTMLImageElement;
-const headerEmail       = document.getElementById("header-email")!;
-const sectionCourses    = document.getElementById("section-courses")!;
-const sectionLog        = document.getElementById("section-import-log")!;
-const coursesGrid       = document.getElementById("courses-grid")!;
-const coursesLoading    = document.getElementById("courses-loading")!;
-const coursesEmpty      = document.getElementById("courses-empty")!;
-const logEntries        = document.getElementById("log-entries")!;
-const logProgressBar    = document.getElementById("log-progress-bar")!;
-const logProgressText   = document.getElementById("log-progress-text")!;
-const logSummary        = document.getElementById("log-summary")!;
-const logSummaryText    = document.getElementById("log-summary-text")!;
-const modalConflicto    = document.getElementById("modal-conflicto")!;
-const conflictoDesc     = document.getElementById("conflicto-desc")!;
-const panelCreds        = document.getElementById("panel-creds")!;
+const panelNoConectado = document.getElementById("panel-no-conectado")!;
+const panelEsperando = document.getElementById("panel-esperando")!;
+const panelConectado = document.getElementById("panel-conectado")!;
+const panelError = document.getElementById("panel-error")!;
+const headerStatus = document.getElementById("header-status")!;
+const headerFoto = document.getElementById("header-foto") as HTMLImageElement;
+const headerEmail = document.getElementById("header-email")!;
+const sectionCourses = document.getElementById("section-courses")!;
+const sectionLog = document.getElementById("section-import-log")!;
+const coursesGrid = document.getElementById("courses-grid")!;
+const coursesLoading = document.getElementById("courses-loading")!;
+const coursesEmpty = document.getElementById("courses-empty")!;
+const logEntries = document.getElementById("log-entries")!;
+const logProgressBar = document.getElementById("log-progress-bar")!;
+const logProgressText = document.getElementById("log-progress-text")!;
+const logSummary = document.getElementById("log-summary")!;
+const logSummaryText = document.getElementById("log-summary-text")!;
+const modalConflicto = document.getElementById("modal-conflicto")!;
+const conflictoDesc = document.getElementById("conflicto-desc")!;
+const panelCreds = document.getElementById("panel-creds")!;
 
 // ─── State ────────────────────────────────────────────────────────────────────
 let currentConfig: ClassroomConfig | null = null;
-let cursos: any[]    = [];
-let selectedIds      = new Set<string>();
+let cursos: any[] = [];
+let selectedIds = new Set<string>();
 let oauthPort: number | null = null;
 let conflictoResolve: ((v: "unir" | "reemplazar" | "copiar" | "omitir") => void) | null = null;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-function show(el: HTMLElement)   { el.classList.remove("hidden"); }
-function hide(el: HTMLElement)   { el.classList.add("hidden"); }
+function show(el: HTMLElement) { el.classList.remove("hidden"); }
+function hide(el: HTMLElement) { el.classList.add("hidden"); }
 function showFlex(el: HTMLElement) { el.classList.remove("hidden"); el.classList.add("flex"); }
 
 function setEstado(estado: "desconectado" | "esperando" | "conectado" | "error", msg = "") {
@@ -59,9 +59,9 @@ function setEstado(estado: "desconectado" | "esperando" | "conectado" | "error",
     hide(panelEsperando);
     hide(panelConectado);
     hide(panelError);
-    if (estado === "desconectado")  show(panelNoConectado);
-    if (estado === "esperando")     show(panelEsperando);
-    if (estado === "conectado")     show(panelConectado);
+    if (estado === "desconectado") show(panelNoConectado);
+    if (estado === "esperando") show(panelEsperando);
+    if (estado === "conectado") show(panelConectado);
     if (estado === "error") {
         show(panelError);
         document.getElementById("error-msg")!.textContent = msg;
@@ -69,13 +69,13 @@ function setEstado(estado: "desconectado" | "esperando" | "conectado" | "error",
 }
 
 function appendLog(log: ImportLog) {
-    const color = log.tipo === "ok"    ? "text-green-700"
-                : log.tipo === "warn"  ? "text-amber-600"
-                : log.tipo === "error" ? "text-red-600"
+    const color = log.tipo === "ok" ? "text-green-700"
+        : log.tipo === "warn" ? "text-amber-600"
+            : log.tipo === "error" ? "text-red-600"
                 : "text-indigo-deep/70";
-    const icon  = log.tipo === "ok"    ? "✔"
-                : log.tipo === "warn"  ? "⚠"
-                : log.tipo === "error" ? "✖"
+    const icon = log.tipo === "ok" ? "✔"
+        : log.tipo === "warn" ? "⚠"
+            : log.tipo === "error" ? "✖"
                 : "·";
     const div = document.createElement("div");
     div.className = `log-entry ${color}`;
@@ -108,10 +108,10 @@ function cerrarModalConflicto(decision: "unir" | "reemplazar" | "copiar" | "omit
     }
 }
 
-document.getElementById("btn-conflicto-unir")!.addEventListener("click", ()       => cerrarModalConflicto("unir"));
+document.getElementById("btn-conflicto-unir")!.addEventListener("click", () => cerrarModalConflicto("unir"));
 document.getElementById("btn-conflicto-reemplazar")!.addEventListener("click", () => cerrarModalConflicto("reemplazar"));
-document.getElementById("btn-conflicto-copiar")!.addEventListener("click", ()     => cerrarModalConflicto("copiar"));
-document.getElementById("btn-conflicto-omitir")!.addEventListener("click", ()      => cerrarModalConflicto("omitir"));
+document.getElementById("btn-conflicto-copiar")!.addEventListener("click", () => cerrarModalConflicto("copiar"));
+document.getElementById("btn-conflicto-omitir")!.addEventListener("click", () => cerrarModalConflicto("omitir"));
 
 // ─── Credentials panel ───────────────────────────────────────────────────────
 document.getElementById("btn-toggle-creds")!.addEventListener("click", () => {
@@ -124,9 +124,9 @@ document.getElementById("lnk-console")!.addEventListener("click", async (e) => {
 });
 
 document.getElementById("btn-guardar-creds")!.addEventListener("click", async () => {
-    const clientId     = (document.getElementById("input-client-id")     as HTMLInputElement).value.trim();
+    const clientId = (document.getElementById("input-client-id") as HTMLInputElement).value.trim();
     const clientSecret = (document.getElementById("input-client-secret") as HTMLInputElement).value.trim();
-    const apiKey       = (document.getElementById("input-api-key")       as HTMLInputElement).value.trim();
+    const apiKey = (document.getElementById("input-api-key") as HTMLInputElement).value.trim();
 
     if (!clientId || !clientSecret) {
         alert("Client ID y Client Secret son obligatorios.");
@@ -170,12 +170,12 @@ async function iniciarOAuth() {
         ].join(" ");
 
         const params = new URLSearchParams({
-            client_id:    currentConfig.client_id,
+            client_id: currentConfig.client_id,
             redirect_uri: `http://localhost:${oauthPort}`,
             response_type: "code",
-            scope:        SCOPES,
-            access_type:  "offline",
-            prompt:       "consent",
+            scope: SCOPES,
+            access_type: "offline",
+            prompt: "consent",
         });
 
         const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
@@ -193,10 +193,10 @@ async function iniciarOAuth() {
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: new URLSearchParams({
                         code,
-                        client_id:     currentConfig!.client_id,
+                        client_id: currentConfig!.client_id,
                         client_secret: currentConfig!.client_secret,
-                        redirect_uri:  `http://localhost:${oauthPort}`,
-                        grant_type:    "authorization_code",
+                        redirect_uri: `http://localhost:${oauthPort}`,
+                        grant_type: "authorization_code",
                     }),
                 });
 
@@ -219,7 +219,7 @@ async function iniciarOAuth() {
                     tokens.refresh_token ?? null,
                     Date.now() + (tokens.expires_in * 1000),
                     user.email ?? "",
-                    user.name  ?? user.email ?? "",
+                    user.name ?? user.email ?? "",
                     user.picture ?? "",
                 );
 
@@ -239,13 +239,13 @@ function mostrarEstadoConectado() {
     if (!currentConfig) return;
     setEstado("conectado");
 
-    const foto    = document.getElementById("foto-perfil")   as HTMLImageElement;
-    const nombre  = document.getElementById("nombre-cuenta")!;
-    const email   = document.getElementById("email-cuenta")!;
+    const foto = document.getElementById("foto-perfil") as HTMLImageElement;
+    const nombre = document.getElementById("nombre-cuenta")!;
+    const email = document.getElementById("email-cuenta")!;
 
     if (currentConfig.foto_url) { foto.src = currentConfig.foto_url; show(foto); }
-    nombre.textContent  = currentConfig.nombre_cuenta ?? "";
-    email.textContent   = currentConfig.email ?? "";
+    nombre.textContent = currentConfig.nombre_cuenta ?? "";
+    email.textContent = currentConfig.email ?? "";
 
     // Header badge
     if (currentConfig.foto_url) headerFoto.src = currentConfig.foto_url;
@@ -284,7 +284,7 @@ function renderCourses() {
         const isSelected = selectedIds.has(course.id);
         const card = document.createElement("div");
         card.className = "course-card bg-white rounded-xl border border-forest/10 p-5 cursor-pointer select-none transition-all " +
-                         (isSelected ? "ring-2 ring-primary shadow-md" : "hover:shadow-md");
+            (isSelected ? "ring-2 ring-primary shadow-md" : "hover:shadow-md");
         card.dataset.courseId = course.id;
         card.innerHTML = `
             <div class="flex items-start justify-between gap-3">
@@ -296,7 +296,7 @@ function renderCourses() {
                         <h4 class="font-bold text-indigo-deep text-sm leading-tight truncate">${course.name}</h4>
                     </div>
                     ${course.section ? `<p class="text-xs text-indigo-deep/50 mb-1">${course.section}</p>` : ""}
-                    ${course.room    ? `<p class="text-xs text-indigo-deep/40">Aula: ${course.room}</p>` : ""}
+                    ${course.room ? `<p class="text-xs text-indigo-deep/40">Aula: ${course.room}</p>` : ""}
                 </div>
                 <div class="flex-shrink-0">
                     <div class="w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isSelected ? 'bg-primary border-primary' : 'border-indigo-deep/30'}">
@@ -348,8 +348,8 @@ async function importarSeleccionados() {
             const result = await importarCursoClassroom(course, existingByCourse, docente_id);
             result.logs.forEach(appendLog);
             totalAlumnos += result.alumnos;
-            totalTareas  += result.tareas;
-            totalCals    += result.calificaciones;
+            totalTareas += result.tareas;
+            totalCals += result.calificaciones;
             continue;
         }
 
@@ -382,8 +382,8 @@ async function importarSeleccionados() {
             const result = await importarCursoClassroom(course, salonId, docente_id, nameOverride);
             result.logs.forEach(appendLog);
             totalAlumnos += result.alumnos;
-            totalTareas  += result.tareas;
-            totalCals    += result.calificaciones;
+            totalTareas += result.tareas;
+            totalCals += result.calificaciones;
         } catch (err: any) {
             appendLog({ tipo: "error", mensaje: `  Error importando "${course.name}": ${err?.message ?? err}` });
         }
@@ -397,7 +397,7 @@ async function importarSeleccionados() {
 
 // ─── Wire up events ───────────────────────────────────────────────────────────
 document.getElementById("btn-conectar")!.addEventListener("click", iniciarOAuth);
-document.getElementById("btn-retry")!.addEventListener("click",    iniciarOAuth);
+document.getElementById("btn-retry")!.addEventListener("click", iniciarOAuth);
 
 document.getElementById("btn-cancelar-oauth")!.addEventListener("click", () => {
     oauthPort = null;
@@ -438,7 +438,7 @@ async function init() {
             (document.getElementById("input-api-key") as HTMLInputElement).value
                 = import.meta.env.VITE_CLASSROOM_API_KEY || "";
         }
-        if (currentConfig.client_id)     (document.getElementById("input-client-id")     as HTMLInputElement).value = currentConfig.client_id;
+        if (currentConfig.client_id) (document.getElementById("input-client-id") as HTMLInputElement).value = currentConfig.client_id;
         if (currentConfig.client_secret) (document.getElementById("input-client-secret") as HTMLInputElement).value = currentConfig.client_secret;
 
         if (currentConfig.access_token && currentConfig.email) {
