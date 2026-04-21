@@ -110,118 +110,103 @@ function hexAlpha(hex: string, alpha: number): string {
     return `rgba(${r},${g},${b},${alpha})`;
 }
 
-function buildTrendDatasets(series: TendenciaPorSalonSerie[]) {
-    const labels = buildTrendLabels(series);
-    const overall = computeOverallAverageSeries(series);
-    const datasets: any[] = [];
-
-    // ── Salon wave datasets (area, drawn first so overall sits on top) ──
-    series.forEach((serie, index) => {
-        if (!serie.puntos.length) return;
-        const pointMap = new Map(serie.puntos.map((p) => [p.titulo, p.promedio]));
-        const color = TREND_COLORS[index % TREND_COLORS.length];
-        datasets.push({
-            label: serie.salon_nombre,
-            data: labels.map((lbl) => pointMap.get(lbl) ?? null),
-            borderColor: color,
-            backgroundColor: hexAlpha(color, 0.18),
-            pointBackgroundColor: color,
-            pointBorderColor: '#fff',
-            pointBorderWidth: 1.5,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            tension: 0.5,          // high tension = wave shape
-            fill: 'origin',        // fill down to zero = area wave
-            borderWidth: 2,
-            spanGaps: true,
-            order: index + 1,      // lower = drawn on top; salons behind
-        });
-    });
-
-    // ── Overall average: dashed gold line, no fill, always on top ──
-    datasets.push({
-        label: 'Promedio global',
-        data: overall.data,
-        borderColor: '#D4AF37',
-        backgroundColor: 'transparent',
-        pointBackgroundColor: '#D4AF37',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        pointRadius: 5,
-        pointHoverRadius: 7,
-        tension: 0.5,
-        fill: false,
-        borderWidth: 3,
-        borderDash: [6, 4],
-        spanGaps: true,
-        order: 0,                  // drawn on top of all salons
-    });
-
-    return datasets;
+function gradeBgColor(val: number): string {
+    if (val >= 80) return '#22c55e';   // green-500
+    if (val >= 60) return '#D4AF37';   // gold
+    return '#f87171';                  // red-400
 }
 
-function waveChartOptions(isDarkMode: boolean) {
-    const tc = isDarkMode ? 'rgba(232,232,240,0.6)' : '#475569';
-    const gc = isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(30,27,75,0.06)';
-    return {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index' as const, intersect: false },
-        animation: { duration: 900, easing: 'easeOutQuart' as const },
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                backgroundColor: isDarkMode ? 'rgba(26,26,46,0.95)' : 'rgba(255,255,255,0.97)',
-                borderColor: 'rgba(212,175,55,0.3)',
-                borderWidth: 1,
-                titleColor: isDarkMode ? '#e8e8f0' : '#1E1B4B',
-                bodyColor: isDarkMode ? 'rgba(232,232,240,0.75)' : '#475569',
-                padding: 12,
-                callbacks: {
-                    label: (ctx: any) => ` ${ctx.dataset.label}: ${ctx.parsed.y != null ? ctx.parsed.y.toFixed(1) + '%' : '—'}`,
-                },
-            },
-        },
-        scales: {
-            x: {
-                grid: { display: false },
-                ticks: { color: tc, font: { size: 10 }, maxRotation: 30 },
-            },
-            y: {
-                min: 0,
-                max: 100,
-                grid: { color: gc },
-                ticks: { color: tc, callback: (v: any) => `${v}%`, font: { size: 10 } },
-            },
-        },
-    };
-}
+/** Gráfica principal: barras horizontales Promedio vs Asistencia por salón */
+function renderComparativaChart(salones: Salon[], estadisticas: EstadisticasSalon[]) {
+    destroyChart(chartTrend);
+    if (!salones.length) return;
 
-function renderTrendChart(series: TendenciaPorSalonSerie[]) {
     const canvas = createCanvas('trend-chart-graphic', 'trend-chart-canvas');
     if (!canvas) return;
-
-    destroyChart(chartTrend);
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const labels = buildTrendLabels(series);
-    const datasets = buildTrendDatasets(series);
     const dark = document.documentElement.classList.contains('dark');
+    const tc   = dark ? 'rgba(232,232,240,0.65)' : '#475569';
+    const gc   = dark ? 'rgba(255,255,255,0.05)'  : 'rgba(30,27,75,0.06)';
+
+    const labels = salones.map(s => s.nombre.length > 22 ? s.nombre.slice(0, 20) + '…' : s.nombre);
+    const proms  = estadisticas.map(e => e.promedioCalificaciones ?? 0);
+    const asist  = estadisticas.map(e => e.promedioAsistencia    ?? 0);
+
+    const promColors = proms.map(v => hexAlpha(gradeBgColor(v), 0.85));
+    const asistColor = hexAlpha('#60a5fa', 0.7); // blue-400 for attendance
 
     chartTrend = new (window as any).Chart(ctx, {
-        type: 'line',
-        data: { labels, datasets },
-        options: waveChartOptions(dark),
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Promedio (%)',
+                    data: proms,
+                    backgroundColor: promColors,
+                    borderColor:     proms.map(v => gradeBgColor(v)),
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barPercentage: 0.5,
+                },
+                {
+                    label: 'Asistencia (%)',
+                    data: asist,
+                    backgroundColor: asistColor,
+                    borderColor:     '#3b82f6',
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barPercentage: 0.5,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y' as const,
+            animation: { duration: 700, easing: 'easeOutQuart' as const },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom' as const,
+                    labels: { color: tc, font: { size: 11 }, usePointStyle: true, pointStyleWidth: 10 },
+                },
+                tooltip: {
+                    mode: 'index' as const,
+                    callbacks: { label: (ctx: any) => ` ${ctx.dataset.label}: ${ctx.parsed.x?.toFixed(1) ?? 0}%` },
+                },
+            },
+            scales: {
+                x: {
+                    min: 0, max: 100,
+                    grid: { color: gc },
+                    ticks: { color: tc, callback: (v: any) => `${v}%` },
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { color: tc, font: { size: 11 } },
+                },
+            },
+        },
     });
 
-    // Legend: salons first, then the global dashed line
-    const items: { label: string; color: string; dashed?: boolean }[] = [];
-    series.forEach((serie, index) => {
-        items.push({ label: serie.salon_nombre, color: TREND_COLORS[index % TREND_COLORS.length] });
-    });
-    items.push({ label: 'Promedio global', color: '#D4AF37', dashed: true });
-    buildTrendLegend(items);
+    // Legend pills
+    const legend = document.getElementById('trend-chart-legend');
+    if (legend) {
+        if (!salones.length) { legend.innerHTML = ''; return; }
+        legend.innerHTML = salones.map((s, i) => {
+            const p = estadisticas[i].promedioCalificaciones;
+            const color = gradeBgColor(p ?? 0);
+            return `<div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:9999px;background:${hexAlpha(color,0.12)};color:${color};font-size:11px;font-weight:700;">
+                <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block"></span>
+                ${s.nombre} · ${p != null ? p.toFixed(1) + '%' : '—'}
+            </div>`;
+        }).join('');
+    }
 }
 
 function renderDetailChart(series: TendenciaPorSalonSerie[]) {
@@ -232,24 +217,81 @@ function renderDetailChart(series: TendenciaPorSalonSerie[]) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const labels = buildTrendLabels(series);
-    const datasets = buildTrendDatasets(series).map((dataset: any) => ({
-        ...dataset,
-        // Keep fills but increase point size for the larger modal chart
-        pointRadius: dataset.order === 0 ? 6 : 5,
-        pointHoverRadius: dataset.order === 0 ? 8 : 7,
-        borderWidth: dataset.order === 0 ? 3.5 : 2.5,
-    }));
-    const dark = document.documentElement.classList.contains('dark');
+    const dark  = document.documentElement.classList.contains('dark');
+    const tc    = dark ? 'rgba(232,232,240,0.6)' : '#475569';
+    const gc    = dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
+
+    // Build unified X labels (all assignment titles across all salons)
+    const allLabels = Array.from(new Set(series.flatMap(s => s.puntos.map(p => p.titulo))));
+
+    // Build datasets: one per salon (colored area) + overall dashed average
+    const datasets: any[] = [];
+
+    series.forEach((serie, index) => {
+        if (!serie.puntos.length) return;
+        const pointMap = new Map(serie.puntos.map(p => [p.titulo, p.promedio]));
+        const color = TREND_COLORS[index % TREND_COLORS.length];
+        datasets.push({
+            label: serie.salon_nombre,
+            data: allLabels.map(lbl => pointMap.get(lbl) ?? null),
+            borderColor: color,
+            backgroundColor: hexAlpha(color, 0.14),
+            pointBackgroundColor: color,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.45,
+            fill: 'origin',
+            borderWidth: 2.5,
+            spanGaps: true,
+        });
+    });
+
+    // Overall average line (gold dashed)
+    const overallData = allLabels.map(lbl => {
+        const pts = series.map(s => s.puntos.find(p => p.titulo === lbl)?.promedio)
+            .filter((v): v is number => v != null);
+        return pts.length ? Math.round((pts.reduce((a, b) => a + b, 0) / pts.length) * 10) / 10 : null;
+    });
+    datasets.push({
+        label: 'Promedio global',
+        data: overallData,
+        borderColor: '#D4AF37',
+        backgroundColor: 'transparent',
+        pointBackgroundColor: '#D4AF37',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        tension: 0.45,
+        fill: false,
+        borderWidth: 3,
+        borderDash: [6, 4],
+        spanGaps: true,
+    });
 
     chartDetail = new (window as any).Chart(ctx, {
         type: 'line',
-        data: { labels, datasets },
+        data: { labels: allLabels, datasets },
         options: {
-            ...waveChartOptions(dark),
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index' as const, intersect: false },
+            animation: { duration: 800, easing: 'easeOutQuart' as const },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom' as const,
+                    labels: { color: tc, font: { size: 11 }, usePointStyle: true, pointStyleWidth: 10 },
+                },
+                tooltip: {
+                    callbacks: { label: (ctx: any) => ` ${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1) ?? '—'}%` },
+                },
+            },
             scales: {
-                x: { grid: { display: false }, ticks: { color: dark ? 'rgba(232,232,240,0.6)' : '#475569', font: { size: 11 } } },
-                y: { min: 0, max: 100, grid: { color: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)' }, ticks: { color: dark ? 'rgba(232,232,240,0.6)' : '#475569', callback: (v: any) => `${v}%` } },
+                x: { grid: { display: false }, ticks: { color: tc, font: { size: 11 } } },
+                y: { min: 0, max: 100, grid: { color: gc }, ticks: { color: tc, callback: (v: any) => `${v}%` } },
             },
         },
     });
@@ -299,10 +341,10 @@ async function cargarResumenAulas() {
     const salones = await obtenerSalones(sesion.docente_id);
     const estadisticas = await Promise.all(salones.map((salon) => obtenerEstadisticasSalon(salon.id)));
 
-    const totalSalones = salones.length;
-    const totalAlumnos = estadisticas.reduce((sum, item) => sum + item.totalAlumnos, 0);
+    const totalSalones      = salones.length;
+    const totalAlumnos      = estadisticas.reduce((sum, item) => sum + item.totalAlumnos, 0);
     const totalAsignaciones = estadisticas.reduce((sum, item) => sum + item.totalAsignaciones, 0);
-    const totalEntregadas = estadisticas.reduce((sum, item) =>
+    const totalEntregadas   = estadisticas.reduce((sum, item) =>
         sum + Math.round(((item.tasaEntrega ?? 0) / 100) * item.totalAsignaciones), 0);
 
     const weightedGradesSum = estadisticas.reduce((sum, item) =>
@@ -320,23 +362,22 @@ async function cargarResumenAulas() {
         ? Math.round((totalEntregadas / totalAsignaciones) * 1000) / 10
         : null;
 
-    setText('total-salones-count', String(totalSalones));
-    setText('total-alumnos-count', String(totalAlumnos));
-    setText('alumnos-context', `en ${totalSalones} aula${totalSalones === 1 ? '' : 's'}`);
-    setText('promedio-general', formatPercent(promedioGeneral));
-    setText('promedio-context', 'Promedio global por aula');
-    setText('tasa-entregas', formatPercent(tasaEntrega));
-    setText('asistencia-general', formatPercent(promedioAsistencia));
+    setText('total-salones-count',  String(totalSalones));
+    setText('total-alumnos-count',  String(totalAlumnos));
+    setText('alumnos-context',      `en ${totalSalones} aula${totalSalones === 1 ? '' : 's'}`);
+    setText('promedio-general',     formatPercent(promedioGeneral));
+    setText('promedio-context',     'Promedio global por aula');
+    setText('tasa-entregas',        formatPercent(tasaEntrega));
+    setText('asistencia-general',   formatPercent(promedioAsistencia));
 
+    // ── Comparative bar chart (always rendered with stats) ──
+    renderComparativaChart(salones, estadisticas);
+
+    // ── Detail modal trend lines (only if we have time-series data) ──
     const tendenciaSeries = await obtenerTendenciaPorSalones(sesion.docente_id);
     if (tendenciaSeries.length > 0 && tendenciaSeries.some((serie) => serie.puntos.length > 0)) {
-        renderTrendChart(tendenciaSeries);
         renderDetailChart(tendenciaSeries);
     } else {
-        const trendContainer = document.getElementById('trend-chart-graphic');
-        if (trendContainer) {
-            trendContainer.innerHTML = '<div class="h-full w-full flex items-center justify-center text-indigo-deep/50 text-sm">No hay datos de tendencia disponibles.</div>';
-        }
         const detailContainer = document.getElementById('detail-modal-graphic');
         if (detailContainer) {
             detailContainer.innerHTML = '<div class="h-full w-full flex items-center justify-center text-indigo-deep/50 text-sm">Carga la primera asignación para ver la tendencia.</div>';
