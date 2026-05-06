@@ -73,8 +73,30 @@ def derivar_tiempos(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def segmentar(serie):
+    """
+    Segmenta una serie en tres grupos (Bajo / Medio / Alto) usando percentiles 33 y 66.
+    Si los percentiles son iguales (datos sin variación suficiente), colapsa los bins
+    duplicados y asigna 'Medio' a todos los alumnos para no romper el pipeline.
+    """
     q33, q66 = serie.quantile(0.33), serie.quantile(0.66)
-    return pd.cut(serie, bins=[-np.inf, q33, q66, np.inf], labels=["Bajo","Medio","Alto"])
+    # Construir bins únicos eliminando duplicados
+    resultado = pd.cut(
+        serie,
+        bins=[-np.inf, q33, q66, np.inf],
+        labels=["Bajo", "Medio", "Alto"],
+        duplicates="drop",
+    )
+    # Si todos cayeron en NaN por colapso total de bins, asignar categoría única
+    if resultado.isna().all():
+        return pd.Categorical(
+            ["Medio"] * len(serie),
+            categories=["Bajo", "Medio", "Alto"],
+            ordered=True,
+        )
+    # Rellenar NaN residuales con "Medio"
+    return resultado.cat.add_categories(["Bajo", "Medio", "Alto"]) \
+                    .fillna("Medio") \
+                    .astype(pd.CategoricalDtype(["Bajo", "Medio", "Alto"], ordered=True))
 
 
 def panel_km(ax, df, t_col, e_col, seg_col, colores, ylabel, titulo):
@@ -149,28 +171,47 @@ def graficar(df, nombre_grupo):
 
 
 def main():
-    entrada = json.loads(sys.stdin.read())
-    df = pd.DataFrame(entrada.get("alumnos",[]))
-    for col in ["cal_final","prom_tareas","prom_asist"]:
-        if col not in df.columns: df[col] = 0.0
-    nombre = entrada.get("nombre_grupo","Grupo")
-    df = derivar_tiempos(df)
-    imagen = graficar(df, nombre)
+    try:
+        entrada = json.loads(sys.stdin.read())
+        df = pd.DataFrame(entrada.get("alumnos",[]))
+        for col in ["cal_final","prom_tareas","prom_asist"]:
+            if col not in df.columns: df[col] = 0.0
+        nombre = entrada.get("nombre_grupo","Grupo")
 
-    resumen_ev = {}
-    for t_col, e_col, nombre_ev in [("tiempo_rep","evento_rep","reprobacion"),
-                                     ("tiempo_des","evento_des","desercion"),
-                                     ("tiempo_mej","evento_mej","mejora")]:
-        kmf = KaplanMeierFitter()
-        kmf.fit(df[t_col], event_observed=df[e_col])
-        med  = kmf.median_survival_time_
-        tasa = float(df[e_col].mean())
-        resumen_ev[nombre_ev] = {
-            "tasa_evento": round(tasa,4),
-            "mediana_semanas": int(med) if not np.isinf(med) else None
-        }
-    resumen = {"algoritmo":"Kaplan-Meier","n_alumnos":len(df),"eventos":resumen_ev}
-    print(json.dumps({"imagen": imagen, "resumen": resumen}))
+        n = len(df)
+        if n < 5:
+            print(json.dumps({
+                "error": True,
+                "mensaje": f"Kaplan-Meier necesita al menos 5 alumnos con datos. "
+                           f"Este salón solo tiene {n}. Agrega más alumnos y calificaciones para usar este análisis de supervivencia."
+            }))
+            return
+
+        df = derivar_tiempos(df)
+        imagen = graficar(df, nombre)
+
+        resumen_ev = {}
+        for t_col, e_col, nombre_ev in [("tiempo_rep","evento_rep","reprobacion"),
+                                         ("tiempo_des","evento_des","desercion"),
+                                         ("tiempo_mej","evento_mej","mejora")]:
+            kmf = KaplanMeierFitter()
+            kmf.fit(df[t_col], event_observed=df[e_col])
+            med  = kmf.median_survival_time_
+            tasa = float(df[e_col].mean())
+            resumen_ev[nombre_ev] = {
+                "tasa_evento": round(tasa,4),
+                "mediana_semanas": int(med) if not np.isinf(med) else None
+            }
+        resumen = {"algoritmo":"Kaplan-Meier","n_alumnos":len(df),"eventos":resumen_ev}
+        print(json.dumps({"imagen": imagen, "resumen": resumen}))
+
+    except Exception as exc:
+        print(json.dumps({
+            "error": True,
+            "mensaje": f"El análisis Kaplan-Meier no pudo ejecutarse con los datos actuales. "
+                       f"Esto suele ocurrir cuando hay muy pocos alumnos o los datos no tienen suficiente variación. "
+                       f"Detalle técnico: {str(exc)}"
+        }))
 
 if __name__=="__main__":
     main()

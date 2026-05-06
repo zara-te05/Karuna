@@ -342,6 +342,14 @@ async function runMLAnalysis(btn: HTMLElement) {
         });
 
         const result  = JSON.parse(raw);
+
+        // Si Python devolvió un error controlado (datos insuficientes, etc.)
+        if (result.error === true) {
+            setMLState("error");
+            showMLFriendlyError(result.mensaje ?? "El modelo no pudo ejecutarse.", modelNombre);
+            return;
+        }
+
         const imagen  = result.imagen  as string;
         const resumen = result.resumen as Record<string, any>;
 
@@ -354,8 +362,42 @@ async function runMLAnalysis(btn: HTMLElement) {
 
     } catch (err: any) {
         setMLState("error");
-        document.getElementById("ml-error-text")!.textContent = String(err);
+        showMLFriendlyError(
+            "No se pudo comunicar con el modelo. Verifica que Python y las librerías estén instaladas.",
+            modelNombre
+        );
     }
+}
+
+/**
+ * Muestra un mensaje de error amigable en el área de error de ML.
+ * Reemplaza el mensaje feo por uno visual con icono, título y explicación.
+ */
+function showMLFriendlyError(mensaje: string, modelNombre: string) {
+    const errorEl = document.getElementById("ml-error-state");
+    if (!errorEl) return;
+    errorEl.innerHTML = `
+        <div class="py-12 px-8 flex flex-col items-center gap-5 max-w-lg mx-auto text-center">
+            <div class="size-16 rounded-2xl flex items-center justify-center"
+                 style="background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(239,68,68,0.1));border:1.5px solid rgba(251,191,36,0.3);">
+                <span class="material-symbols-outlined text-4xl" style="color:#D4AF37;">data_thresholding</span>
+            </div>
+            <div>
+                <p class="font-bold text-lg text-slate-700 dark:text-slate-200 mb-1">Datos insuficientes para <em>${modelNombre}</em></p>
+                <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">${mensaje}</p>
+            </div>
+            <div class="rounded-xl p-4 w-full text-left"
+                 style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);">
+                <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">¿Qué modelos puedo usar?</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full"
+                          style="background:rgba(96,165,250,0.15);color:#60a5fa;">🔵 K-Means</span>
+                    <span class="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full"
+                          style="background:rgba(156,163,175,0.15);color:#9ca3af;">🔍 DBSCAN</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">Los modelos de clustering funcionan con cualquier volumen de datos.</p>
+            </div>
+        </div>`;
 }
 
 function buildMLCards(r: Record<string, any>, tipo: string): string {

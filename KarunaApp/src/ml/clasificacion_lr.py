@@ -181,45 +181,74 @@ def graficar(df,res,nombre,modo,umbral):
 
 
 def main():
-    e=json.loads(sys.stdin.read())
-    df=pd.DataFrame(e.get("alumnos",[]))
-    for col in ["cal_final","prom_tareas","prom_asist"]:
-        if col not in df.columns: df[col]=0.0
-    umbral=e.get("umbral",70); nombre=e.get("nombre_grupo","Grupo")
-    df,X,y,Xtr,Xte,ytr,yte,modo,loo,fitted_scaler,k_folds=preparar(df,umbral)
-    res=entrenar(X,y,Xtr,Xte,ytr,yte,loo,k_folds)
-    imagen=graficar(df,res,nombre,modo,umbral)
-    yt=np.array(res["y_test"]); yp=np.array(res["y_pred"])
-    # En modo CV/LOO la accuracy real viene del promedio del CV, no de predecir sobre entrenamiento
-    if res.get("acc_from_cv") and res["scores_loo"] is not None and len(res["scores_loo"]) > 0:
-        acc = float(res["scores_loo"].mean())
-    elif len(np.unique(yt)) >= 2:
-        acc = float(accuracy_score(yt, yp))
-    else:
-        acc = None
-    coefs=res["model"].coef_[0]
+    try:
+        e=json.loads(sys.stdin.read())
+        df=pd.DataFrame(e.get("alumnos",[]))
+        for col in ["cal_final","prom_tareas","prom_asist"]:
+            if col not in df.columns: df[col]=0.0
+        umbral=e.get("umbral",70); nombre=e.get("nombre_grupo","Grupo")
 
-    # Probabilidades por alumno: SIEMPRE escalar con el scaler entrenado
-    X_raw = df[["cal_final","prom_tareas","prom_asist"]].values
-    X_scaled_for_pred = pd.DataFrame(fitted_scaler.transform(X_raw), columns=["cal_final","prom_tareas","prom_asist"])
-    all_p = res["model"].predict_proba(X_scaled_for_pred)[:,1]
+        n = len(df)
+        if n < 5:
+            print(json.dumps({
+                "error": True,
+                "mensaje": f"Logistic Regression necesita al menos 5 alumnos con datos. "
+                           f"Este salón solo tiene {n}. Agrega más alumnos y calificaciones para usar este modelo."
+            }))
+            return
 
-    resumen={
-        "algoritmo":"Logistic Regression","modo":modo,
-        "accuracy":round(acc,4) if acc is not None else None,
-        "n_alumnos":len(df),"n_aprueba":int(df["aprueba"].sum()),"n_reprueba":int(len(df)-df["aprueba"].sum()),
-        "coeficientes":{"cal_final":round(float(coefs[0]),4),"prom_tareas":round(float(coefs[1]),4),"prom_asist":round(float(coefs[2]),4)},
-        "probabilidades":[round(float(p),3) for p in all_p],
-        "cal_finals":[round(float(v),1) for v in df["cal_final"].values],
-        "prom_asists":[round(float(v),1) for v in df["prom_asist"].values],
-        "aprueba_vals":[int(v) for v in df["aprueba"].values],
-        "umbral":umbral,
-    }
-    if res["scores_loo"] is not None and len(res["scores_loo"])>0:
-        resumen["cv_scores"]=[round(float(s),4) for s in res["scores_loo"]]
-        resumen["cv_mean"]=round(float(res["scores_loo"].mean()),4)
+        y_preview = (df["cal_final"] >= umbral).astype(int)
+        if len(np.unique(y_preview)) < 2:
+            print(json.dumps({
+                "error": True,
+                "mensaje": "Logistic Regression requiere alumnos que aprueben Y que reprueben. "
+                           "Actualmente todos los alumnos tienen el mismo resultado. "
+                           "El modelo no puede aprender con una sola clase."
+            }))
+            return
 
-    print(json.dumps({"imagen":imagen,"resumen":resumen}))
+        df,X,y,Xtr,Xte,ytr,yte,modo,loo,fitted_scaler,k_folds=preparar(df,umbral)
+        res=entrenar(X,y,Xtr,Xte,ytr,yte,loo,k_folds)
+        imagen=graficar(df,res,nombre,modo,umbral)
+        yt=np.array(res["y_test"]); yp=np.array(res["y_pred"])
+        # En modo CV/LOO la accuracy real viene del promedio del CV, no de predecir sobre entrenamiento
+        if res.get("acc_from_cv") and res["scores_loo"] is not None and len(res["scores_loo"]) > 0:
+            acc = float(res["scores_loo"].mean())
+        elif len(np.unique(yt)) >= 2:
+            acc = float(accuracy_score(yt, yp))
+        else:
+            acc = None
+        coefs=res["model"].coef_[0]
+
+        # Probabilidades por alumno: SIEMPRE escalar con el scaler entrenado
+        X_raw = df[["cal_final","prom_tareas","prom_asist"]].values
+        X_scaled_for_pred = pd.DataFrame(fitted_scaler.transform(X_raw), columns=["cal_final","prom_tareas","prom_asist"])
+        all_p = res["model"].predict_proba(X_scaled_for_pred)[:,1]
+
+        resumen={
+            "algoritmo":"Logistic Regression","modo":modo,
+            "accuracy":round(acc,4) if acc is not None else None,
+            "n_alumnos":len(df),"n_aprueba":int(df["aprueba"].sum()),"n_reprueba":int(len(df)-df["aprueba"].sum()),
+            "coeficientes":{"cal_final":round(float(coefs[0]),4),"prom_tareas":round(float(coefs[1]),4),"prom_asist":round(float(coefs[2]),4)},
+            "probabilidades":[round(float(p),3) for p in all_p],
+            "cal_finals":[round(float(v),1) for v in df["cal_final"].values],
+            "prom_asists":[round(float(v),1) for v in df["prom_asist"].values],
+            "aprueba_vals":[int(v) for v in df["aprueba"].values],
+            "umbral":umbral,
+        }
+        if res["scores_loo"] is not None and len(res["scores_loo"])>0:
+            resumen["cv_scores"]=[round(float(s),4) for s in res["scores_loo"]]
+            resumen["cv_mean"]=round(float(res["scores_loo"].mean()),4)
+
+        print(json.dumps({"imagen":imagen,"resumen":resumen}))
+
+    except Exception as exc:
+        print(json.dumps({
+            "error": True,
+            "mensaje": f"El modelo Logistic Regression no pudo ejecutarse con los datos actuales. "
+                       f"Esto suele ocurrir cuando hay muy pocos alumnos o todos tienen calificaciones idénticas. "
+                       f"Detalle técnico: {str(exc)}"
+        }))
 
 if __name__=="__main__":
     main()

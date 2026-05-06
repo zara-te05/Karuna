@@ -107,14 +107,37 @@
             border-color: rgba(212, 175, 55, 0.1);
         }
 
-        .dark .text-slate-900 { color: #e8e8f0; }
-        .dark .text-slate-600 { color: rgba(232, 232, 240, 0.7); }
-        .dark .text-slate-500 { color: rgba(232, 232, 240, 0.6); }
-        .dark .text-slate-400 { color: rgba(232, 232, 240, 0.5); }
-        .dark .bg-slate-50 { background-color: rgba(42, 42, 62, 0.6); }
-        .dark .ring-slate-200 { --tw-ring-color: rgba(212, 175, 55, 0.2); }
-        .dark .border-slate-100 { border-color: rgba(212, 175, 55, 0.1); }
-        .dark .hover\:bg-primary\/10:hover { background-color: rgba(212, 175, 55, 0.15); }
+        .dark .text-slate-900 {
+            color: #e8e8f0;
+        }
+
+        .dark .text-slate-600 {
+            color: rgba(232, 232, 240, 0.7);
+        }
+
+        .dark .text-slate-500 {
+            color: rgba(232, 232, 240, 0.6);
+        }
+
+        .dark .text-slate-400 {
+            color: rgba(232, 232, 240, 0.5);
+        }
+
+        .dark .bg-slate-50 {
+            background-color: rgba(42, 42, 62, 0.6);
+        }
+
+        .dark .ring-slate-200 {
+            --tw-ring-color: rgba(212, 175, 55, 0.2);
+        }
+
+        .dark .border-slate-100 {
+            border-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .dark .hover\:bg-primary\/10:hover {
+            background-color: rgba(212, 175, 55, 0.15);
+        }
 
         * {
             transition-property: background-color, border-color, color, fill, stroke, box-shadow;
@@ -206,59 +229,21 @@
             <!-- Header -->
             <header
                 class="sticky top-0 z-10 bg-slate-soft/80 backdrop-blur-md border-b border-indigo-deep/10 px-8 py-4 flex items-center justify-between bg-white/40">
-                <div class="flex items-center gap-4 flex-1 max-w-xl">
-                    <div class="relative w-full">
-                        <span
-                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-forest/40">search</span>
-                        <input
-                            class="w-full pl-10 pr-4 py-2 bg-indigo-deep/5 border-none rounded-xl focus:ring-2 focus:ring-primary text-indigo-deep placeholder:text-indigo-deep/40"
-                            placeholder="Buscar aulas o materiales..." type="text" />
-                    </div>
-                </div>
-
                 <button
                     class="p-2 rounded-full hover:bg-indigo-deep/10 dark:hover:bg-white/10 transition-colors text-indigo-deep dark:text-white flex items-center justify-center"
                     id="theme-toggle" title="Alternar Modo Oscuro">
                     <span class="material-symbols-outlined dark:hidden">dark_mode</span>
                     <span class="material-symbols-outlined hidden dark:block">light_mode</span>
                 </button>
-
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-3 pl-4 border-l border-forest/10">
-                        <div class="text-right hidden sm:block">
-                            <p class="text-sm font-bold text-forest leading-none" id="nombre_docente">Prof. Julián
-                                Thorne</p>
-                        </div>
-                        <div class="size-10 rounded-full bg-primary/20 border-2 border-primary/60 overflow-hidden">
-                            <img id="imagen-perfil" alt="Perfil del profesor" class="w-full h-full object-cover"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUtN4wGsfp3yeKp9YXvQd3VgllVW0If4f2HiPlbtIcwS0gIC_njhkyaRlmXVUBO_ZkUIONPQ5mDwnwl5ZK-QcxUgeCU4FlXUjvzeg5ULesd_NJpHgXrIM60ne8pmrwi6yWscx_rakXYpU0gndLqI-lx1_Z4gpJ04vOO0LhERG-DuxoZHKxLo_NHjsFWzSmFSgNaDxs6wmmIfsZz7BqYDOYDZiNRLzVjo27JvT-yspxiNkPPIF7qYsg9ADy0Hnh9bael0v1Qpdc5Q" />
-                        </div>
-                    </div>
-                </div>
             </header>
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto fluid-waves">
                 <div class="px-10 pb-20 pt-10">
-
-                    <!-- Filters -->
-                    <div class="flex gap-4 mb-8 overflow-x-auto pb-2">
-                        <button class="px-5 py-2 rounded-full bg-indigo-deep text-white text-sm font-medium">All
-                            Sessions</button>
-                        <button
-                            class="px-5 py-2 rounded-full bg-white ring-1 ring-slate-200 text-slate-600 text-sm font-medium hover:bg-primary/10">Active</button>
-                        <button
-                            class="px-5 py-2 rounded-full bg-white ring-1 ring-slate-200 text-slate-600 text-sm font-medium hover:bg-primary/10">Archived</button>
-                        <button
-                            class="px-5 py-2 rounded-full bg-white ring-1 ring-slate-200 text-slate-600 text-sm font-medium hover:bg-primary/10">Drafts</button>
-                    </div>
-
                     <!-- Cards Grid — las cards reales las inyecta lobby_aulas.ts -->
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
                         <!-- Placeholder "Nuevo Salón" — siempre al final del grid -->
-                        <a href="crear_aulas.html"
-                           data-placeholder
-                           class="group border-2 border-dashed border-slate-200 dark:border-primary/20
+                        <a href="crear_aulas.html" data-placeholder class="group border-2 border-dashed border-slate-200 dark:border-primary/20
                                   rounded-xl flex flex-col items-center justify-center p-12 text-center
                                   hover:border-primary/50 hover:bg-white/50 dark:hover:bg-primary/5
                                   transition-all cursor-pointer no-underline">
@@ -287,39 +272,39 @@
             <span class="material-symbols-outlined text-2xl font-bold">add</span>
         </button>
         <script>
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const htmlElement = document.documentElement;
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const htmlElement = document.documentElement;
 
-        themeToggleBtn.addEventListener('click', () => {
-            if (htmlElement.classList.contains('dark')) {
+            themeToggleBtn.addEventListener('click', () => {
+                if (htmlElement.classList.contains('dark')) {
+                    htmlElement.classList.remove('dark');
+                    htmlElement.classList.add('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    htmlElement.classList.remove('light');
+                    htmlElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+            } else {
                 htmlElement.classList.remove('dark');
                 htmlElement.classList.add('light');
-                localStorage.setItem('theme', 'light');
-            } else {
-                htmlElement.classList.remove('light');
-                htmlElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
             }
-        });
 
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            htmlElement.classList.add('dark');
-            htmlElement.classList.remove('light');
-        } else {
-            htmlElement.classList.remove('dark');
-            htmlElement.classList.add('light');
-        }
-
-        window.addEventListener('load', () => {
-            const overlay = document.getElementById('page-overlay');
-            if (overlay) {
-                overlay.style.transition = 'opacity 0.4s ease';
-                overlay.style.opacity = '0';
-                setTimeout(() => overlay.remove(), 400);
-            }
-        });
-    </script>
-    <script type="module" src="/scripts/lobby_aulas.ts"></script>
+            window.addEventListener('load', () => {
+                const overlay = document.getElementById('page-overlay');
+                if (overlay) {
+                    overlay.style.transition = 'opacity 0.4s ease';
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.remove(), 400);
+                }
+            });
+        </script>
+        <script type="module" src="/scripts/lobby_aulas.ts"></script>
 </body>
 
 </html>

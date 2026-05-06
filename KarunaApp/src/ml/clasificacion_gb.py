@@ -176,54 +176,82 @@ def graficar(df,res,nombre,modo,umbral):
 
 
 def main():
-    e=json.loads(sys.stdin.read())
-    df=pd.DataFrame(e.get("alumnos",[]))
-    for col in ["cal_final","prom_tareas","prom_asist"]:
-        if col not in df.columns: df[col]=0.0
-    umbral=e.get("umbral",70); nombre=e.get("nombre_grupo","Grupo")
+    try:
+        e=json.loads(sys.stdin.read())
+        df=pd.DataFrame(e.get("alumnos",[]))
+        for col in ["cal_final","prom_tareas","prom_asist"]:
+            if col not in df.columns: df[col]=0.0
+        umbral=e.get("umbral",70); nombre=e.get("nombre_grupo","Grupo")
 
-    resultado=preparar(df,umbral)
-    # preparar devuelve 10 valores cuando es normal/oversampling, 9 cuando es LOO/stratified
-    if len(resultado)==10:
-        df,X,y,Xtr,Xte,ytr,yte,modo,loo,k_folds=resultado
-    else:
-        df,X,y,Xtr,Xte,ytr,yte,modo,loo=resultado; k_folds=None
+        n = len(df)
+        if n < 5:
+            print(json.dumps({
+                "error": True,
+                "mensaje": f"Gradient Boosting necesita al menos 5 alumnos con datos. "
+                           f"Este salón solo tiene {n}. Agrega más alumnos y calificaciones para usar este modelo."
+            }))
+            return
 
-    res=entrenar(X,y,Xtr,Xte,ytr,yte,loo,k_folds)
-    imagen=graficar(df,res,nombre,modo,umbral)
-    yt=np.array(res["y_test"]); yp=np.array(res["y_pred"])
-    # En modo CV/LOO la accuracy real viene del promedio del CV, no de predecir sobre entrenamiento
-    if res.get("acc_from_cv") and res["scores_loo"] is not None and len(res["scores_loo"]) > 0:
-        acc = float(res["scores_loo"].mean())
-    elif len(np.unique(yt)) >= 2:
-        acc = float(accuracy_score(yt, yp))
-    else:
-        acc = None
+        y_preview = (df["cal_final"] >= umbral).astype(int)
+        if len(np.unique(y_preview)) < 2:
+            print(json.dumps({
+                "error": True,
+                "mensaje": "Gradient Boosting requiere alumnos que aprueben Y que reprueben. "
+                           "Actualmente todos los alumnos tienen el mismo resultado. "
+                           "El modelo no puede aprender con una sola clase."
+            }))
+            return
 
-    # Importancias de variables
-    imp=res["model"].feature_importances_
-    imp_dict={"cal_final":round(float(imp[0]),4),"prom_tareas":round(float(imp[1]),4),"prom_asist":round(float(imp[2]),4)}
+        resultado=preparar(df,umbral)
+        # preparar devuelve 10 valores cuando es normal/oversampling, 9 cuando es LOO/stratified
+        if len(resultado)==10:
+            df,X,y,Xtr,Xte,ytr,yte,modo,loo,k_folds=resultado
+        else:
+            df,X,y,Xtr,Xte,ytr,yte,modo,loo=resultado; k_folds=None
 
-    # Distribución de probabilidades por alumno
-    all_probs=res["model"].predict_proba(df[["cal_final","prom_tareas","prom_asist"]])[:,1]
-    prob_list=[round(float(p),3) for p in all_probs]
+        res=entrenar(X,y,Xtr,Xte,ytr,yte,loo,k_folds)
+        imagen=graficar(df,res,nombre,modo,umbral)
+        yt=np.array(res["y_test"]); yp=np.array(res["y_pred"])
+        # En modo CV/LOO la accuracy real viene del promedio del CV, no de predecir sobre entrenamiento
+        if res.get("acc_from_cv") and res["scores_loo"] is not None and len(res["scores_loo"]) > 0:
+            acc = float(res["scores_loo"].mean())
+        elif len(np.unique(yt)) >= 2:
+            acc = float(accuracy_score(yt, yp))
+        else:
+            acc = None
 
-    resumen={
-        "algoritmo":"Gradient Boosting","modo":modo,
-        "accuracy":round(acc,4) if acc is not None else None,
-        "n_alumnos":len(df),"n_aprueba":int(df["aprueba"].sum()),"n_reprueba":int(len(df)-df["aprueba"].sum()),
-        "importancias":imp_dict,
-        "probabilidades":prob_list,
-        "cal_finals":[round(float(v),1) for v in df["cal_final"].values],
-        "prom_asists":[round(float(v),1) for v in df["prom_asist"].values],
-        "aprueba_vals":[int(v) for v in df["aprueba"].values],
-        "umbral":umbral,
-    }
-    if res["scores_loo"] is not None and len(res["scores_loo"])>0:
-        resumen["cv_scores"]=[round(float(s),4) for s in res["scores_loo"]]
-        resumen["cv_mean"]=round(float(res["scores_loo"].mean()),4)
+        # Importancias de variables
+        imp=res["model"].feature_importances_
+        imp_dict={"cal_final":round(float(imp[0]),4),"prom_tareas":round(float(imp[1]),4),"prom_asist":round(float(imp[2]),4)}
 
-    print(json.dumps({"imagen":imagen,"resumen":resumen}))
+        # Distribución de probabilidades por alumno
+        all_probs=res["model"].predict_proba(df[["cal_final","prom_tareas","prom_asist"]])[:,1]
+        prob_list=[round(float(p),3) for p in all_probs]
+
+        resumen={
+            "algoritmo":"Gradient Boosting","modo":modo,
+            "accuracy":round(acc,4) if acc is not None else None,
+            "n_alumnos":len(df),"n_aprueba":int(df["aprueba"].sum()),"n_reprueba":int(len(df)-df["aprueba"].sum()),
+            "importancias":imp_dict,
+            "probabilidades":prob_list,
+            "cal_finals":[round(float(v),1) for v in df["cal_final"].values],
+            "prom_asists":[round(float(v),1) for v in df["prom_asist"].values],
+            "aprueba_vals":[int(v) for v in df["aprueba"].values],
+            "umbral":umbral,
+        }
+        if res["scores_loo"] is not None and len(res["scores_loo"])>0:
+            resumen["cv_scores"]=[round(float(s),4) for s in res["scores_loo"]]
+            resumen["cv_mean"]=round(float(res["scores_loo"].mean()),4)
+
+        print(json.dumps({"imagen":imagen,"resumen":resumen}))
+
+    except Exception as exc:
+        print(json.dumps({
+            "error": True,
+            "mensaje": f"El modelo Gradient Boosting no pudo ejecutarse con los datos actuales. "
+                       f"Esto suele ocurrir cuando hay muy pocos alumnos o todos tienen calificaciones idénticas. "
+                       f"Detalle técnico: {str(exc)}"
+        }))
 
 if __name__=="__main__":
     main()

@@ -222,47 +222,76 @@ def graficar(df, res, nombre_grupo, modo, umbral):
 
 
 def main():
-    raw = sys.stdin.read()
-    entrada = json.loads(raw)
-    alumnos = entrada.get("alumnos", [])
-    umbral  = entrada.get("umbral", 70)
-    nombre  = entrada.get("nombre_grupo", "Grupo")
+    try:
+        raw = sys.stdin.read()
+        entrada = json.loads(raw)
+        alumnos = entrada.get("alumnos", [])
+        umbral  = entrada.get("umbral", 70)
+        nombre  = entrada.get("nombre_grupo", "Grupo")
 
-    df = pd.DataFrame(alumnos)
-    for col in ["cal_final","prom_tareas","prom_asist"]:
-        if col not in df.columns:
-            df[col] = 0.0
+        df = pd.DataFrame(alumnos)
+        for col in ["cal_final","prom_tareas","prom_asist"]:
+            if col not in df.columns:
+                df[col] = 0.0
 
-    df, X, y, X_train, X_test, y_train, y_test, modo, loo = preparar_datos(df, umbral)
-    res = entrenar(X, y, X_train, X_test, y_train, y_test, loo)
-    imagen_b64 = graficar(df, res, nombre, modo, umbral)
+        n = len(df)
+        clases = df["aprueba"].unique() if "aprueba" in df.columns else np.unique((df["cal_final"] >= umbral).astype(int))
+        if n < 5:
+            print(json.dumps({
+                "error": True,
+                "mensaje": f"Random Forest necesita al menos 5 alumnos con datos. "
+                           f"Este salón solo tiene {n}. Agrega más alumnos y calificaciones para usar este modelo."
+            }))
+            return
 
-    y_pred     = np.array(res["y_pred"])
-    y_test_arr = np.array(res["y_test"])
-    # En modo LOO la accuracy real viene del CV, no de predecir sobre datos de entrenamiento
-    if res.get("acc_from_cv") and res["scores_loo"] is not None:
-        acc = float(res["scores_loo"].mean())
-    else:
-        acc = float(accuracy_score(y_test_arr, y_pred))
-    n_aprueba  = int(df["aprueba"].sum())
-    n_reprueba = int(len(df) - n_aprueba)
+        df, X, y, X_train, X_test, y_train, y_test, modo, loo = preparar_datos(df, umbral)
 
-    probabilidades = res["model"].predict_proba(df[["cal_final","prom_tareas","prom_asist"]])[:,1]
-    resumen = {
-        "algoritmo":   "Random Forest",
-        "modo":        modo,
-        "accuracy":    round(acc, 4),
-        "n_alumnos":   len(df),
-        "n_aprueba":   n_aprueba,
-        "n_reprueba":  n_reprueba,
-        "importancias": {
-            "cal_final":   round(float(res["model"].feature_importances_[0]), 4),
-            "prom_tareas": round(float(res["model"].feature_importances_[1]), 4),
-            "prom_asist":  round(float(res["model"].feature_importances_[2]), 4),
-        },
-        "probabilidades": [round(float(p), 3) for p in probabilidades],
-    }
-    print(json.dumps({"imagen": imagen_b64, "resumen": resumen}))
+        clases_unicas = np.unique(y)
+        if len(clases_unicas) < 2:
+            print(json.dumps({
+                "error": True,
+                "mensaje": "Random Forest requiere alumnos que aprueben Y que reprueben. "
+                           "Actualmente todos los alumnos tienen el mismo resultado (todos aprueban o todos reprueban). "
+                           "El modelo no puede aprender con una sola clase."
+            }))
+            return
+
+        res = entrenar(X, y, X_train, X_test, y_train, y_test, loo)
+        imagen_b64 = graficar(df, res, nombre, modo, umbral)
+
+        y_pred     = np.array(res["y_pred"])
+        y_test_arr = np.array(res["y_test"])
+        if res.get("acc_from_cv") and res["scores_loo"] is not None:
+            acc = float(res["scores_loo"].mean())
+        else:
+            acc = float(accuracy_score(y_test_arr, y_pred))
+        n_aprueba  = int(df["aprueba"].sum())
+        n_reprueba = int(len(df) - n_aprueba)
+
+        probabilidades = res["model"].predict_proba(df[["cal_final","prom_tareas","prom_asist"]])[:,1]
+        resumen = {
+            "algoritmo":   "Random Forest",
+            "modo":        modo,
+            "accuracy":    round(acc, 4),
+            "n_alumnos":   len(df),
+            "n_aprueba":   n_aprueba,
+            "n_reprueba":  n_reprueba,
+            "importancias": {
+                "cal_final":   round(float(res["model"].feature_importances_[0]), 4),
+                "prom_tareas": round(float(res["model"].feature_importances_[1]), 4),
+                "prom_asist":  round(float(res["model"].feature_importances_[2]), 4),
+            },
+            "probabilidades": [round(float(p), 3) for p in probabilidades],
+        }
+        print(json.dumps({"imagen": imagen_b64, "resumen": resumen}))
+
+    except Exception as e:
+        print(json.dumps({
+            "error": True,
+            "mensaje": f"El modelo Random Forest no pudo ejecutarse con los datos actuales. "
+                       f"Esto suele ocurrir cuando hay muy pocos alumnos o todos tienen calificaciones idénticas. "
+                       f"Detalle técnico: {str(e)}"
+        }))
 
 if __name__ == "__main__":
     main()

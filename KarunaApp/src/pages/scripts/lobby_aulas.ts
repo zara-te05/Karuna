@@ -57,10 +57,7 @@ function crearCardHTML(salon: Salon): string {
                     <span class="material-symbols-outlined text-sm">menu_book</span>
                     ${salon.materia}
                 </p>
-                <p class="text-slate-400 dark:text-slate-500 text-xs flex items-center gap-1 mb-6">
-                    <span class="material-symbols-outlined text-xs">calendar_today</span>
-                    Semestre Otoño 2024
-                </p>
+
 
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
