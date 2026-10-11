@@ -63,6 +63,7 @@ async fn ejecutar_ml(script_path: String, datos_json: String) -> Result<String, 
                 .spawn()
             {
                 Ok(c) => c,
+                // El binario de Python no existe en el PATH — probar el siguiente
                 Err(e) => { last_err = format!("{}: {}", py, e); continue; }
             };
 
@@ -78,13 +79,38 @@ async fn ejecutar_ml(script_path: String, datos_json: String) -> Result<String, 
             };
 
             if !output.status.success() {
-                let stderr = String::from_utf8_lossy(&output.stderr);
-                // Si el error es simplemente que no encontró el comando/módulo, iterar al siguiente python
-                if stderr.contains("No module named") || stderr.contains("not found") {
-                    last_err = format!("{} Python falló: {}", py, stderr.trim());
-                    continue;
+                let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+                let stdout_str = String::from_utf8_lossy(&output.stdout).to_string();
+
+                // Si Python encontró el script pero le faltan librerias (sklearn, matplotlib, etc.)
+                // devolver un JSON de error controlado para que el frontend lo muestre amigablemente.
+                if stderr.contains("No module named") {
+                    let module = stderr
+                        .lines()
+                        .find(|l| l.contains("No module named"))
+                        .and_then(|l| l.split("No module named ").nth(1))
+                        .map(|m| m.trim().trim_matches('\'').to_string())
+                        .unwrap_or_else(|| "desconocido".to_string());
+                    let json_err = format!(
+                        "{{\"error\":true,\"mensaje\":\"Falta la libreria Python '{module}'. Instalala con: pip install scikit-learn matplotlib seaborn pandas numpy\"}}",
+                        module = module
+                    );
+                    return Ok(json_err);
                 }
-                return Err(format!("Script falló:\n{}", stderr));
+
+                // Si stdout tiene contenido (el script capturo el error y lo escribio en stdout)
+                if !stdout_str.trim().is_empty() {
+                    return Ok(stdout_str);
+                }
+
+                // Otro error real del script — devolver JSON controlado para no
+                // activar el catch generico en TypeScript ("No se pudo comunicar")
+                let stderr_short: String = stderr.lines().take(5).collect::<Vec<_>>().join(" | ");
+                let json_err = format!(
+                    "{{\"error\":true,\"mensaje\":\"El modelo no pudo ejecutarse. Detalle: {detail}\"}}",
+                    detail = stderr_short.replace('"', "'")
+                );
+                return Ok(json_err);
             }
 
             return Ok(String::from_utf8_lossy(&output.stdout).to_string());
@@ -93,7 +119,7 @@ async fn ejecutar_ml(script_path: String, datos_json: String) -> Result<String, 
         Err(format!("Error ejecutando Python:\n{}", last_err))
     })
     .await
-    .map_err(|e| format!("Error en hilo de ejecución ML: {}", e))?
+    .map_err(|e| format!("Error en hilo de ejecucion ML: {}", e))?
 }
 
 // ─── OAuth helpers ────────────────────────────────────────────────────────────

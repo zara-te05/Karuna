@@ -78,14 +78,16 @@ def segmentar(serie):
     Si los percentiles son iguales (datos sin variación suficiente), colapsa los bins
     duplicados y asigna 'Medio' a todos los alumnos para no romper el pipeline.
     """
+    cat_dtype = pd.CategoricalDtype(["Bajo", "Medio", "Alto"], ordered=True)
     q33, q66 = serie.quantile(0.33), serie.quantile(0.66)
-    # Construir bins únicos eliminando duplicados
+
     resultado = pd.cut(
         serie,
         bins=[-np.inf, q33, q66, np.inf],
         labels=["Bajo", "Medio", "Alto"],
         duplicates="drop",
     )
+
     # Si todos cayeron en NaN por colapso total de bins, asignar categoría única
     if resultado.isna().all():
         return pd.Categorical(
@@ -93,10 +95,11 @@ def segmentar(serie):
             categories=["Bajo", "Medio", "Alto"],
             ordered=True,
         )
-    # Rellenar NaN residuales con "Medio"
-    return resultado.cat.add_categories(["Bajo", "Medio", "Alto"]) \
-                    .fillna("Medio") \
-                    .astype(pd.CategoricalDtype(["Bajo", "Medio", "Alto"], ordered=True))
+
+    # Convertir a string para poder rellenar NaN sin conflictos de categorías,
+    # luego recastear al dtype completo. Evita el error "new categories must not
+    # include old categories" que lanzaba add_categories cuando ya existían.
+    return resultado.astype(object).fillna("Medio").astype(cat_dtype)
 
 
 def panel_km(ax, df, t_col, e_col, seg_col, colores, ylabel, titulo):

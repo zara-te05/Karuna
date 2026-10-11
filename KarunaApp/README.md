@@ -1,7 +1,23 @@
-# Tauri + React
+# 🎓 KarunaApp
 
-This template should help get you started developing with Tauri and React in Vite.
+Aplicación de escritorio para la gestión escolar, control de notas y análisis predictivo del rendimiento estudiantil construida con **Tauri v2**, **React** y modelos analíticos en **Python**.
 
-## Recommended IDE Setup
+Para ver la documentación completa y guía de instalación, consulta el [README principal](../README.md).
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+---
+
+## ⚡ Comandos Rápidos
+
+```bash
+# Instalar dependencias
+npm install # o pnpm install
+
+# Instalar dependencias para Machine Learning (Python)
+pip install scikit-learn pandas numpy matplotlib seaborn lifelines
+
+# Ejecutar en modo desarrollo
+npm run tauri dev
+
+# Compilar para producción
+npm run tauri build
+```
